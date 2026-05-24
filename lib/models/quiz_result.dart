@@ -1,12 +1,5 @@
-/// Modèle de résultat pour chaque question répondue.
-///
-/// Conserve les réponses de l'utilisateur et les compare aux bonnes réponses
-/// pour calculer le score et afficher la correction.
-library;
-
 import 'question.dart';
 
-/// Résultat d'une question individuelle
 class QuestionResult {
   final Question question;
   final Set<String> userAnswerIds;
@@ -16,16 +9,23 @@ class QuestionResult {
     required this.userAnswerIds,
   });
 
-  /// Vérifie si l'utilisateur a répondu correctement
-  /// (toutes les bonnes réponses cochées ET aucune mauvaise)
   bool get isCorrect {
     final correctIds = question.correctAnswerIds.toSet();
     return userAnswerIds.length == correctIds.length &&
         userAnswerIds.containsAll(correctIds);
   }
+
+  factory QuestionResult.fromJson(Map<String, dynamic> json) => QuestionResult(
+        question: Question.fromJson(json['question']),
+        userAnswerIds: Set<String>.from(json['userAnswerIds']),
+      );
+
+  Map<String, dynamic> toJson() => {
+        'question': question.toJson(),
+        'userAnswerIds': userAnswerIds.toList(),
+      };
 }
 
-/// Résultat global d'un quiz complet
 class QuizResult {
   final String categoryName;
   final List<QuestionResult> questionResults;
@@ -37,12 +37,21 @@ class QuizResult {
     required this.totalTime,
   });
 
-  /// Score : nombre de questions entièrement correctes
   int get score => questionResults.where((r) => r.isCorrect).length;
-
-  /// Nombre total de questions
   int get total => questionResults.length;
-
-  /// Pourcentage de réussite
   double get percentage => total > 0 ? (score / total) * 100 : 0;
+
+  factory QuizResult.fromJson(Map<String, dynamic> json) => QuizResult(
+        categoryName: json['categoryName'],
+        questionResults: (json['questionResults'] as List)
+            .map((e) => QuestionResult.fromJson(e))
+            .toList(),
+        totalTime: Duration(seconds: json['totalSeconds'] ?? 0),
+      );
+
+  Map<String, dynamic> toJson() => {
+        'categoryName': categoryName,
+        'questionResults': questionResults.map((e) => e.toJson()).toList(),
+        'totalSeconds': totalTime.inSeconds,
+      };
 }

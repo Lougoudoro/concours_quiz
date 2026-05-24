@@ -1,19 +1,5 @@
-/// Modèle de données pour une question de quiz.
-///
-/// Supporte les QCM (choix multiples via Checkbox) et les Vrai/Faux.
-/// Chaque question peut avoir PLUSIEURS bonnes réponses.
-library;
+enum QuestionType { qcm, vraiOuFaux }
 
-/// Types de questions possibles
-enum QuestionType {
-  /// Question à Choix Multiples (plusieurs bonnes réponses possibles)
-  qcm,
-
-  /// Question Vrai ou Faux
-  vraiOuFaux,
-}
-
-/// Représente une option de réponse
 class AnswerOption {
   final String id;
   final String text;
@@ -24,19 +10,26 @@ class AnswerOption {
     required this.text,
     required this.isCorrect,
   });
+
+  factory AnswerOption.fromJson(Map<String, dynamic> json) => AnswerOption(
+        id: json['id'],
+        text: json['text'],
+        isCorrect: json['isCorrect'] ?? false,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'text': text,
+        'isCorrect': isCorrect,
+      };
 }
 
-/// Représente une question complète avec ses options et sa justification
 class Question {
   final String id;
   final String text;
   final QuestionType type;
   final List<AnswerOption> options;
-
-  /// Justification affichée après validation (référence légale, explication, etc.)
   final String justification;
-
-  /// Catégorie du concours (ENAREF, ENAM, Santé, etc.)
   final String category;
 
   const Question({
@@ -48,7 +41,26 @@ class Question {
     required this.category,
   });
 
-  /// Retourne les IDs de toutes les bonnes réponses
+  factory Question.fromJson(Map<String, dynamic> json) => Question(
+        id: json['id'],
+        text: json['text'],
+        type: QuestionType.values.firstWhere((e) => e.toString() == json['type']),
+        options: (json['options'] as List)
+            .map((o) => AnswerOption.fromJson(o))
+            .toList(),
+        justification: json['justification'] ?? '',
+        category: json['category'] ?? '',
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'text': text,
+        'type': type.toString(),
+        'options': options.map((o) => o.toJson()).toList(),
+        'justification': justification,
+        'category': category,
+      };
+
   List<String> get correctAnswerIds =>
       options.where((o) => o.isCorrect).map((o) => o.id).toList();
 }

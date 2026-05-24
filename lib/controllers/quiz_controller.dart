@@ -1,14 +1,21 @@
 import 'dart:async';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../models/question.dart';
 import '../models/quiz_result.dart';
 import '../data/sample_questions.dart';
+import 'history_controller.dart';
 
 class QuizController extends GetxController {
   final String categoryId;
   final String categoryName;
+  final List<Question>? initialQuestions;
 
-  QuizController({required this.categoryId, required this.categoryName});
+  QuizController({
+    required this.categoryId,
+    required this.categoryName,
+    this.initialQuestions,
+  });
 
   // State
   var questions = <Question>[].obs;
@@ -30,7 +37,11 @@ class QuizController extends GetxController {
   }
 
   void loadQuestions() {
-    questions.value = SampleQuestions.getQuestionsForCategory(categoryId);
+    if (initialQuestions != null && initialQuestions!.isNotEmpty) {
+      questions.assignAll(initialQuestions!);
+    } else {
+      questions.assignAll(SampleQuestions.getQuestionsForCategory(categoryId));
+    }
   }
 
   void startQuiz() {
@@ -41,7 +52,6 @@ class QuizController extends GetxController {
   }
 
   String get elapsedFormatted {
-    // Accessing .value here makes this property reactive when used inside Obx
     final seconds = elapsedSeconds.value;
     final d = Duration(seconds: seconds);
     final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
@@ -51,7 +61,7 @@ class QuizController extends GetxController {
 
   Question get currentQuestion => questions[currentIndex.value];
   bool get isLastQuestion => currentIndex.value == questions.length - 1;
-  double get progressValue => (currentIndex.value + 1) / questions.length;
+  double get progressValue => (currentIndex.value + 1) / (questions.isEmpty ? 1 : questions.length);
 
   void toggleAnswer(String answerId) {
     if (isValidated.value) return;
@@ -72,21 +82,46 @@ class QuizController extends GetxController {
     if (selectedAnswerIds.isEmpty) return;
 
     isValidated.value = true;
+    final isCorrect = _checkIsCorrect();
+    
+    // Feedback haptique
+    if (isCorrect) {
+      HapticFeedback.lightImpact();
+    } else {
+      HapticFeedback.mediumImpact();
+    }
+
     results.add(QuestionResult(
       question: currentQuestion,
       userAnswerIds: Set.from(selectedAnswerIds),
     ));
   }
 
+  bool _checkIsCorrect() {
+    final correctIds = currentQuestion.correctAnswerIds;
+    if (selectedAnswerIds.length != correctIds.length) return false;
+    return selectedAnswerIds.every((id) => correctIds.contains(id));
+  }
+
   void nextQuestion() {
     if (isLastQuestion) {
       stopwatch.stop();
       _timer?.cancel();
-      Get.offNamed('/results', arguments: QuizResult(
+      
+      final result = QuizResult(
         categoryName: categoryName,
-        questionResults: results,
+        questionResults: results.toList(),
         totalTime: stopwatch.elapsed,
-      ));
+      );
+
+      // Sauvegarde dans l'historique
+      try {
+        Get.find<HistoryController>().addResult(result);
+      } catch (e) {
+        // Ignorer si pas injecté (ex: tests)
+      }
+
+      Get.offNamed('/results', arguments: result);
       return;
     }
 

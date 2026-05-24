@@ -8,11 +8,13 @@ import '../theme/app_theme.dart';
 class QuizScreen extends StatelessWidget {
   final String categoryId;
   final String categoryName;
+  final List<Question>? questions;
 
   const QuizScreen({
     super.key,
     required this.categoryId,
     required this.categoryName,
+    this.questions,
   });
 
   @override
@@ -22,6 +24,7 @@ class QuizScreen extends StatelessWidget {
     final controller = Get.put(QuizController(
       categoryId: categoryId,
       categoryName: categoryName,
+      initialQuestions: questions,
     ), tag: categoryId); // Use tag to allow multiple instances if needed
 
     return Scaffold(

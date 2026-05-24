@@ -1,14 +1,6 @@
-/// Écran C : Résultat Global et Correction
-///
-/// Affiche :
-/// - Score final avec animation circulaire
-/// - Durée totale du test
-/// - Liste des questions avec accordéon (ExpansionTile)
-///   pour la justification textuelle
-library;
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:confetti/confetti.dart';
 
 import '../models/quiz_result.dart';
 import '../theme/app_theme.dart';
@@ -26,6 +18,10 @@ class _ResultScreenState extends State<ResultScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
   late Animation<double> _scoreAnimation;
+  late ConfettiController _confettiController;
+  
+  // --- NOUVEAU : État du filtre (Axe 3) ---
+  bool _showOnlyErrors = false;
 
   @override
   void initState() {
@@ -41,12 +37,20 @@ class _ResultScreenState extends State<ResultScreen>
       parent: _animController,
       curve: Curves.easeOutCubic,
     ));
+    
+    _confettiController = ConfettiController(duration: const Duration(seconds: 3));
+    
     _animController.forward();
+    
+    if (widget.quizResult.percentage == 100) {
+      _confettiController.play();
+    }
   }
 
   @override
   void dispose() {
     _animController.dispose();
+    _confettiController.dispose();
     super.dispose();
   }
 
@@ -61,103 +65,151 @@ class _ResultScreenState extends State<ResultScreen>
     final result = widget.quizResult;
     final passed = result.percentage >= 50;
 
+    // --- Filtrage des résultats ---
+    final filteredResults = _showOnlyErrors 
+        ? result.questionResults.asMap().entries.where((e) => !e.value.isCorrect).toList()
+        : result.questionResults.asMap().entries.toList();
+
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            // En-tête
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => Get.back(),
-                    child: Container(
-                      width: 38, height: 38,
-                      decoration: BoxDecoration(
-                        color: AppTheme.getSurfaceCardActive(Theme.of(context).brightness == Brightness.dark),
-                        borderRadius: BorderRadius.circular(10),
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Column(
+              children: [
+                // En-tête
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () => Get.back(),
+                        child: Container(
+                          width: 38, height: 38,
+                          decoration: BoxDecoration(
+                            color: AppTheme.getSurfaceCardActive(Theme.of(context).brightness == Brightness.dark),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(Icons.close,
+                              color: Theme.of(context).textTheme.bodyMedium!.color, size: 20),
+                        ),
                       ),
-                      child: Icon(Icons.close,
-                          color: Theme.of(context).textTheme.bodyMedium!.color, size: 20),
-                    ),
-                  ),
-                  const Spacer(),
-                  Text('Résultats — ${result.categoryName}',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).textTheme.bodyLarge!.color)),
-                  const Spacer(),
-                  const SizedBox(width: 38),
-                ],
-              ),
-            ),
-
-            // Corps scrollable
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
-                child: Column(
-                  children: [
-                    // ─── Carte de score ──────────────────────
-                    _buildScoreCard(result, passed),
-                    const SizedBox(height: 12),
-
-                    // Statistiques rapides
-                    _buildStatsRow(result),
-                    const SizedBox(height: 28),
-
-                    // ─── Liste des questions (accordéon) ─────
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Correction détaillée',
+                      const Spacer(),
+                      Text('Résultats — ${result.categoryName}',
                           style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w600,
                               color: Theme.of(context).textTheme.bodyLarge!.color)),
-                    ),
-                    const SizedBox(height: 14),
-                    ...result.questionResults.asMap().entries.map(
-                          (entry) =>
-                              _buildQuestionTile(entry.key, entry.value),
-                        ),
-                  ],
+                      const Spacer(),
+                      const SizedBox(width: 38),
+                    ],
+                  ),
                 ),
-              ),
-            ),
 
-            // Bouton retour accueil
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                border: Border(
-                    top: BorderSide(
-                        color: Theme.of(context).dividerTheme.color!.withOpacity(0.5))),
-              ),
-              child: SafeArea(
-                top: false,
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 54,
-                  child: ElevatedButton.icon(
-                    onPressed: () => Get.offAllNamed('/dashboard'),
-                    icon: const Icon(Icons.home_outlined, size: 20),
-                    label: const Text('Retour à l\'accueil'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.vertFaso,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14)),
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
+                    child: Column(
+                      children: [
+                        _buildScoreCard(result, passed),
+                        const SizedBox(height: 12),
+                        _buildStatsRow(result),
+                        const SizedBox(height: 28),
+
+                        // --- Correction avec Filtre Diagnostic (Axe 3) ---
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Correction détaillée',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Theme.of(context).textTheme.bodyLarge!.color)),
+                            
+                            // Bouton de bascule Diagnostic
+                            if (result.score < result.total)
+                            TextButton.icon(
+                              onPressed: () => setState(() => _showOnlyErrors = !_showOnlyErrors),
+                              icon: Icon(_showOnlyErrors ? Icons.visibility : Icons.filter_list, size: 16, color: AppTheme.rougeTerre),
+                              label: Text(_showOnlyErrors ? 'Voir Tout' : 'Mes Erreurs', 
+                                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.rougeTerre)),
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                backgroundColor: AppTheme.rougeTerre.withOpacity(0.1),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 14),
+                        
+                        if (filteredResults.isEmpty && _showOnlyErrors)
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 40),
+                            child: Column(
+                              children: [
+                                Icon(Icons.check_circle_outline, size: 48, color: AppTheme.correctGreen),
+                                SizedBox(height: 12),
+                                Text('Aucune erreur à réviser ! 🎉', style: TextStyle(fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                          )
+                        else
+                          ...filteredResults.map(
+                                (entry) =>
+                                    _buildQuestionTile(entry.key, entry.value),
+                              ),
+                      ],
                     ),
                   ),
                 ),
-              ),
+
+                // Bouton retour accueil
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    border: Border(
+                        top: BorderSide(
+                            color: Theme.of(context).dividerTheme.color?.withOpacity(0.5) ?? Colors.transparent)),
+                  ),
+                  child: SafeArea(
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 54,
+                      child: ElevatedButton.icon(
+                        onPressed: () => Get.offAllNamed('/dashboard'),
+                        icon: const Icon(Icons.home_outlined, size: 20),
+                        label: const Text('Retour à l\'accueil'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.vertFaso,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              shouldLoop: false,
+              colors: const [
+                AppTheme.vertFaso,
+                AppTheme.orReussite,
+                AppTheme.rougeTerre,
+                Colors.white,
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -186,14 +238,15 @@ class _ResultScreenState extends State<ResultScreen>
       ),
       child: Column(
         children: [
-          // Emoji + message
           Text(
-            passed ? '🎉' : '💪',
+            passed ? (result.percentage == 100 ? '🏆' : '🎉') : '💪',
             style: const TextStyle(fontSize: 42),
           ),
           const SizedBox(height: 8),
           Text(
-            passed ? 'Félicitations !' : 'Continue tes efforts !',
+            result.percentage == 100 
+              ? 'Score Parfait !' 
+              : (passed ? 'Félicitations !' : 'Continue tes efforts !'),
             style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
@@ -201,7 +254,6 @@ class _ResultScreenState extends State<ResultScreen>
           ),
           const SizedBox(height: 20),
 
-          // Score circulaire animé
           AnimatedBuilder(
             animation: _scoreAnimation,
             builder: (context, child) {
@@ -292,7 +344,7 @@ class _ResultScreenState extends State<ResultScreen>
         decoration: BoxDecoration(
           color: Theme.of(context).cardTheme.color,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Theme.of(context).dividerTheme.color!),
+          border: Border.all(color: Theme.of(context).dividerTheme.color ?? Colors.transparent),
         ),
         child: Column(
           children: [
@@ -304,7 +356,7 @@ class _ResultScreenState extends State<ResultScreen>
             const SizedBox(height: 2),
             Text(label,
                 style: TextStyle(
-                    fontSize: 11, color: Theme.of(context).textTheme.bodyMedium!.color)),
+                    fontSize: 11, color: Theme.of(context).textTheme.bodyMedium?.color)),
           ],
         ),
       ),
@@ -355,17 +407,16 @@ class _ResultScreenState extends State<ResultScreen>
               style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: Theme.of(context).textTheme.bodyLarge!.color),
+                  color: Theme.of(context).textTheme.bodyLarge?.color),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            iconColor: Theme.of(context).textTheme.bodyMedium!.color,
-            collapsedIconColor: Theme.of(context).textTheme.bodyMedium!.color,
+            iconColor: Theme.of(context).textTheme.bodyMedium?.color,
+            collapsedIconColor: Theme.of(context).textTheme.bodyMedium?.color,
             children: [
-              // Réponses de l'utilisateur
               ...qr.question.options.map((opt) {
                 final userSelected = qr.userAnswerIds.contains(opt.id);
-                Color optColor = Theme.of(context).textTheme.bodyMedium!.color!;
+                Color optColor = Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey;
                 IconData optIcon = Icons.radio_button_unchecked;
 
                 if (opt.isCorrect) {
@@ -405,7 +456,6 @@ class _ResultScreenState extends State<ResultScreen>
                 );
               }),
               const SizedBox(height: 10),
-              // Justification
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
@@ -433,7 +483,7 @@ class _ResultScreenState extends State<ResultScreen>
                       qr.question.justification,
                       style: TextStyle(
                         fontSize: 13,
-                        color: Theme.of(context).textTheme.bodyLarge!.color,
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
                         height: 1.5,
                       ),
                     ),
