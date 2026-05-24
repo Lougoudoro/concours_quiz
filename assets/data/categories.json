@@ -1,0 +1,52 @@
+{
+  "categories": [
+    {
+      "id": "enaref",
+      "name": "ENAREF",
+      "description": "École Nationale des Régies Financières",
+      "icon": "account_balance",
+      "totalQuestions": 20,
+      "progress": 0.35
+    },
+    {
+      "id": "enam",
+      "name": "ENAM",
+      "description": "École Nationale d'Administration et de Magistrature",
+      "icon": "gavel",
+      "totalQuestions": 20,
+      "progress": 0.15
+    },
+    {
+      "id": "sante",
+      "name": "Santé",
+      "description": "Concours du secteur de la santé",
+      "icon": "local_hospital",
+      "totalQuestions": 20,
+      "progress": 0.0
+    },
+    {
+      "id": "police",
+      "name": "Police",
+      "description": "Concours d'entrée à la Police Nationale",
+      "icon": "shield",
+      "totalQuestions": 20,
+      "progress": 0.60
+    },
+    {
+      "id": "douanes",
+      "name": "Douanes",
+      "description": "Concours de la Direction Générale des Douanes",
+      "icon": "local_shipping",
+      "totalQuestions": 20,
+      "progress": 0.0
+    },
+    {
+      "id": "education",
+      "name": "Éducation",
+      "description": "Concours de l'éducation nationale",
+      "icon": "school",
+      "totalQuestions": 20,
+      "progress": 0.45
+    }
+  ]
+}

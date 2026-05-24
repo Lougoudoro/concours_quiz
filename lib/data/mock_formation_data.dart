@@ -1,5 +1,5 @@
-import '../models/formation.dart';
-import '../models/question.dart';
+import '../app/data/models/formation.dart';
+import '../app/data/models/question.dart';
 
 class MockFormationData {
   static Session getSession2026() {

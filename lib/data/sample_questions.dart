@@ -7,7 +7,7 @@
 /// - Questions de type Vrai/Faux
 library;
 
-import '../models/question.dart';
+import '../app/data/models/question.dart';
 
 class SampleQuestions {
   SampleQuestions._();

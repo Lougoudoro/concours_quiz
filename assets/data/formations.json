@@ -1,0 +1,181 @@
+{
+  "id": "s2026",
+  "name": "Session 2026",
+  "isActive": true,
+  "concoursTypes": [
+    {
+      "id": "dir",
+      "name": "Concours Directs",
+      "category": "ConcoursCategory.direct",
+      "subCategories": [
+        {
+          "id": "bac",
+          "name": "Niveau BAC",
+          "collections": [
+            {
+              "id": "f_mars",
+              "name": "Formation de Mars",
+              "series": [
+                {
+                  "id": "ex_blanc_cg",
+                  "name": "Examen Blanc : Culture Générale",
+                  "questions": [
+                    {
+                      "id": "q1",
+                      "text": "Quelle est la capitale économique du Burkina Faso ?",
+                      "type": "QuestionType.qcm",
+                      "category": "Culture Générale (BAC)",
+                      "justification": "Bobo-Dioulasso est historiquement et économiquement reconnue comme la capitale économique du pays.",
+                      "options": [
+                        { "id": "o1", "text": "Ouagadougou", "isCorrect": false },
+                        { "id": "o2", "text": "Bobo-Dioulasso", "isCorrect": true },
+                        { "id": "o3", "text": "Koudougou", "isCorrect": false }
+                      ]
+                    },
+                    {
+                      "id": "q2",
+                      "text": "Le Burkina Faso est un pays enclavé.",
+                      "type": "QuestionType.vraiOuFaux",
+                      "category": "Culture Générale (BAC)",
+                      "justification": "Vrai. Le Burkina Faso n'a pas d'accès direct à la mer.",
+                      "options": [
+                        { "id": "v", "text": "Vrai", "isCorrect": true },
+                        { "id": "f", "text": "Faux", "isCorrect": false }
+                      ]
+                    },
+                    {
+                      "id": "q3",
+                      "text": "Quelles sont les couleurs du drapeau burkinabè ? (Choisir toutes les bonnes réponses)",
+                      "type": "QuestionType.qcm",
+                      "category": "Culture Générale (BAC)",
+                      "justification": "Le drapeau est composé de deux bandes horizontales (rouge et verte) avec une étoile jaune au milieu.",
+                      "options": [
+                        { "id": "c1", "text": "Rouge", "isCorrect": true },
+                        { "id": "c2", "text": "Bleu", "isCorrect": false },
+                        { "id": "c3", "text": "Vert", "isCorrect": true },
+                        { "id": "c4", "text": "Jaune (Étoile)", "isCorrect": true }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "quiz_logique",
+                  "name": "Quiz : Tests de Logique",
+                  "questions": [
+                    {
+                      "id": "q1",
+                      "text": "Quelle est la capitale économique du Burkina Faso ?",
+                      "type": "QuestionType.qcm",
+                      "category": "Logique (BAC)",
+                      "justification": "Bobo-Dioulasso est historiquement et économiquement reconnue comme la capitale économique du pays.",
+                      "options": [
+                        { "id": "o1", "text": "Ouagadougou", "isCorrect": false },
+                        { "id": "o2", "text": "Bobo-Dioulasso", "isCorrect": true },
+                        { "id": "o3", "text": "Koudougou", "isCorrect": false }
+                      ]
+                    },
+                    {
+                      "id": "q2",
+                      "text": "Le Burkina Faso est un pays enclavé.",
+                      "type": "QuestionType.vraiOuFaux",
+                      "category": "Logique (BAC)",
+                      "justification": "Vrai. Le Burkina Faso n'a pas d'accès direct à la mer.",
+                      "options": [
+                        { "id": "v", "text": "Vrai", "isCorrect": true },
+                        { "id": "f", "text": "Faux", "isCorrect": false }
+                      ]
+                    },
+                    {
+                      "id": "q3",
+                      "text": "Quelles sont les couleurs du drapeau burkinabè ? (Choisir toutes les bonnes réponses)",
+                      "type": "QuestionType.qcm",
+                      "category": "Logique (BAC)",
+                      "justification": "Le drapeau est composé de deux bandes horizontales (rouge et verte) avec une étoile jaune au milieu.",
+                      "options": [
+                        { "id": "c1", "text": "Rouge", "isCorrect": true },
+                        { "id": "c2", "text": "Bleu", "isCorrect": false },
+                        { "id": "c3", "text": "Vert", "isCorrect": true },
+                        { "id": "c4", "text": "Jaune (Étoile)", "isCorrect": true }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "bepc",
+          "name": "Niveau BEPC",
+          "collections": []
+        }
+      ]
+    },
+    {
+      "id": "pro",
+      "name": "Concours Professionnels",
+      "category": "ConcoursCategory.professionnel",
+      "subCategories": [
+        {
+          "id": "enam",
+          "name": "ENAM (Administration)",
+          "collections": [
+            {
+              "id": "f_janv",
+              "name": "Formation de Janvier",
+              "series": [
+                {
+                  "id": "droit_admin",
+                  "name": "Quiz 1 : Droit Administratif",
+                  "questions": [
+                    {
+                      "id": "q1",
+                      "text": "Quelle est la capitale économique du Burkina Faso ?",
+                      "type": "QuestionType.qcm",
+                      "category": "Droit Admin (ENAM)",
+                      "justification": "Bobo-Dioulasso est historiquement et économiquement reconnue comme la capitale économique du pays.",
+                      "options": [
+                        { "id": "o1", "text": "Ouagadougou", "isCorrect": false },
+                        { "id": "o2", "text": "Bobo-Dioulasso", "isCorrect": true },
+                        { "id": "o3", "text": "Koudougou", "isCorrect": false }
+                      ]
+                    },
+                    {
+                      "id": "q2",
+                      "text": "Le Burkina Faso est un pays enclavé.",
+                      "type": "QuestionType.vraiOuFaux",
+                      "category": "Droit Admin (ENAM)",
+                      "justification": "Vrai. Le Burkina Faso n'a pas d'accès direct à la mer.",
+                      "options": [
+                        { "id": "v", "text": "Vrai", "isCorrect": true },
+                        { "id": "f", "text": "Faux", "isCorrect": false }
+                      ]
+                    },
+                    {
+                      "id": "q3",
+                      "text": "Quelles sont les couleurs du drapeau burkinabè ? (Choisir toutes les bonnes réponses)",
+                      "type": "QuestionType.qcm",
+                      "category": "Droit Admin (ENAM)",
+                      "justification": "Le drapeau est composé de deux bandes horizontales (rouge et verte) avec une étoile jaune au milieu.",
+                      "options": [
+                        { "id": "c1", "text": "Rouge", "isCorrect": true },
+                        { "id": "c2", "text": "Bleu", "isCorrect": false },
+                        { "id": "c3", "text": "Vert", "isCorrect": true },
+                        { "id": "c4", "text": "Jaune (Étoile)", "isCorrect": true }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sante",
+          "name": "Secteur de la Santé",
+          "collections": []
+        }
+      ]
+    }
+  ]
+}
