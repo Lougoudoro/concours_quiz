@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../theme/app_theme.dart';
-import 'auth_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -64,7 +64,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       height: 8,
                       width: _currentPage == index ? 24 : 8,
                       decoration: BoxDecoration(
-                        color: _currentPage == index ? AppTheme.vertFaso : AppTheme.borderSubtle,
+                        color: _currentPage == index ? AppTheme.vertFaso : Theme.of(context).dividerColor,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -82,9 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           curve: Curves.easeInOut,
                         );
                       } else {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => const AuthScreen()),
-                        );
+                        Get.offNamed('/auth');
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -103,13 +101,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 if (_currentPage < _pages.length - 1)
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => const AuthScreen()),
-                      );
+                      Get.offNamed('/auth');
                     },
-                    child: const Text(
+                    child: Text(
                       'Passer',
-                      style: TextStyle(color: AppTheme.textSecondary),
+                      style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
                     ),
                   ),
                 const SizedBox(height: 10),
@@ -148,7 +144,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary,
+                  color: Theme.of(context).textTheme.bodyLarge!.color,
                 ),
           ),
           const SizedBox(height: 20),
@@ -156,7 +152,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             data.description,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppTheme.textSecondary,
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
                 ),
           ),
           const SizedBox(height: 100),

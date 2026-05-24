@@ -7,10 +7,11 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../controllers/theme_controller.dart';
 import '../models/category.dart';
 import '../theme/app_theme.dart';
-import 'quiz_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -75,6 +76,8 @@ class DashboardScreen extends StatelessWidget {
         : _categories.map((c) => c.progress).reduce((a, b) => a + b) /
             _categories.length;
 
+    final themeController = Get.find<ThemeController>();
+
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
@@ -125,13 +128,27 @@ class DashboardScreen extends StatelessWidget {
                           ],
                         ),
                         const Spacer(),
+                        // Thème Toggle
+                        Obx(() => IconButton(
+                              icon: Icon(
+                                themeController.isDarkMode
+                                    ? Icons.light_mode_outlined
+                                    : Icons.dark_mode_outlined,
+                                color: AppTheme.getTextSecondary(themeController.isDarkMode),
+                              ),
+                              onPressed: () => themeController.toggleTheme(),
+                            )),
+                        const SizedBox(width: 8),
                         // Icône de profil
-                        CircleAvatar(
-                          radius: 22,
-                          backgroundColor: AppTheme.surfaceCardActive,
-                          child: const Icon(
-                            Icons.person_outline,
-                            color: AppTheme.textSecondary,
+                        GestureDetector(
+                          onTap: () => Get.toNamed('/settings'),
+                          child: CircleAvatar(
+                            radius: 22,
+                            backgroundColor: AppTheme.getSurfaceCardActive(themeController.isDarkMode),
+                            child: const Icon(
+                              Icons.person_outline,
+                              color: Colors.white70,
+                            ),
                           ),
                         ),
                       ],
@@ -214,14 +231,10 @@ class DashboardScreen extends StatelessWidget {
                             width: double.infinity,
                             child: ElevatedButton.icon(
                               onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => const QuizScreen(
-                                      categoryId: 'enaref',
-                                      categoryName: 'Test Rapide',
-                                    ),
-                                  ),
-                                );
+                                Get.toNamed('/quiz', arguments: {
+                                  'categoryId': 'enaref',
+                                  'categoryName': 'Test Rapide',
+                                });
                               },
                               icon: const Icon(Icons.bolt, size: 20),
                               label: const Text('Lancer un test rapide'),
@@ -295,23 +308,19 @@ class _CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => QuizScreen(
-              categoryId: category.id,
-              categoryName: category.name,
-            ),
-          ),
-        );
+                    Get.toNamed('/quiz', arguments: {
+                      'categoryId': category.id,
+                      'categoryName': category.name,
+                    });
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppTheme.surfaceCard,
+          color: Theme.of(context).cardTheme.color,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: AppTheme.borderSubtle,
+            color: Theme.of(context).dividerTheme.color!,
             width: 1,
           ),
         ),
@@ -336,10 +345,10 @@ class _CategoryCard extends StatelessWidget {
             // Nom
             Text(
               category.name,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: AppTheme.textPrimary,
+                color: Theme.of(context).textTheme.bodyLarge!.color,
               ),
             ),
             const SizedBox(height: 4),
@@ -347,9 +356,9 @@ class _CategoryCard extends StatelessWidget {
             Expanded(
               child: Text(
                 category.description,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
-                  color: AppTheme.textSecondary,
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
                   height: 1.3,
                 ),
                 maxLines: 2,
@@ -366,11 +375,11 @@ class _CategoryCard extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: category.progress,
                       minHeight: 5,
-                      backgroundColor: AppTheme.borderSubtle,
+                      backgroundColor: Theme.of(context).dividerTheme.color,
                       valueColor: AlwaysStoppedAnimation<Color>(
                         category.progress > 0
                             ? AppTheme.vertFaso
-                            : AppTheme.borderSubtle,
+                            : Theme.of(context).dividerTheme.color!,
                       ),
                     ),
                   ),
@@ -378,10 +387,10 @@ class _CategoryCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   '${(category.progress * 100).toStringAsFixed(0)}%',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textSecondary,
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
                   ),
                 ),
               ],

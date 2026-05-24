@@ -8,6 +8,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../models/quiz_result.dart';
 import '../theme/app_theme.dart';
@@ -70,23 +71,23 @@ class _ResultScreenState extends State<ResultScreen>
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
+                    onTap: () => Get.back(),
                     child: Container(
                       width: 38, height: 38,
                       decoration: BoxDecoration(
-                        color: AppTheme.surfaceCardActive,
+                        color: AppTheme.getSurfaceCardActive(Theme.of(context).brightness == Brightness.dark),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.close,
-                          color: AppTheme.textSecondary, size: 20),
+                      child: Icon(Icons.close,
+                          color: Theme.of(context).textTheme.bodyMedium!.color, size: 20),
                     ),
                   ),
                   const Spacer(),
                   Text('Résultats — ${result.categoryName}',
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: AppTheme.textPrimary)),
+                          color: Theme.of(context).textTheme.bodyLarge!.color)),
                   const Spacer(),
                   const SizedBox(width: 38),
                 ],
@@ -109,13 +110,13 @@ class _ResultScreenState extends State<ResultScreen>
                     const SizedBox(height: 28),
 
                     // ─── Liste des questions (accordéon) ─────
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: Text('Correction détaillée',
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
-                              color: AppTheme.textPrimary)),
+                              color: Theme.of(context).textTheme.bodyLarge!.color)),
                     ),
                     const SizedBox(height: 14),
                     ...result.questionResults.asMap().entries.map(
@@ -131,10 +132,10 @@ class _ResultScreenState extends State<ResultScreen>
             Container(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
               decoration: BoxDecoration(
-                color: AppTheme.fondSombre,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 border: Border(
                     top: BorderSide(
-                        color: AppTheme.borderSubtle.withOpacity(0.5))),
+                        color: Theme.of(context).dividerTheme.color!.withOpacity(0.5))),
               ),
               child: SafeArea(
                 top: false,
@@ -142,7 +143,7 @@ class _ResultScreenState extends State<ResultScreen>
                   width: double.infinity,
                   height: 54,
                   child: ElevatedButton.icon(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => Get.offAllNamed('/dashboard'),
                     icon: const Icon(Icons.home_outlined, size: 20),
                     label: const Text('Retour à l\'accueil'),
                     style: ElevatedButton.styleFrom(
@@ -289,9 +290,9 @@ class _ResultScreenState extends State<ResultScreen>
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
         decoration: BoxDecoration(
-          color: AppTheme.surfaceCard,
+          color: Theme.of(context).cardTheme.color,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppTheme.borderSubtle),
+          border: Border.all(color: Theme.of(context).dividerTheme.color!),
         ),
         child: Column(
           children: [
@@ -302,8 +303,8 @@ class _ResultScreenState extends State<ResultScreen>
                     fontSize: 18, fontWeight: FontWeight.w700, color: color)),
             const SizedBox(height: 2),
             Text(label,
-                style: const TextStyle(
-                    fontSize: 11, color: AppTheme.textSecondary)),
+                style: TextStyle(
+                    fontSize: 11, color: Theme.of(context).textTheme.bodyMedium!.color)),
           ],
         ),
       ),
@@ -316,7 +317,7 @@ class _ResultScreenState extends State<ResultScreen>
       padding: const EdgeInsets.only(bottom: 8),
       child: Container(
         decoration: BoxDecoration(
-          color: AppTheme.surfaceCard,
+          color: Theme.of(context).cardTheme.color,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: isCorrect
@@ -351,20 +352,20 @@ class _ResultScreenState extends State<ResultScreen>
             ),
             title: Text(
               'Q${index + 1}. ${qr.question.text}',
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: AppTheme.textPrimary),
+                  color: Theme.of(context).textTheme.bodyLarge!.color),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            iconColor: AppTheme.textSecondary,
-            collapsedIconColor: AppTheme.textSecondary,
+            iconColor: Theme.of(context).textTheme.bodyMedium!.color,
+            collapsedIconColor: Theme.of(context).textTheme.bodyMedium!.color,
             children: [
               // Réponses de l'utilisateur
               ...qr.question.options.map((opt) {
                 final userSelected = qr.userAnswerIds.contains(opt.id);
-                Color optColor = AppTheme.textSecondary;
+                Color optColor = Theme.of(context).textTheme.bodyMedium!.color!;
                 IconData optIcon = Icons.radio_button_unchecked;
 
                 if (opt.isCorrect) {
@@ -430,9 +431,9 @@ class _ResultScreenState extends State<ResultScreen>
                     const SizedBox(height: 8),
                     Text(
                       qr.question.justification,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: AppTheme.textPrimary,
+                        color: Theme.of(context).textTheme.bodyLarge!.color,
                         height: 1.5,
                       ),
                     ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../theme/app_theme.dart';
-import 'dashboard_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -37,7 +37,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       ? 'Connectez-vous pour continuer votre apprentissage.'
                       : 'Rejoignez-nous pour sauvegarder votre progression.',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppTheme.textSecondary,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
                       ),
                 ),
                 const SizedBox(height: 48),
@@ -86,9 +86,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => const DashboardScreen()),
-                        );
+                        Get.offNamed('/dashboard');
                       }
                     },
                     child: Text(
@@ -101,10 +99,10 @@ class _AuthScreenState extends State<AuthScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      _isLogin ? 'Pas de compte ?' : 'Déjà un compte ?',
-                      style: const TextStyle(color: AppTheme.textSecondary),
-                    ),
+                      Text(
+                        _isLogin ? 'Pas de compte ?' : 'Déjà un compte ?',
+                        style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
+                      ),
                     TextButton(
                       onPressed: () {
                         setState(() {
@@ -131,10 +129,10 @@ class _AuthScreenState extends State<AuthScreen> {
       padding: const EdgeInsets.only(bottom: 8, left: 4),
       child: Text(
         label,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,
-          color: AppTheme.textPrimary,
+          color: Theme.of(context).textTheme.bodyLarge!.color,
         ),
       ),
     );
