@@ -17,7 +17,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     OnboardingData(
       title: 'Bienvenue sur ConcourQuiz BF',
       description: 'L\'application de référence pour réussir vos concours de la fonction publique burkinabè.',
-      image: 'assets/images/onboarding.png',
+      image: 'assets/images/logo.png',
     ),
     OnboardingData(
       title: 'Apprentissage Gratuit',
