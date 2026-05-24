@@ -11,6 +11,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   bool _isLogin = true;
+  bool _obscurePassword = true;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -48,7 +49,8 @@ class _AuthScreenState extends State<AuthScreen> {
                       hintText: 'Ex: Jean Traoré',
                       prefixIcon: Icon(Icons.person_outline),
                     ),
-                    validator: (value) => value == null || value.isEmpty ? 'Champ requis' : null,
+                    validator: (value) =>
+                        value == null || value.isEmpty ? 'Champ requis' : null,
                   ),
                   const SizedBox(height: 20),
                 ],
@@ -58,25 +60,38 @@ class _AuthScreenState extends State<AuthScreen> {
                     hintText: 'votre@email.com ou 70 00 00 00',
                     prefixIcon: Icon(Icons.mail_outline),
                   ),
-                  validator: (value) => value == null || value.isEmpty ? 'Champ requis' : null,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Champ requis' : null,
                 ),
                 const SizedBox(height: 20),
                 _buildLabel('Mot de passe'),
                 TextFormField(
-                  obscureText: true,
-                  decoration: const InputDecoration(
+                  obscureText: _obscurePassword,
+                  decoration: InputDecoration(
                     hintText: '••••••••',
-                    prefixIcon: Icon(Icons.lock_outline),
-                    suffixIcon: Icon(Icons.visibility_off_outlined),
+                    prefixIcon: const Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      onPressed: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
+                      ),
+                    ),
                   ),
-                  validator: (value) => value == null || value.length < 6 ? 'Min 6 caractères' : null,
+                  validator: (value) => value == null || value.length < 6
+                      ? 'Min 6 caractères'
+                      : null,
                 ),
                 if (_isLogin)
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () {},
-                      child: const Text('Mot de passe oublié ?', style: TextStyle(color: AppTheme.vertFaso)),
+                      child: const Text('Mot de passe oublié ?',
+                          style: TextStyle(color: AppTheme.vertFaso)),
                     ),
                   ),
                 const SizedBox(height: 40),
@@ -99,10 +114,11 @@ class _AuthScreenState extends State<AuthScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                      Text(
-                        _isLogin ? 'Pas de compte ?' : 'Déjà un compte ?',
-                        style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
-                      ),
+                    Text(
+                      _isLogin ? 'Pas de compte ?' : 'Déjà un compte ?',
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyMedium!.color),
+                    ),
                     TextButton(
                       onPressed: () {
                         setState(() {
@@ -111,7 +127,9 @@ class _AuthScreenState extends State<AuthScreen> {
                       },
                       child: Text(
                         _isLogin ? 'S\'inscrire' : 'Se connecter',
-                        style: const TextStyle(color: AppTheme.vertFaso, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            color: AppTheme.vertFaso,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],

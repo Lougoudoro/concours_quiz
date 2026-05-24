@@ -200,7 +200,7 @@ class _ResultScreenState extends State<ResultScreen>
                   ),
                 ),
 
-                // Bouton retour accueil
+                // Boutons d'action
                 Container(
                   padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
                   decoration: BoxDecoration(
@@ -214,20 +214,44 @@ class _ResultScreenState extends State<ResultScreen>
                                 Colors.transparent)),
                   ),
                   child: SafeArea(
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 54,
-                      child: ElevatedButton.icon(
-                        onPressed: () => Get.offAllNamed('/dashboard'),
-                        icon: const Icon(Icons.home_outlined, size: 20),
-                        label: const Text('Retour à l\'accueil'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.vertFaso,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14)),
+                    top: false,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (result.score < result.total) ...[
+                          SizedBox(
+                            width: double.infinity,
+                            height: 54,
+                            child: ElevatedButton.icon(
+                              onPressed: () => _retryErrors(result),
+                              icon: const Icon(Icons.replay, size: 20),
+                              label: const Text('Réviser mes erreurs'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppTheme.orReussite,
+                                foregroundColor: Colors.black87,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14)),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                        SizedBox(
+                          width: double.infinity,
+                          height: 54,
+                          child: ElevatedButton.icon(
+                            onPressed: () => Get.offAllNamed('/dashboard'),
+                            icon: const Icon(Icons.home_outlined, size: 20),
+                            label: const Text('Retour à l\'accueil'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppTheme.vertFaso,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14)),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ),
@@ -543,6 +567,19 @@ class _ResultScreenState extends State<ResultScreen>
       'timestamp': DateTime.now().toIso8601String(),
     });
     box.write('question_reports', reports);
+  }
+
+  void _retryErrors(QuizResult result) {
+    final wrongQuestions = result.questionResults
+        .where((qr) => !qr.isCorrect)
+        .map((qr) => qr.question)
+        .toList();
+    if (wrongQuestions.isEmpty) return;
+    Get.toNamed('/quiz', arguments: {
+      'categoryId': 'revision',
+      'categoryName': 'Révision — ${result.categoryName}',
+      'questions': wrongQuestions,
+    });
   }
 
   Widget _buildQuestionTile(int index, QuestionResult qr) {

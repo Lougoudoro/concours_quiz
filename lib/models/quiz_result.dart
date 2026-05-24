@@ -30,12 +30,14 @@ class QuizResult {
   final String categoryName;
   final List<QuestionResult> questionResults;
   final Duration totalTime;
+  final DateTime dateTime;
 
-  const QuizResult({
+  QuizResult({
     required this.categoryName,
     required this.questionResults,
     required this.totalTime,
-  });
+    DateTime? dateTime,
+  }) : dateTime = dateTime ?? DateTime.now();
 
   int get score => questionResults.where((r) => r.isCorrect).length;
   int get total => questionResults.length;
@@ -47,11 +49,14 @@ class QuizResult {
             .map((e) => QuestionResult.fromJson(e))
             .toList(),
         totalTime: Duration(seconds: json['totalSeconds'] ?? 0),
+        dateTime:
+            json['dateTime'] != null ? DateTime.parse(json['dateTime']) : null,
       );
 
   Map<String, dynamic> toJson() => {
         'categoryName': categoryName,
         'questionResults': questionResults.map((e) => e.toJson()).toList(),
         'totalSeconds': totalTime.inSeconds,
+        'dateTime': dateTime.toIso8601String(),
       };
 }

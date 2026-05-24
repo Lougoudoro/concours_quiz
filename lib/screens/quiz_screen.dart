@@ -3,8 +3,10 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../controllers/quiz_controller.dart';
+import '../controllers/bookmark_controller.dart';
 import '../models/question.dart';
 import '../theme/app_theme.dart';
+import '../widgets/shimmer_loading.dart';
 
 class QuizScreen extends StatelessWidget {
   final String categoryId;
@@ -34,9 +36,7 @@ class QuizScreen extends StatelessWidget {
       body: SafeArea(
         child: Obx(() {
           if (controller.questions.isEmpty) {
-            return const Center(
-              child: CircularProgressIndicator(color: AppTheme.vertFaso),
-            );
+            return const QuizShimmer();
           }
 
           return Column(
@@ -46,24 +46,43 @@ class QuizScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildQuestionTypeBadge(context, controller),
-                      const SizedBox(height: 14),
-                      _buildQuestionText(context, controller),
-                      const SizedBox(height: 8),
-                      if (controller.currentQuestion.type == QuestionType.qcm &&
-                          controller.currentQuestion.correctAnswerIds.length >
-                              1)
-                        _buildMultiHint(),
-                      const SizedBox(height: 4),
-                      _buildAnswerOptions(context, controller),
-                      if (controller.isValidated.value) ...[
-                        const SizedBox(height: 20),
-                        _buildJustification(context, controller)
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    switchInCurve: Curves.easeOutCubic,
+                    switchOutCurve: Curves.easeInCubic,
+                    transitionBuilder: (child, animation) {
+                      return SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.2, 0),
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: Column(
+                      key: ValueKey(controller.currentQuestion.id),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildQuestionTypeBadge(context, controller),
+                        const SizedBox(height: 14),
+                        _buildQuestionText(context, controller),
+                        const SizedBox(height: 8),
+                        if (controller.currentQuestion.type ==
+                                QuestionType.qcm &&
+                            controller.currentQuestion.correctAnswerIds.length >
+                                1)
+                          _buildMultiHint(),
+                        const SizedBox(height: 4),
+                        _buildAnswerOptions(context, controller),
+                        if (controller.isValidated.value) ...[
+                          const SizedBox(height: 20),
+                          _buildJustification(context, controller)
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -128,6 +147,30 @@ class QuizScreen extends StatelessWidget {
                       fontSize: 12,
                       fontWeight: FontWeight.w600))),
           const Spacer(),
+          Obx(() {
+            final bookmarkController = Get.find<BookmarkController>();
+            final isBookmarked =
+                bookmarkController.isBookmarked(controller.currentQuestion.id);
+            return GestureDetector(
+              onTap: () =>
+                  bookmarkController.toggle(controller.currentQuestion),
+              child: Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                    color: AppTheme.getSurfaceCardActive(
+                        Theme.of(context).brightness == Brightness.dark),
+                    borderRadius: BorderRadius.circular(10)),
+                child: Icon(
+                    isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                    color: isBookmarked
+                        ? AppTheme.orReussite
+                        : Theme.of(context).textTheme.bodyMedium!.color,
+                    size: 20),
+              ),
+            );
+          }),
+          const SizedBox(width: 8),
           Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
               decoration: BoxDecoration(

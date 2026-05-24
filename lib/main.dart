@@ -4,12 +4,15 @@ import 'package:get/get.dart';
 
 import 'package:get_storage/get_storage.dart';
 
+import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/quiz_screen.dart';
 import 'screens/result_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/history_screen.dart';
+import 'widgets/shimmer_loading.dart';
 import 'theme/app_theme.dart';
 import 'models/quiz_result.dart';
 import 'models/question.dart';
@@ -17,6 +20,7 @@ import 'models/question.dart';
 import 'controllers/theme_controller.dart';
 import 'controllers/history_controller.dart';
 import 'controllers/formation_controller.dart';
+import 'controllers/bookmark_controller.dart';
 import 'data/mock_formation_data.dart';
 
 void main() async {
@@ -26,13 +30,14 @@ void main() async {
   // Inject Controllers globally
   Get.put(ThemeController());
   Get.put(HistoryController());
+  Get.put(BookmarkController());
   final formationController = Get.put(FormationController());
-  
+
   // Initialisation avec la session active par défaut
   formationController.setSession(MockFormationData.getSession2026());
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  
+
   runApp(const ConcourQuizApp());
 }
 
@@ -50,7 +55,8 @@ class ConcourQuizApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: themeController.themeMode,
       getPages: [
-        GetPage(name: '/', page: () => const OnboardingScreen()),
+        GetPage(name: '/', page: () => const SplashScreen()),
+        GetPage(name: '/onboarding', page: () => const OnboardingScreen()),
         GetPage(name: '/auth', page: () => const AuthScreen()),
         GetPage(name: '/dashboard', page: () => const DashboardScreen()),
         GetPage(name: '/settings', page: () => const SettingsScreen()),
@@ -59,14 +65,14 @@ class ConcourQuizApp extends StatelessWidget {
           page: () {
             if (Get.arguments == null) {
               Future.microtask(() => Get.offAllNamed('/dashboard'));
-              return const Scaffold(body: Center(child: CircularProgressIndicator()));
+              return const Scaffold(body: Center(child: QuizShimmer()));
             }
             final args = Get.arguments as Map<String, dynamic>;
             return QuizScreen(
               categoryId: args['categoryId'],
               categoryName: args['categoryName'],
-              questions: args['questions'] != null 
-                  ? List<Question>.from(args['questions']) 
+              questions: args['questions'] != null
+                  ? List<Question>.from(args['questions'])
                   : null,
             );
           },
@@ -78,11 +84,12 @@ class ConcourQuizApp extends StatelessWidget {
               // Safety fallback: if arguments are lost (e.g. after hot restart),
               // go back to dashboard instead of crashing.
               Future.microtask(() => Get.offAllNamed('/dashboard'));
-              return const Scaffold(body: Center(child: CircularProgressIndicator()));
+              return const Scaffold(body: Center(child: QuizShimmer()));
             }
             return ResultScreen(quizResult: Get.arguments as QuizResult);
           },
         ),
+        GetPage(name: '/history', page: () => const HistoryScreen()),
       ],
     );
   }

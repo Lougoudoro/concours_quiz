@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import '../theme/app_theme.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -16,17 +17,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final List<OnboardingData> _pages = [
     OnboardingData(
       title: 'Bienvenue sur ConcourQuiz BF',
-      description: 'L\'application de référence pour réussir vos concours de la fonction publique burkinabè.',
+      description:
+          'L\'application de référence pour réussir vos concours de la fonction publique burkinabè.',
       image: 'assets/images/logo.png',
     ),
     OnboardingData(
       title: 'Apprentissage Gratuit',
-      description: 'Accédez à des milliers de questions QCM et Vrai/Faux gratuitement et sans limites.',
+      description:
+          'Accédez à des milliers de questions QCM et Vrai/Faux gratuitement et sans limites.',
       icon: Icons.auto_stories_outlined,
     ),
     OnboardingData(
       title: 'Suivez vos progrès',
-      description: 'Conservez votre historique et analysez vos performances pour mieux vous préparer.',
+      description:
+          'Conservez votre historique et analysez vos performances pour mieux vous préparer.',
       icon: Icons.insights_outlined,
     ),
   ];
@@ -64,7 +68,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       height: 8,
                       width: _currentPage == index ? 24 : 8,
                       decoration: BoxDecoration(
-                        color: _currentPage == index ? AppTheme.vertFaso : Theme.of(context).dividerColor,
+                        color: _currentPage == index
+                            ? AppTheme.vertFaso
+                            : Theme.of(context).dividerColor,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -82,6 +88,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           curve: Curves.easeInOut,
                         );
                       } else {
+                        GetStorage().write('onboarding_done', true);
                         Get.offNamed('/auth');
                       }
                     },
@@ -92,8 +99,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                     ),
                     child: Text(
-                      _currentPage == _pages.length - 1 ? 'Commencer' : 'Suivant',
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                      _currentPage == _pages.length - 1
+                          ? 'Commencer'
+                          : 'Suivant',
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     ),
                   ),
                 ),
@@ -101,11 +113,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 if (_currentPage < _pages.length - 1)
                   TextButton(
                     onPressed: () {
+                      GetStorage().write('onboarding_done', true);
                       Get.offNamed('/auth');
                     },
                     child: Text(
                       'Passer',
-                      style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyMedium!.color),
                     ),
                   ),
                 const SizedBox(height: 10),
@@ -129,7 +143,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               height: 300,
             )
           else if (data.icon != null)
-             Container(
+            Container(
               height: 200,
               width: 200,
               decoration: BoxDecoration(

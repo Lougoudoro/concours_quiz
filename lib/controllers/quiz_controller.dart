@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import '../models/question.dart';
 import '../models/quiz_result.dart';
 import '../data/sample_questions.dart';
 import 'history_controller.dart';
 
-class QuizController extends GetxController {
+class QuizController extends GetxController with WidgetsBindingObserver {
   final String categoryId;
   final String categoryName;
   final List<Question>? initialQuestions;
@@ -23,7 +24,7 @@ class QuizController extends GetxController {
   var selectedAnswerIds = <String>{}.obs;
   var isValidated = false.obs;
   var results = <QuestionResult>[].obs;
-  
+
   // Timer state
   var elapsedSeconds = 0.obs;
   Timer? _timer;
@@ -32,6 +33,7 @@ class QuizController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    WidgetsBinding.instance.addObserver(this);
     loadQuestions();
     startQuiz();
   }
@@ -51,6 +53,33 @@ class QuizController extends GetxController {
     });
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _pauseTimer();
+    } else if (state == AppLifecycleState.resumed) {
+      _resumeTimer();
+    }
+  }
+
+  void _pauseTimer() {
+    if (stopwatch.isRunning) {
+      stopwatch.stop();
+      _timer?.cancel();
+      _timer = null;
+    }
+  }
+
+  void _resumeTimer() {
+    if (!stopwatch.isRunning && !isValidated.value && !isLastQuestion) {
+      stopwatch.start();
+      _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+        elapsedSeconds.value = stopwatch.elapsed.inSeconds;
+      });
+    }
+  }
+
   String get elapsedFormatted {
     final seconds = elapsedSeconds.value;
     final d = Duration(seconds: seconds);
@@ -61,7 +90,8 @@ class QuizController extends GetxController {
 
   Question get currentQuestion => questions[currentIndex.value];
   bool get isLastQuestion => currentIndex.value == questions.length - 1;
-  double get progressValue => (currentIndex.value + 1) / (questions.isEmpty ? 1 : questions.length);
+  double get progressValue =>
+      (currentIndex.value + 1) / (questions.isEmpty ? 1 : questions.length);
 
   void toggleAnswer(String answerId) {
     if (isValidated.value) return;
@@ -83,7 +113,7 @@ class QuizController extends GetxController {
 
     isValidated.value = true;
     final isCorrect = _checkIsCorrect();
-    
+
     // Feedback haptique
     if (isCorrect) {
       HapticFeedback.lightImpact();
@@ -107,7 +137,7 @@ class QuizController extends GetxController {
     if (isLastQuestion) {
       stopwatch.stop();
       _timer?.cancel();
-      
+
       final result = QuizResult(
         categoryName: categoryName,
         questionResults: results.toList(),
@@ -132,6 +162,7 @@ class QuizController extends GetxController {
 
   @override
   void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
     _timer?.cancel();
     stopwatch.stop();
     super.onClose();
