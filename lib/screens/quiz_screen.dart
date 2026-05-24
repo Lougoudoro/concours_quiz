@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../controllers/quiz_controller.dart';
 import '../models/question.dart';
@@ -19,13 +20,15 @@ class QuizScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // We use Get.find if it's already there, or Get.put. 
+    // We use Get.find if it's already there, or Get.put.
     // Best is to use a GetView or initialize in the route.
-    final controller = Get.put(QuizController(
-      categoryId: categoryId,
-      categoryName: categoryName,
-      initialQuestions: questions,
-    ), tag: categoryId); // Use tag to allow multiple instances if needed
+    final controller = Get.put(
+        QuizController(
+          categoryId: categoryId,
+          categoryName: categoryName,
+          initialQuestions: questions,
+        ),
+        tag: categoryId); // Use tag to allow multiple instances if needed
 
     return Scaffold(
       body: SafeArea(
@@ -35,7 +38,7 @@ class QuizScreen extends StatelessWidget {
               child: CircularProgressIndicator(color: AppTheme.vertFaso),
             );
           }
-          
+
           return Column(
             children: [
               _buildHeader(context, controller),
@@ -51,7 +54,8 @@ class QuizScreen extends StatelessWidget {
                       _buildQuestionText(context, controller),
                       const SizedBox(height: 8),
                       if (controller.currentQuestion.type == QuestionType.qcm &&
-                          controller.currentQuestion.correctAnswerIds.length > 1)
+                          controller.currentQuestion.correctAnswerIds.length >
+                              1)
                         _buildMultiHint(),
                       const SizedBox(height: 4),
                       _buildAnswerOptions(context, controller),
@@ -75,7 +79,8 @@ class QuizScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(children: [
-        Icon(Icons.info_outline, size: 16, color: AppTheme.orReussite.withOpacity(0.8)),
+        Icon(Icons.info_outline,
+            size: 16, color: AppTheme.orReussite.withOpacity(0.8)),
         const SizedBox(width: 6),
         Text('Plusieurs réponses possibles',
             style: TextStyle(
@@ -94,7 +99,8 @@ class QuizScreen extends StatelessWidget {
           color: Theme.of(context).scaffoldBackgroundColor,
           border: Border(
               bottom: BorderSide(
-                  color: Theme.of(context).dividerTheme.color!.withOpacity(0.5)))),
+                  color:
+                      Theme.of(context).dividerTheme.color!.withOpacity(0.5)))),
       child: Column(children: [
         Row(children: [
           GestureDetector(
@@ -103,10 +109,12 @@ class QuizScreen extends StatelessWidget {
                 width: 38,
                 height: 38,
                 decoration: BoxDecoration(
-                    color: AppTheme.getSurfaceCardActive(Theme.of(context).brightness == Brightness.dark),
+                    color: AppTheme.getSurfaceCardActive(
+                        Theme.of(context).brightness == Brightness.dark),
                     borderRadius: BorderRadius.circular(10)),
                 child: Icon(Icons.close,
-                    color: Theme.of(context).textTheme.bodyMedium!.color, size: 20)),
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
+                    size: 20)),
           ),
           const Spacer(),
           Container(
@@ -123,7 +131,8 @@ class QuizScreen extends StatelessWidget {
           Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
               decoration: BoxDecoration(
-                  color: AppTheme.getSurfaceCardActive(Theme.of(context).brightness == Brightness.dark),
+                  color: AppTheme.getSurfaceCardActive(
+                      Theme.of(context).brightness == Brightness.dark),
                   borderRadius: BorderRadius.circular(20)),
               child: Row(children: [
                 const Icon(Icons.timer_outlined,
@@ -147,7 +156,8 @@ class QuizScreen extends StatelessWidget {
           const SizedBox(width: 4),
           Text('/ ${controller.questions.length}',
               style: TextStyle(
-                  fontSize: 13, color: Theme.of(context).textTheme.bodyMedium!.color)),
+                  fontSize: 13,
+                  color: Theme.of(context).textTheme.bodyMedium!.color)),
           const Spacer(),
           Text('${(controller.progressValue * 100).toStringAsFixed(0)}%',
               style: TextStyle(
@@ -168,7 +178,8 @@ class QuizScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuestionTypeBadge(BuildContext context, QuizController controller) {
+  Widget _buildQuestionTypeBadge(
+      BuildContext context, QuizController controller) {
     final isVF = controller.currentQuestion.type == QuestionType.vraiOuFaux;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -227,7 +238,9 @@ class QuizScreen extends StatelessWidget {
             trailingIcon = Icons.check_circle_outline;
             trailingIconColor = AppTheme.correctGreen.withOpacity(0.6);
           } else {
-            borderColor = Theme.of(context).brightness == Brightness.dark ? AppTheme.neutralGrey : AppTheme.neutralGreyClair;
+            borderColor = Theme.of(context).brightness == Brightness.dark
+                ? AppTheme.neutralGrey
+                : AppTheme.neutralGreyClair;
             bgColor = Theme.of(context).cardTheme.color!;
           }
         } else if (isSelected) {
@@ -274,8 +287,14 @@ class QuizScreen extends StatelessWidget {
                                         ? AppTheme.correctGreen
                                         : isSelected
                                             ? AppTheme.incorrectRed
-                                            : Theme.of(context).textTheme.bodyMedium!.color)
-                                    : Theme.of(context).textTheme.bodyLarge!.color,
+                                            : Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color)
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color,
                                 height: 1.4))),
                     if (trailingIcon != null)
                       Padding(
@@ -292,15 +311,17 @@ class QuizScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCheckbox(BuildContext context,
-      QuizController controller, AnswerOption option, bool isSelected) {
+  Widget _buildCheckbox(BuildContext context, QuizController controller,
+      AnswerOption option, bool isSelected) {
     Color checkboxColor;
     if (controller.isValidated.value) {
       checkboxColor = option.isCorrect
           ? AppTheme.correctGreen
           : isSelected
               ? AppTheme.incorrectRed
-              : (Theme.of(context).brightness == Brightness.dark ? AppTheme.neutralGrey : AppTheme.neutralGreyClair);
+              : (Theme.of(context).brightness == Brightness.dark
+                  ? AppTheme.neutralGrey
+                  : AppTheme.neutralGreyClair);
     } else {
       checkboxColor = isSelected ? AppTheme.vertFaso : Colors.transparent;
     }
@@ -316,7 +337,11 @@ class QuizScreen extends StatelessWidget {
           border: Border.all(
               color: showCheck
                   ? checkboxColor
-                  : Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.5),
+                  : Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .color!
+                      .withOpacity(0.5),
               width: 2)),
       child: showCheck
           ? Icon(
@@ -329,7 +354,8 @@ class QuizScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildVraiFauxOptions(BuildContext context, QuizController controller) {
+  Widget _buildVraiFauxOptions(
+      BuildContext context, QuizController controller) {
     return Row(
       children: controller.currentQuestion.options.map((option) {
         final isSelected = controller.selectedAnswerIds.contains(option.id);
@@ -379,8 +405,12 @@ class QuizScreen extends StatelessWidget {
                             ? 2.5
                             : 1.5)),
                 child: Column(children: [
-                  Icon(isVrai ? Icons.check_circle_outline : Icons.cancel_outlined,
-                      color: iconColor, size: 40),
+                  Icon(
+                      isVrai
+                          ? Icons.check_circle_outline
+                          : Icons.cancel_outlined,
+                      color: iconColor,
+                      size: 40),
                   const SizedBox(height: 10),
                   Text(option.text,
                       style: TextStyle(
@@ -406,11 +436,13 @@ class QuizScreen extends StatelessWidget {
                                 ? (isVrai
                                     ? AppTheme.vertFaso
                                     : AppTheme.rougeTerre)
-                                : Theme.of(context).textTheme.bodyMedium!.color!,
+                                : Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color!,
                             width: 2)),
                     child: isSelected
-                        ? const Icon(Icons.check,
-                            color: Colors.white, size: 16)
+                        ? const Icon(Icons.check, color: Colors.white, size: 16)
                         : null,
                   ),
                 ]),
@@ -444,9 +476,152 @@ class QuizScreen extends StatelessWidget {
         const SizedBox(height: 10),
         Text(controller.currentQuestion.justification,
             style: TextStyle(
-                fontSize: 14, color: Theme.of(context).textTheme.bodyLarge!.color, height: 1.55)),
+                fontSize: 14,
+                color: Theme.of(context).textTheme.bodyLarge!.color,
+                height: 1.55)),
+        const SizedBox(height: 12),
+        _buildReportButton(context, controller.currentQuestion),
       ]),
     );
+  }
+
+  Widget _buildReportButton(BuildContext context, Question question) {
+    return GestureDetector(
+      onTap: () => _showReportDialog(context, question),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.flag_outlined,
+              size: 13,
+              color: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .color!
+                  .withOpacity(0.5)),
+          const SizedBox(width: 4),
+          Text('Signaler une erreur',
+              style: TextStyle(
+                  fontSize: 11,
+                  color: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .color!
+                      .withOpacity(0.5),
+                  decoration: TextDecoration.underline,
+                  decorationColor: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .color!
+                      .withOpacity(0.5))),
+        ],
+      ),
+    );
+  }
+
+  void _showReportDialog(BuildContext context, Question question) {
+    final messageController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Theme.of(context).cardTheme.color,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Row(children: [
+          Icon(Icons.flag, color: AppTheme.rougeTerre, size: 20),
+          SizedBox(width: 8),
+          Expanded(
+              child: Text('Signaler une erreur',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600))),
+        ]),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(question.text,
+                  style: TextStyle(
+                      fontSize: 13,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      height: 1.4)),
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppTheme.orReussite.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(question.justification,
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
+                        fontStyle: FontStyle.italic,
+                        height: 1.4)),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: messageController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  hintText: 'Décris l\'erreur...',
+                  hintStyle: TextStyle(
+                      fontSize: 13,
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .color!
+                          .withOpacity(0.5)),
+                  filled: true,
+                  fillColor: Theme.of(context).cardTheme.color,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                        color: Theme.of(context).dividerTheme.color!),
+                  ),
+                  contentPadding: const EdgeInsets.all(12),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('Annuler',
+                  style: TextStyle(color: AppTheme.neutralGrey))),
+          TextButton(
+              onPressed: () {
+                _saveReport(question, messageController.text.trim());
+                Get.back();
+                Get.snackbar(
+                  'Signalement envoyé',
+                  'Merci, nous examinerons cette question.',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: AppTheme.vertFaso,
+                  colorText: Colors.white,
+                  duration: const Duration(seconds: 3),
+                );
+              },
+              child: const Text('Envoyer',
+                  style: TextStyle(
+                      color: AppTheme.rougeTerre,
+                      fontWeight: FontWeight.w600))),
+        ],
+      ),
+    );
+  }
+
+  void _saveReport(Question question, String message) {
+    final box = GetStorage();
+    final reports = box.read<List>('question_reports') ?? [];
+    reports.add({
+      'question_id': question.id,
+      'question_text': question.text,
+      'justification': question.justification,
+      'message': message,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+    box.write('question_reports', reports);
   }
 
   Widget _buildFooter(BuildContext context, QuizController controller) {
@@ -456,7 +631,8 @@ class QuizScreen extends StatelessWidget {
           color: Theme.of(context).scaffoldBackgroundColor,
           border: Border(
               top: BorderSide(
-                  color: Theme.of(context).dividerTheme.color!.withOpacity(0.5)))),
+                  color:
+                      Theme.of(context).dividerTheme.color!.withOpacity(0.5)))),
       child: SafeArea(
         top: false,
         child: SizedBox(
@@ -466,7 +642,9 @@ class QuizScreen extends StatelessWidget {
               ? ElevatedButton.icon(
                   onPressed: controller.nextQuestion,
                   icon: Icon(
-                      controller.isLastQuestion ? Icons.emoji_events : Icons.arrow_forward,
+                      controller.isLastQuestion
+                          ? Icons.emoji_events
+                          : Icons.arrow_forward,
                       size: 20),
                   label: Text(controller.isLastQuestion
                       ? 'Voir les résultats'
@@ -492,8 +670,12 @@ class QuizScreen extends StatelessWidget {
                           ? AppTheme.neutralGrey
                           : AppTheme.vertFaso,
                       foregroundColor: Colors.white,
-                      disabledBackgroundColor: Theme.of(context).brightness == Brightness.dark ? AppTheme.neutralGrey : AppTheme.neutralGreyClair,
-                      disabledForegroundColor: Theme.of(context).textTheme.bodyMedium!.color,
+                      disabledBackgroundColor:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? AppTheme.neutralGrey
+                              : AppTheme.neutralGreyClair,
+                      disabledForegroundColor:
+                          Theme.of(context).textTheme.bodyMedium!.color,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14))),
                 ),
@@ -509,19 +691,23 @@ class QuizScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).cardTheme.color,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text('Quitter le test ?',
-            style: TextStyle(color: Theme.of(context).textTheme.bodyLarge!.color)),
+            style:
+                TextStyle(color: Theme.of(context).textTheme.bodyLarge!.color)),
         content: Text('Ta progression pour ce test sera perdue.',
-            style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color)),
+            style: TextStyle(
+                color: Theme.of(context).textTheme.bodyMedium!.color)),
         actions: [
           TextButton(
               onPressed: () => Get.back(),
-              child: const Text('Continuer', style: TextStyle(color: AppTheme.vertFaso))),
+              child: const Text('Continuer',
+                  style: TextStyle(color: AppTheme.vertFaso))),
           TextButton(
               onPressed: () {
                 Get.back();
                 Get.back();
               },
-              child: const Text('Quitter', style: TextStyle(color: AppTheme.rougeTerre))),
+              child: const Text('Quitter',
+                  style: TextStyle(color: AppTheme.rougeTerre))),
         ],
       ),
     );
