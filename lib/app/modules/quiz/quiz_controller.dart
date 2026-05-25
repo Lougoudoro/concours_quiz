@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:cncours_quiz/data/sample_questions.dart';
 import 'package:cncours_quiz/app/data/models/question.dart';
 import 'package:cncours_quiz/app/data/models/quiz_result.dart';
@@ -151,7 +152,7 @@ class QuizController extends GetxController with WidgetsBindingObserver {
         // Ignorer si pas injecté (ex: tests)
       }
 
-      Get.offNamed('/results', arguments: result);
+      Get.offNamed(Routes.RESULTS , arguments: result);
       return;
     }
 

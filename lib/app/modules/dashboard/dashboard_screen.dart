@@ -1,3 +1,4 @@
+import 'package:cncours_quiz/app/core/controllers/auth_controller.dart';
 import 'package:cncours_quiz/app/data/models/category.dart';
 import 'package:cncours_quiz/app/data/models/formation.dart';
 import 'package:cncours_quiz/app/data/models/question.dart';
@@ -65,6 +66,7 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
     final formationController = Get.find<FormationController>();
+    final authController = Get.find<AuthController>();
 
     final globalProgress =
         _categories.map((c) => c.progress).reduce((a, b) => a + b) /
@@ -116,7 +118,7 @@ class DashboardScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Salut, Candidat 👋',
+                      'Salut, ${authController.authResource.value?.name} 👋🏿',
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall

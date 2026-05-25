@@ -1,7 +1,8 @@
+import 'package:cncours_quiz/app/data/models/token.dart';
+import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -36,9 +37,15 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> _navigateAfterDelay() async {
     await Future.delayed(const Duration(milliseconds: 2200));
     if (!mounted) return;
+
+    if (Token.get().isNotEmpty) {
+      Get.offNamed(Routes.DASHBOARD );
+      return;
+    }
+
     final box = GetStorage();
     final onboardingDone = box.read<bool>('onboarding_done') ?? false;
-    Get.offNamed(onboardingDone ? '/auth' : '/onboarding');
+    Get.offNamed(onboardingDone ? Routes.AUTH : Routes.ONBOARDING);
   }
 
   @override

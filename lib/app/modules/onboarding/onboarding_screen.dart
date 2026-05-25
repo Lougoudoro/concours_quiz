@@ -1,3 +1,4 @@
+import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -89,7 +90,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         );
                       } else {
                         GetStorage().write('onboarding_done', true);
-                        Get.offNamed('/auth');
+                        Get.offNamed(Routes.AUTH );
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -114,7 +115,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   TextButton(
                     onPressed: () {
                       GetStorage().write('onboarding_done', true);
-                      Get.offNamed('/auth');
+                      Get.offNamed(Routes.AUTH );
                     },
                     child: Text(
                       'Passer',

@@ -1,3 +1,5 @@
+import 'package:cncours_quiz/app/core/controllers/auth_controller.dart';
+import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/controllers/theme_controller.dart';
@@ -9,6 +11,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
+    final authController = Get.find<AuthController>();
     final isDark = themeController.isDarkMode;
 
     return Scaffold(
@@ -19,9 +22,9 @@ class SettingsScreen extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
       ),
-      body: SingleChildScrollView(
+      body:SingleChildScrollView(
         padding: const EdgeInsets.all(20),
-        child: Column(
+        child:Obx(() =>  Column(
           children: [
             // ─── Header Profil ──────────────────────────────────────
             const SizedBox(height: 10),
@@ -50,11 +53,11 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Candidat Faso',
+              "${authController.authResource.value?.name}",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             Text(
-              'candidat.bf@example.com',
+              "${authController.authResource.value?.email}",
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 32),
@@ -67,11 +70,11 @@ class SettingsScreen extends StatelessWidget {
               icon: Icons.dark_mode_outlined,
               title: 'Mode Sombre',
               subtitle: 'Basculer entre thème clair et sombre',
-              trailing: Obx(() => Switch(
+              trailing:Switch(
                     value: themeController.isDarkMode,
                     onChanged: (val) => themeController.toggleTheme(),
                     activeColor: AppTheme.vertFaso,
-                  )),
+                  ),
             ),
             const SizedBox(height: 12),
             _buildSettingCard(
@@ -127,7 +130,7 @@ class SettingsScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
-                onPressed: () => Get.offAllNamed('/auth'),
+                onPressed: () => authController.logout(),
                 icon: const Icon(Icons.logout),
                 label: const Text('Se déconnecter'),
                 style: OutlinedButton.styleFrom(
@@ -140,7 +143,9 @@ class SettingsScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
+      
+      )
+      )
     );
   }
 
