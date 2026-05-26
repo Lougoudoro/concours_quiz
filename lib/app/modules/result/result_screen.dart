@@ -1,4 +1,4 @@
-import 'package:cncours_quiz/app/data/models/question.dart';
+import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/data/models/quiz_result.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
@@ -427,7 +427,7 @@ class _ResultScreenState extends State<ResultScreen>
     );
   }
 
-  Widget _buildReportButton(BuildContext context, Question question) {
+  Widget _buildReportButton(BuildContext context, QuestionResource question) {
     return GestureDetector(
       onTap: () => _showReportDialog(context, question),
       child: Row(
@@ -463,7 +463,7 @@ class _ResultScreenState extends State<ResultScreen>
     );
   }
 
-  void _showReportDialog(BuildContext context, Question question) {
+  void _showReportDialog(BuildContext context, QuestionResource question) {
     final messageController = TextEditingController();
     showDialog(
       context: context,
@@ -557,7 +557,7 @@ class _ResultScreenState extends State<ResultScreen>
     );
   }
 
-  void _saveReport(Question question, String message) {
+  void _saveReport(QuestionResource question, String message) {
     final box = GetStorage();
     final reports = box.read<List>('question_reports') ?? [];
     reports.add({
@@ -656,7 +656,7 @@ class _ResultScreenState extends State<ResultScreen>
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          opt.text,
+                          opt.content,
                           style: TextStyle(
                             fontSize: 13,
                             color: optColor,

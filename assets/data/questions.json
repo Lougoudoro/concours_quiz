@@ -1,249 +1,249 @@
 {
   "enaref": [
     {
-      "id": "enaref_01",
+      "id": 1,
       "text": "Quels sont les symboles de la République du Burkina Faso inscrits dans la Constitution ?",
-      "type": "QuestionType.qcm",
-      "category": "ENAREF",
+      "type_value": "qcm",
+      "type_label": "QCM",
       "justification": "Selon la Constitution du Burkina Faso (Titre I, Art. 34), les symboles de la République sont : le drapeau national, l'hymne national « Une Seule Nuit » et les armoiries. Le balafon, bien que patrimoine culturel, n'est pas un symbole constitutionnel.",
       "options": [
-        { "id": "a", "text": "Le drapeau national (vert, rouge, étoile jaune)", "isCorrect": true },
-        { "id": "b", "text": "L'hymne national « Une Seule Nuit »", "isCorrect": true },
-        { "id": "c", "text": "Les armoiries", "isCorrect": true },
-        { "id": "d", "text": "Le balafon impérial de Bobo-Dioulasso", "isCorrect": false }
+        { "id": 1, "text": "Le drapeau national (vert, rouge, étoile jaune)", "is_correct": true },
+        { "id": 2, "text": "L'hymne national « Une Seule Nuit »", "is_correct": true },
+        { "id": 3, "text": "Les armoiries", "is_correct": true },
+        { "id": 4, "text": "Le balafon impérial de Bobo-Dioulasso", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_02",
+      "id": 2,
       "text": "En quelle année la Haute-Volta a-t-elle été rebaptisée « Burkina Faso » ?",
-      "type": "QuestionType.qcm",
-      "category": "ENAREF",
+      "type_value": "qcm",
+      "type_label": "QCM",
       "justification": "Le 4 août 1984, sous la présidence de Thomas Sankara, la Haute-Volta a été officiellement rebaptisée « Burkina Faso », signifiant « Pays des Hommes Intègres ».",
       "options": [
-        { "id": "a", "text": "1960", "isCorrect": false },
-        { "id": "b", "text": "1984", "isCorrect": true },
-        { "id": "c", "text": "1987", "isCorrect": false },
-        { "id": "d", "text": "1991", "isCorrect": false }
+        { "id": 1, "text": "1960", "is_correct": false },
+        { "id": 2, "text": "1984", "is_correct": true },
+        { "id": 3, "text": "1987", "is_correct": false },
+        { "id": 4, "text": "1991", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_03",
+      "id": 3,
       "text": "Quelles villes sont des chefs-lieux de région au Burkina Faso ?",
-      "type": "QuestionType.qcm",
-      "category": "ENAREF",
+      "type_value": "qcm",
+      "type_label": "QCM",
       "justification": "Le Burkina Faso compte 13 régions. Ouagadougou, Bobo-Dioulasso et Koudougou sont bien des chefs-lieux de région. Abidjan est la capitale économique de la Côte d'Ivoire.",
       "options": [
-        { "id": "a", "text": "Ouagadougou (Centre)", "isCorrect": true },
-        { "id": "b", "text": "Bobo-Dioulasso (Hauts-Bassins)", "isCorrect": true },
-        { "id": "c", "text": "Koudougou (Centre-Ouest)", "isCorrect": true },
-        { "id": "d", "text": "Abidjan (Lagunes)", "isCorrect": false }
+        { "id": 1, "text": "Ouagadougou (Centre)", "is_correct": true },
+        { "id": 2, "text": "Bobo-Dioulasso (Hauts-Bassins)", "is_correct": true },
+        { "id": 3, "text": "Koudougou (Centre-Ouest)", "is_correct": true },
+        { "id": 4, "text": "Abidjan (Lagunes)", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_04",
+      "id": 4,
       "text": "Quelles institutions font partie du pouvoir judiciaire au Burkina Faso ?",
-      "type": "QuestionType.qcm",
-      "category": "ENAREF",
+      "type_value": "qcm",
+      "type_label": "QCM",
       "justification": "Au Burkina Faso, le pouvoir judiciaire comprend le Conseil constitutionnel, la Cour de cassation et le Conseil d'État. L'Assemblée nationale relève du pouvoir législatif.",
       "options": [
-        { "id": "a", "text": "Le Conseil constitutionnel", "isCorrect": true },
-        { "id": "b", "text": "La Cour de cassation", "isCorrect": true },
-        { "id": "c", "text": "Le Conseil d'État", "isCorrect": true },
-        { "id": "d", "text": "L'Assemblée nationale", "isCorrect": false }
+        { "id": 1, "text": "Le Conseil constitutionnel", "is_correct": true },
+        { "id": 2, "text": "La Cour de cassation", "is_correct": true },
+        { "id": 3, "text": "Le Conseil d'État", "is_correct": true },
+        { "id": 4, "text": "L'Assemblée nationale", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_05",
+      "id": 5,
       "text": "Le Burkina Faso est un État unitaire décentralisé.",
-      "type": "QuestionType.vraiOuFaux",
-      "category": "ENAREF",
+      "type_value": "vrai_ou_faux",
+      "type_label": "Vrai ou Faux",
       "justification": "Selon la Constitution (Art. 31), le Burkina Faso est un État démocratique, unitaire et laïc. La décentralisation est un principe organisationnel consacré avec les collectivités territoriales (régions et communes).",
       "options": [
-        { "id": "vrai", "text": "Vrai", "isCorrect": true },
-        { "id": "faux", "text": "Faux", "isCorrect": false }
+        { "id": 1, "text": "Vrai", "is_correct": true },
+        { "id": 2, "text": "Faux", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_06",
+      "id": 6,
       "text": "Le FCFA utilisé au Burkina Faso est émis par la BCEAO (Banque Centrale des États de l'Afrique de l'Ouest).",
-      "type": "QuestionType.vraiOuFaux",
-      "category": "ENAREF",
+      "type_value": "vrai_ou_faux",
+      "type_label": "Vrai ou Faux",
       "justification": "Le franc CFA (XOF) utilisé au Burkina Faso est bien émis par la BCEAO, dont le siège est à Dakar. Le Burkina Faso est membre de l'UEMOA.",
       "options": [
-        { "id": "vrai", "text": "Vrai", "isCorrect": true },
-        { "id": "faux", "text": "Faux", "isCorrect": false }
+        { "id": 1, "text": "Vrai", "is_correct": true },
+        { "id": 2, "text": "Faux", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_07",
+      "id": 7,
       "text": "Quels fleuves traversent le territoire du Burkina Faso ?",
-      "type": "QuestionType.qcm",
-      "category": "ENAREF",
+      "type_value": "qcm",
+      "type_label": "QCM",
       "justification": "Les trois principaux cours d'eau du Burkina Faso sont le Mouhoun (ex-Volta Noire), le Nakambé (ex-Volta Blanche) et le Nazinon (ex-Volta Rouge). Le Niger ne traverse pas le Burkina, seul un petit affluent y passe brièvement.",
       "options": [
-        { "id": "a", "text": "Le Mouhoun (Volta Noire)", "isCorrect": true },
-        { "id": "b", "text": "Le Nakambé (Volta Blanche)", "isCorrect": true },
-        { "id": "c", "text": "Le Nazinon (Volta Rouge)", "isCorrect": true },
-        { "id": "d", "text": "Le fleuve Niger (cours principal)", "isCorrect": false }
+        { "id": 1, "text": "Le Mouhoun (Volta Noire)", "is_correct": true },
+        { "id": 2, "text": "Le Nakambé (Volta Blanche)", "is_correct": true },
+        { "id": 3, "text": "Le Nazinon (Volta Rouge)", "is_correct": true },
+        { "id": 4, "text": "Le fleuve Niger (cours principal)", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_08",
+      "id": 8,
       "text": "Quelle est la superficie approximative du Burkina Faso ?",
-      "type": "QuestionType.qcm",
-      "category": "ENAREF",
+      "type_value": "qcm",
+      "type_label": "QCM",
       "justification": "Le Burkina Faso s'étend sur environ 274 200 km². C'est un pays sahélien enclavé en Afrique de l'Ouest.",
       "options": [
-        { "id": "a", "text": "274 200 km²", "isCorrect": true },
-        { "id": "b", "text": "322 460 km²", "isCorrect": false },
-        { "id": "c", "text": "196 720 km²", "isCorrect": false },
-        { "id": "d", "text": "475 440 km²", "isCorrect": false }
+        { "id": 1, "text": "274 200 km²", "is_correct": true },
+        { "id": 2, "text": "322 460 km²", "is_correct": false },
+        { "id": 3, "text": "196 720 km²", "is_correct": false },
+        { "id": 4, "text": "475 440 km²", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_09",
+      "id": 9,
       "text": "Au Burkina Faso, la loi de finances est votée chaque année par l'Assemblée nationale avant le 31 décembre.",
-      "type": "QuestionType.vraiOuFaux",
-      "category": "ENAREF",
+      "type_value": "vrai_ou_faux",
+      "type_label": "Vrai ou Faux",
       "justification": "En principe, la loi de finances doit être votée avant le 31 décembre pour l'exercice budgétaire suivant (Art. 103 de la Constitution). En pratique, il peut y avoir des régimes d'exception.",
       "options": [
-        { "id": "vrai", "text": "Vrai", "isCorrect": true },
-        { "id": "faux", "text": "Faux", "isCorrect": false }
+        { "id": 1, "text": "Vrai", "is_correct": true },
+        { "id": 2, "text": "Faux", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_10",
+      "id": 10,
       "text": "Parmi les éléments suivants, lesquels sont des principes budgétaires fondamentaux au Burkina Faso ?",
-      "type": "QuestionType.qcm",
-      "category": "ENAREF",
+      "type_value": "qcm",
+      "type_label": "QCM",
       "justification": "Les principes budgétaires fondamentaux reconnus sont : annualité, universalité, unité, spécialité et sincérité. La « confidentialité » n'est pas un principe budgétaire ; au contraire, la transparence est encouragée.",
       "options": [
-        { "id": "a", "text": "Le principe d'annualité", "isCorrect": true },
-        { "id": "b", "text": "Le principe d'universalité", "isCorrect": true },
-        { "id": "c", "text": "Le principe de spécialité", "isCorrect": true },
-        { "id": "d", "text": "Le principe de confidentialité", "isCorrect": false }
+        { "id": 1, "text": "Le principe d'annualité", "is_correct": true },
+        { "id": 2, "text": "Le principe d'universalité", "is_correct": true },
+        { "id": 3, "text": "Le principe de spécialité", "is_correct": true },
+        { "id": 4, "text": "Le principe de confidentialité", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_11",
+      "id": 11,
       "text": "Qui nomme le Premier ministre au Burkina Faso selon la Constitution de 1991 ?",
-      "type": "QuestionType.qcm",
-      "category": "ENAREF",
+      "type_value": "qcm",
+      "type_label": "QCM",
       "justification": "Selon l'article 46 de la Constitution du 2 juin 1991, le Président du Faso nomme le Premier ministre et met fin à ses fonctions.",
       "options": [
-        { "id": "a", "text": "Le Président du Faso", "isCorrect": true },
-        { "id": "b", "text": "L'Assemblée nationale", "isCorrect": false },
-        { "id": "c", "text": "Le Conseil constitutionnel", "isCorrect": false },
-        { "id": "d", "text": "Le peuple par référendum", "isCorrect": false }
+        { "id": 1, "text": "Le Président du Faso", "is_correct": true },
+        { "id": 2, "text": "L'Assemblée nationale", "is_correct": false },
+        { "id": 3, "text": "Le Conseil constitutionnel", "is_correct": false },
+        { "id": 4, "text": "Le peuple par référendum", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_12",
+      "id": 12,
       "text": "Le Burkina Faso est frontalier de combien de pays ?",
-      "type": "QuestionType.qcm",
-      "category": "ENAREF",
+      "type_value": "qcm",
+      "type_label": "QCM",
       "justification": "Le Burkina Faso partage ses frontières avec 6 pays : le Mali (nord), le Niger (est), le Bénin (sud-est), le Togo (sud), le Ghana (sud) et la Côte d'Ivoire (sud-ouest).",
       "options": [
-        { "id": "a", "text": "4 pays", "isCorrect": false },
-        { "id": "b", "text": "6 pays", "isCorrect": true },
-        { "id": "c", "text": "5 pays", "isCorrect": false },
-        { "id": "d", "text": "7 pays", "isCorrect": false }
+        { "id": 1, "text": "4 pays", "is_correct": false },
+        { "id": 2, "text": "6 pays", "is_correct": true },
+        { "id": 3, "text": "5 pays", "is_correct": false },
+        { "id": 4, "text": "7 pays", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_13",
+      "id": 13,
       "text": "Le FESPACO (Festival Panafricain du Cinéma de Ouagadougou) se tient tous les deux ans à Ouagadougou.",
-      "type": "QuestionType.vraiOuFaux",
-      "category": "ENAREF",
+      "type_value": "vrai_ou_faux",
+      "type_label": "Vrai ou Faux",
       "justification": "Le FESPACO est effectivement un festival biennal qui se tient les années impaires à Ouagadougou depuis 1969. C'est le plus grand festival de cinéma d'Afrique.",
       "options": [
-        { "id": "vrai", "text": "Vrai", "isCorrect": true },
-        { "id": "faux", "text": "Faux", "isCorrect": false }
+        { "id": 1, "text": "Vrai", "is_correct": true },
+        { "id": 2, "text": "Faux", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_14",
+      "id": 14,
       "text": "Quelles sont les catégories de collectivités territoriales au Burkina Faso ?",
-      "type": "QuestionType.qcm",
-      "category": "ENAREF",
+      "type_value": "qcm",
+      "type_label": "QCM",
       "justification": "Selon le Code général des collectivités territoriales (CGCT), les collectivités territoriales du Burkina Faso sont les régions et les communes. Les provinces et départements relèvent de la déconcentration administrative.",
       "options": [
-        { "id": "a", "text": "Les régions", "isCorrect": true },
-        { "id": "b", "text": "Les communes", "isCorrect": true },
-        { "id": "c", "text": "Les départements", "isCorrect": false },
-        { "id": "d", "text": "Les provinces", "isCorrect": false }
+        { "id": 1, "text": "Les régions", "is_correct": true },
+        { "id": 2, "text": "Les communes", "is_correct": true },
+        { "id": 3, "text": "Les départements", "is_correct": false },
+        { "id": 4, "text": "Les provinces", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_15",
+      "id": 15,
       "text": "Le Burkina Faso a obtenu son indépendance le 5 août 1960.",
-      "type": "QuestionType.vraiOuFaux",
-      "category": "ENAREF",
+      "type_value": "vrai_ou_faux",
+      "type_label": "Vrai ou Faux",
       "justification": "La République de Haute-Volta (aujourd'hui Burkina Faso) a proclamé son indépendance le 5 août 1960, sous la présidence de Maurice Yaméogo.",
       "options": [
-        { "id": "vrai", "text": "Vrai", "isCorrect": true },
-        { "id": "faux", "text": "Faux", "isCorrect": false }
+        { "id": 1, "text": "Vrai", "is_correct": true },
+        { "id": 2, "text": "Faux", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_16",
+      "id": 16,
       "text": "Quels sont les principaux produits d'exportation du Burkina Faso ?",
-      "type": "QuestionType.qcm",
-      "category": "ENAREF",
+      "type_value": "qcm",
+      "type_label": "QCM",
       "justification": "Les principaux produits d'exportation du Burkina Faso sont l'or (premier produit d'exportation), le coton (« or blanc ») et le karité. Le Burkina Faso ne dispose pas de ressources pétrolières significatives.",
       "options": [
-        { "id": "a", "text": "L'or", "isCorrect": true },
-        { "id": "b", "text": "Le coton", "isCorrect": true },
-        { "id": "c", "text": "Le karité", "isCorrect": true },
-        { "id": "d", "text": "Le pétrole", "isCorrect": false }
+        { "id": 1, "text": "L'or", "is_correct": true },
+        { "id": 2, "text": "Le coton", "is_correct": true },
+        { "id": 3, "text": "Le karité", "is_correct": true },
+        { "id": 4, "text": "Le pétrole", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_17",
+      "id": 17,
       "text": "La devise du Burkina Faso est « Unité – Progrès – Justice ».",
-      "type": "QuestionType.vraiOuFaux",
-      "category": "ENAREF",
+      "type_value": "vrai_ou_faux",
+      "type_label": "Vrai ou Faux",
       "justification": "La devise officielle du Burkina Faso est bien « Unité – Progrès – Justice », inscrite dans la Constitution et figurant sur les armoiries nationales.",
       "options": [
-        { "id": "vrai", "text": "Vrai", "isCorrect": true },
-        { "id": "faux", "text": "Faux", "isCorrect": false }
+        { "id": 1, "text": "Vrai", "is_correct": true },
+        { "id": 2, "text": "Faux", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_18",
+      "id": 18,
       "text": "Combien de régions administratives le Burkina Faso compte-t-il ?",
-      "type": "QuestionType.qcm",
-      "category": "ENAREF",
+      "type_value": "qcm",
+      "type_label": "QCM",
       "justification": "Le Burkina Faso est divisé en 13 régions administratives, 45 provinces et 351 communes.",
       "options": [
-        { "id": "a", "text": "10 régions", "isCorrect": false },
-        { "id": "b", "text": "13 régions", "isCorrect": true },
-        { "id": "c", "text": "15 régions", "isCorrect": false },
-        { "id": "d", "text": "45 régions", "isCorrect": false }
+        { "id": 1, "text": "10 régions", "is_correct": false },
+        { "id": 2, "text": "13 régions", "is_correct": true },
+        { "id": 3, "text": "15 régions", "is_correct": false },
+        { "id": 4, "text": "45 régions", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_19",
+      "id": 19,
       "text": "Parmi ces langues, lesquelles sont parlées au Burkina Faso ?",
-      "type": "QuestionType.qcm",
-      "category": "ENAREF",
+      "type_value": "qcm",
+      "type_label": "QCM",
       "justification": "Le mooré, le dioula et le fulfuldé sont trois des principales langues nationales du Burkina Faso. Le wolof est principalement parlé au Sénégal et en Gambie.",
       "options": [
-        { "id": "a", "text": "Le mooré", "isCorrect": true },
-        { "id": "b", "text": "Le dioula", "isCorrect": true },
-        { "id": "c", "text": "Le fulfuldé", "isCorrect": true },
-        { "id": "d", "text": "Le wolof", "isCorrect": false }
+        { "id": 1, "text": "Le mooré", "is_correct": true },
+        { "id": 2, "text": "Le dioula", "is_correct": true },
+        { "id": 3, "text": "Le fulfuldé", "is_correct": true },
+        { "id": 4, "text": "Le wolof", "is_correct": false }
       ]
     },
     {
-      "id": "enaref_20",
+      "id": 20,
       "text": "Le Nahouri est une province du Burkina Faso dont le chef-lieu est Pô.",
-      "type": "QuestionType.vraiOuFaux",
-      "category": "ENAREF",
+      "type_value": "vrai_ou_faux",
+      "type_label": "Vrai ou Faux",
       "justification": "Le Nahouri est bien une province de la région du Centre-Sud, et son chef-lieu est la ville de Pô.",
       "options": [
-        { "id": "vrai", "text": "Vrai", "isCorrect": true },
-        { "id": "faux", "text": "Faux", "isCorrect": false }
+        { "id": 1, "text": "Vrai", "is_correct": true },
+        { "id": 2, "text": "Faux", "is_correct": false }
       ]
     }
   ]

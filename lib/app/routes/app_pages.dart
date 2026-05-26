@@ -17,7 +17,7 @@ import 'package:cncours_quiz/app/modules/settings/settings_binding.dart';
 import 'package:cncours_quiz/app/modules/settings/settings_screen.dart';
 import 'package:cncours_quiz/app/modules/splash/splash_binding.dart';
 import 'package:cncours_quiz/app/modules/splash/splash_screen.dart';
-import 'package:cncours_quiz/app/data/models/question.dart';
+import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/data/models/quiz_result.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +63,7 @@ class AppPages {
           categoryId: args['categoryId'],
           categoryName: args['categoryName'],
           questions: args['questions'] != null
-              ? List<Question>.from(args['questions'])
+              ? List<QuestionResource>.from(args['questions'])
               : null,
         );
       },

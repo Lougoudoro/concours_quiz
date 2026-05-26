@@ -1,22 +1,196 @@
-/// Banque de questions d'exemple pour les concours du Burkina Faso.
-///
-/// Contient de vrais exemples couvrant :
-/// - Culture générale & Histoire du Burkina Faso
-/// - Géographie et Institutions
-/// - Droit administratif et constitutionnel
-/// - Questions de type Vrai/Faux
-library;
+import 'package:cncours_quiz/app/data/resources/category_resource.dart';
+import 'package:cncours_quiz/app/data/resources/quiz_resource.dart';
+import 'package:cncours_quiz/app/data/resources/question_resource.dart';
+import 'package:cncours_quiz/app/data/resources/option_resource.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../app/data/resources/question_resource.dart';
-import '../app/data/resources/option_resource.dart';
+class DashboardController extends GetxController {
+  final RxList<CategoryResource> categories = <CategoryResource>[].obs;
 
-class SampleQuestions {
-  SampleQuestions._();
+  @override
+  void onInit() {
+    super.onInit();
+    _initCategories();
+  }
 
-  // ─── ENAREF ─────────────────────────────────────────────────────────
+  double get globalProgress {
+    if (categories.isEmpty) return 0.0;
+    return categories.map((c) => c.progress).reduce((a, b) => a + b) /
+        categories.length;
+  }
 
-  static final List<QuestionResource> enarefQuestions = [
-    // --- QCM : Culture Générale & Histoire ---
+  void _initCategories() {
+    categories.addAll([
+      CategoryResource(
+        id: 1,
+        name: 'ENAREF',
+        description: 'École Nationale des Régies Financières',
+        progress: 0.35,
+      ),
+      CategoryResource(
+        id: 2,
+        name: 'ENAM',
+        description: 'École Nationale d\'Administration et de Magistrature',
+        progress: 0.15,
+      ),
+      CategoryResource(
+        id: 3,
+        name: 'Santé',
+        description: 'Concours du secteur de la santé',
+        progress: 0.0,
+      ),
+      CategoryResource(
+        id: 4,
+        name: 'Police',
+        description: 'Concours d\'entrée à la Police Nationale',
+        progress: 0.60,
+      ),
+      CategoryResource(
+        id: 5,
+        name: 'Douanes',
+        description: 'Concours de la Direction Générale des Douanes',
+        progress: 0.0,
+      ),
+      CategoryResource(
+        id: 6,
+        name: 'Éducation',
+        description: 'Concours de l\'éducation nationale',
+        progress: 0.45,
+      ),
+    ]);
+  }
+
+  static const Map<int, IconData> categoryIcons = {
+    1: Icons.account_balance,
+    2: Icons.gavel,
+    3: Icons.local_hospital,
+    4: Icons.shield,
+    5: Icons.local_shipping,
+    6: Icons.school,
+  };
+
+  static final Map<int, List<QuizResource>> _quizzes = {
+    1: _buildENAREFQuizzes(),
+    2: _buildENAMQuizzes(),
+    3: _buildSanteQuizzes(),
+    4: _buildPoliceQuizzes(),
+    5: _buildDouanesQuizzes(),
+    6: _buildEducationQuizzes(),
+  };
+
+  List<QuizResource> getQuizzesForCategory(int categoryId) =>
+      _quizzes[categoryId] ?? [];
+
+  static List<QuizResource> _buildENAREFQuizzes() => [
+        QuizResource(
+          id: 1,
+          title: 'Culture Générale',
+          description: 'Symboles, histoire et géographie du Burkina',
+          questions: _sampleQuestions.sublist(0, 7),
+        ),
+        QuizResource(
+          id: 2,
+          title: 'Droit et Finances',
+          description: 'Institutions, droit et finances publiques',
+          questions: _sampleQuestions.sublist(3, 10),
+        ),
+        QuizResource(
+          id: 3,
+          title: 'Quiz Complet',
+          description: 'Toutes les questions ENAREF',
+          questions: _sampleQuestions.sublist(0),
+        ),
+      ];
+
+  static List<QuizResource> _buildENAMQuizzes() => [
+        QuizResource(
+          id: 4,
+          title: 'Droit Administratif',
+          description: 'Droit administratif et institutions',
+          questions: _sampleQuestions.sublist(0, 4),
+        ),
+        QuizResource(
+          id: 5,
+          title: 'Culture Générale',
+          description: 'Histoire et géographie',
+          questions: _sampleQuestions.sublist(0, 7),
+        ),
+        QuizResource(
+          id: 6,
+          title: 'Quiz Complet',
+          description: 'Toutes les questions ENAM',
+          questions: _sampleQuestions.sublist(0),
+        ),
+      ];
+
+  static List<QuizResource> _buildSanteQuizzes() => [
+        QuizResource(
+          id: 7,
+          title: 'Santé Publique',
+          description: 'Quiz de connaissances générales',
+          questions: _sampleQuestions.sublist(0, 5),
+        ),
+        QuizResource(
+          id: 8,
+          title: 'Quiz Complet',
+          description: 'Toutes les questions Santé',
+          questions: _sampleQuestions.sublist(0),
+        ),
+      ];
+
+  static List<QuizResource> _buildPoliceQuizzes() => [
+        QuizResource(
+          id: 9,
+          title: 'Droit et Institutions',
+          description: 'Connaissances juridiques de base',
+          questions: _sampleQuestions.sublist(0, 5),
+        ),
+        QuizResource(
+          id: 10,
+          title: 'Culture Générale',
+          description: 'Histoire et géographie du Burkina',
+          questions: _sampleQuestions.sublist(0, 7),
+        ),
+        QuizResource(
+          id: 11,
+          title: 'Quiz Complet',
+          description: 'Toutes les questions Police',
+          questions: _sampleQuestions.sublist(0),
+        ),
+      ];
+
+  static List<QuizResource> _buildDouanesQuizzes() => [
+        QuizResource(
+          id: 12,
+          title: 'Finances Publiques',
+          description: 'Principes budgétaires et finances',
+          questions: _sampleQuestions.sublist(8, 12),
+        ),
+        QuizResource(
+          id: 13,
+          title: 'Quiz Complet',
+          description: 'Toutes les questions Douanes',
+          questions: _sampleQuestions.sublist(0),
+        ),
+      ];
+
+  static List<QuizResource> _buildEducationQuizzes() => [
+        QuizResource(
+          id: 14,
+          title: 'Culture Générale',
+          description: 'Histoire, géographie et culture',
+          questions: _sampleQuestions.sublist(0, 7),
+        ),
+        QuizResource(
+          id: 15,
+          title: 'Quiz Complet',
+          description: 'Toutes les questions Éducation',
+          questions: _sampleQuestions.sublist(0),
+        ),
+      ];
+
+  static final List<QuestionResource> _sampleQuestions = [
     QuestionResource(
       id: 1,
       text:
@@ -39,11 +213,8 @@ class SampleQuestions {
             isCorrect: false),
       ],
       justification:
-          'Selon la Constitution du Burkina Faso (Titre I, Art. 34), les symboles '
-          'de la République sont : le drapeau national, l\'hymne national « Une Seule Nuit » '
-          'et les armoiries. Le balafon, bien que patrimoine culturel, n\'est pas un symbole constitutionnel.',
+          'Selon la Constitution du Burkina Faso (Titre I, Art. 34), les symboles de la République sont : le drapeau national, l\'hymne national « Une Seule Nuit » et les armoiries.',
     ),
-
     QuestionResource(
       id: 2,
       text:
@@ -57,10 +228,8 @@ class SampleQuestions {
         OptionResource(id: 4, content: '1991', isCorrect: false),
       ],
       justification:
-          'Le 4 août 1984, sous la présidence de Thomas Sankara, la Haute-Volta '
-          'a été officiellement rebaptisée « Burkina Faso », signifiant « Pays des Hommes Intègres ».',
+          'Le 4 août 1984, sous la présidence de Thomas Sankara, la Haute-Volta a été officiellement rebaptisée « Burkina Faso ».',
     ),
-
     QuestionResource(
       id: 3,
       text: 'Quelles villes sont des chefs-lieux de région au Burkina Faso ?',
@@ -75,11 +244,8 @@ class SampleQuestions {
         OptionResource(id: 4, content: 'Abidjan (Lagunes)', isCorrect: false),
       ],
       justification:
-          'Le Burkina Faso compte 13 régions. Ouagadougou, Bobo-Dioulasso et Koudougou '
-          'sont bien des chefs-lieux de région. Abidjan est la capitale économique de la Côte d\'Ivoire.',
+          'Le Burkina Faso compte 13 régions. Ouagadougou, Bobo-Dioulasso et Koudougou sont bien des chefs-lieux de région.',
     ),
-
-    // --- QCM : Droit & Institutions ---
     QuestionResource(
       id: 4,
       text:
@@ -95,12 +261,8 @@ class SampleQuestions {
             id: 4, content: 'L\'Assemblée nationale', isCorrect: false),
       ],
       justification:
-          'Au Burkina Faso, le pouvoir judiciaire comprend le Conseil constitutionnel, '
-          'la Cour de cassation et le Conseil d\'État. L\'Assemblée nationale relève du '
-          'pouvoir législatif.',
+          'Au Burkina Faso, le pouvoir judiciaire comprend le Conseil constitutionnel, la Cour de cassation et le Conseil d\'État.',
     ),
-
-    // --- Vrai/Faux ---
     QuestionResource(
       id: 5,
       text: 'Le Burkina Faso est un État unitaire décentralisé.',
@@ -111,15 +273,11 @@ class SampleQuestions {
         OptionResource(id: 2, content: 'Faux', isCorrect: false),
       ],
       justification:
-          'Selon la Constitution (Art. 31), le Burkina Faso est un État démocratique, '
-          'unitaire et laïc. La décentralisation est un principe organisationnel '
-          'consacré avec les collectivités territoriales (régions et communes).',
+          'Selon la Constitution (Art. 31), le Burkina Faso est un État démocratique, unitaire et laïc.',
     ),
-
     QuestionResource(
       id: 6,
-      text:
-          'Le FCFA utilisé au Burkina Faso est émis par la BCEAO (Banque Centrale des États de l\'Afrique de l\'Ouest).',
+      text: 'Le FCFA utilisé au Burkina Faso est émis par la BCEAO.',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
       options: [
@@ -127,11 +285,8 @@ class SampleQuestions {
         OptionResource(id: 2, content: 'Faux', isCorrect: false),
       ],
       justification:
-          'Le franc CFA (XOF) utilisé au Burkina Faso est bien émis par la BCEAO, '
-          'dont le siège est à Dakar. Le Burkina Faso est membre de l\'UEMOA.',
+          'Le franc CFA (XOF) utilisé au Burkina Faso est bien émis par la BCEAO.',
     ),
-
-    // --- QCM : Géographie ---
     QuestionResource(
       id: 7,
       text: 'Quels fleuves traversent le territoire du Burkina Faso ?',
@@ -150,11 +305,8 @@ class SampleQuestions {
             isCorrect: false),
       ],
       justification:
-          'Les trois principaux cours d\'eau du Burkina Faso sont le Mouhoun (ex-Volta Noire), '
-          'le Nakambé (ex-Volta Blanche) et le Nazinon (ex-Volta Rouge). '
-          'Le Niger ne traverse pas le Burkina, seul un petit affluent y passe brièvement.',
+          'Les trois principaux cours d\'eau du Burkina Faso sont le Mouhoun, le Nakambé et le Nazinon.',
     ),
-
     QuestionResource(
       id: 8,
       text: 'Quelle est la superficie approximative du Burkina Faso ?',
@@ -166,12 +318,8 @@ class SampleQuestions {
         OptionResource(id: 3, content: '196 720 km²', isCorrect: false),
         OptionResource(id: 4, content: '475 440 km²', isCorrect: false),
       ],
-      justification:
-          'Le Burkina Faso s\'étend sur environ 274 200 km². C\'est un pays '
-          'sahélien enclavé en Afrique de l\'Ouest.',
+      justification: 'Le Burkina Faso s\'étend sur environ 274 200 km².',
     ),
-
-    // --- Vrai/Faux Finances ---
     QuestionResource(
       id: 9,
       text:
@@ -183,11 +331,8 @@ class SampleQuestions {
         OptionResource(id: 2, content: 'Faux', isCorrect: false),
       ],
       justification:
-          'En principe, la loi de finances doit être votée avant le 31 décembre '
-          'pour l\'exercice budgétaire suivant (Art. 103 de la Constitution). '
-          'En pratique, il peut y avoir des régimes d\'exception.',
+          'En principe, la loi de finances doit être votée avant le 31 décembre pour l\'exercice budgétaire suivant.',
     ),
-
     QuestionResource(
       id: 10,
       text:
@@ -205,12 +350,8 @@ class SampleQuestions {
             id: 4, content: 'Le principe de confidentialité', isCorrect: false),
       ],
       justification:
-          'Les principes budgétaires fondamentaux reconnus sont : annualité, universalité, '
-          'unité, spécialité et sincérité. La « confidentialité » n\'est pas un principe '
-          'budgétaire ; au contraire, la transparence est encouragée.',
+          'Les principes budgétaires fondamentaux sont : annualité, universalité, unité, spécialité et sincérité.',
     ),
-
-    // --- QCM : Institutions et fonctionnement ---
     QuestionResource(
       id: 11,
       text:
@@ -227,10 +368,8 @@ class SampleQuestions {
             id: 4, content: 'Le peuple par référendum', isCorrect: false),
       ],
       justification:
-          'Selon l\'article 46 de la Constitution du 2 juin 1991, le Président du Faso '
-          'nomme le Premier ministre et met fin à ses fonctions.',
+          'Selon l\'article 46 de la Constitution du 2 juin 1991, le Président du Faso nomme le Premier ministre.',
     ),
-
     QuestionResource(
       id: 12,
       text: 'Le Burkina Faso est frontalier de combien de pays ?',
@@ -242,17 +381,11 @@ class SampleQuestions {
         OptionResource(id: 3, content: '5 pays', isCorrect: false),
         OptionResource(id: 4, content: '7 pays', isCorrect: false),
       ],
-      justification:
-          'Le Burkina Faso partage ses frontières avec 6 pays : le Mali (nord), '
-          'le Niger (est), le Bénin (sud-est), le Togo (sud), le Ghana (sud) et '
-          'la Côte d\'Ivoire (sud-ouest).',
+      justification: 'Le Burkina Faso partage ses frontières avec 6 pays.',
     ),
-
-    // --- Vrai/Faux Culture ---
     QuestionResource(
       id: 13,
-      text:
-          'Le FESPACO (Festival Panafricain du Cinéma de Ouagadougou) se tient tous les deux ans à Ouagadougou.',
+      text: 'Le FESPACO se tient tous les deux ans à Ouagadougou.',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
       options: [
@@ -260,11 +393,8 @@ class SampleQuestions {
         OptionResource(id: 2, content: 'Faux', isCorrect: false),
       ],
       justification:
-          'Le FESPACO est effectivement un festival biennal qui se tient les années impaires '
-          'à Ouagadougou depuis 1969. C\'est le plus grand festival de cinéma d\'Afrique.',
+          'Le FESPACO est un festival biennal qui se tient les années impaires à Ouagadougou.',
     ),
-
-    // --- QCM Droit administratif ---
     QuestionResource(
       id: 14,
       text:
@@ -278,11 +408,8 @@ class SampleQuestions {
         OptionResource(id: 4, content: 'Les provinces', isCorrect: false),
       ],
       justification:
-          'Selon le Code général des collectivités territoriales (CGCT), '
-          'les collectivités territoriales du Burkina Faso sont les régions et les communes. '
-          'Les provinces et départements relèvent de la déconcentration administrative.',
+          'Les collectivités territoriales du Burkina Faso sont les régions et les communes.',
     ),
-
     QuestionResource(
       id: 15,
       text: 'Le Burkina Faso a obtenu son indépendance le 5 août 1960.',
@@ -293,11 +420,8 @@ class SampleQuestions {
         OptionResource(id: 2, content: 'Faux', isCorrect: false),
       ],
       justification:
-          'La République de Haute-Volta (aujourd\'hui Burkina Faso) a proclamé son '
-          'indépendance le 5 août 1960, sous la présidence de Maurice Yaméogo.',
+          'La République de Haute-Volta a proclamé son indépendance le 5 août 1960.',
     ),
-
-    // --- QCM Économie ---
     QuestionResource(
       id: 16,
       text:
@@ -311,11 +435,8 @@ class SampleQuestions {
         OptionResource(id: 4, content: 'Le pétrole', isCorrect: false),
       ],
       justification:
-          'Les principaux produits d\'exportation du Burkina Faso sont l\'or '
-          '(premier produit d\'exportation), le coton (« or blanc ») et le karité. '
-          'Le Burkina Faso ne dispose pas de ressources pétrolières significatives.',
+          'Les principaux produits d\'exportation sont l\'or, le coton et le karité.',
     ),
-
     QuestionResource(
       id: 17,
       text: 'La devise du Burkina Faso est « Unité – Progrès – Justice ».',
@@ -326,11 +447,8 @@ class SampleQuestions {
         OptionResource(id: 2, content: 'Faux', isCorrect: false),
       ],
       justification:
-          'La devise officielle du Burkina Faso est bien « Unité – Progrès – Justice », '
-          'inscrite dans la Constitution et figurant sur les armoiries nationales.',
+          'La devise officielle du Burkina Faso est « Unité – Progrès – Justice ».',
     ),
-
-    // --- QCM Administration ---
     QuestionResource(
       id: 18,
       text: 'Combien de régions administratives le Burkina Faso compte-t-il ?',
@@ -343,10 +461,8 @@ class SampleQuestions {
         OptionResource(id: 4, content: '45 régions', isCorrect: false),
       ],
       justification:
-          'Le Burkina Faso est divisé en 13 régions administratives, '
-          '45 provinces et 351 communes.',
+          'Le Burkina Faso est divisé en 13 régions administratives.',
     ),
-
     QuestionResource(
       id: 19,
       text: 'Parmi ces langues, lesquelles sont parlées au Burkina Faso ?',
@@ -359,10 +475,8 @@ class SampleQuestions {
         OptionResource(id: 4, content: 'Le wolof', isCorrect: false),
       ],
       justification:
-          'Le mooré, le dioula et le fulfuldé sont trois des principales langues nationales '
-          'du Burkina Faso. Le wolof est principalement parlé au Sénégal et en Gambie.',
+          'Le mooré, le dioula et le fulfuldé sont trois des principales langues nationales.',
     ),
-
     QuestionResource(
       id: 20,
       text:
@@ -374,15 +488,7 @@ class SampleQuestions {
         OptionResource(id: 2, content: 'Faux', isCorrect: false),
       ],
       justification:
-          'Le Nahouri est bien une province de la région du Centre-Sud, '
-          'et son chef-lieu est la ville de Pô.',
+          'Le Nahouri est bien une province de la région du Centre-Sud, et son chef-lieu est la ville de Pô.',
     ),
   ];
-
-  /// Retourne la liste de questions pour une catégorie donnée
-  static List<QuestionResource> getQuestionsForCategory(String categoryId) {
-    // Pour l'instant, toutes les catégories retournent les mêmes questions
-    // En production, chaque catégorie aurait sa propre banque
-    return enarefQuestions;
-  }
 }

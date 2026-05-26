@@ -1,5 +1,5 @@
 class BaseResource {
-  String id;
+  dynamic id;
   String? createdAt;
   String? updatedAt;
   String? deletedAt;

@@ -17,7 +17,8 @@ class QuestionResource extends BaseResource {
     required this.justification,
   });
 
-  factory QuestionResource.fromJson(Map<String, dynamic> json) => QuestionResource(
+  factory QuestionResource.fromJson(Map<String, dynamic> json) =>
+      QuestionResource(
         id: json['id'],
         text: json['text'],
         typeValue: json['type_value'],
@@ -37,6 +38,9 @@ class QuestionResource extends BaseResource {
         'justification': justification,
       };
 
-  List<String> get correctAnswerIds =>
+  bool get isVraiOuFaux => typeValue == 'vrai_ou_faux';
+  bool get isQcm => typeValue == 'qcm';
+
+  List<dynamic> get correctAnswerIds =>
       options.where((o) => o.isCorrect).map((o) => o.id).toList();
 }

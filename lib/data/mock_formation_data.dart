@@ -1,34 +1,35 @@
 import '../app/data/models/formation.dart';
-import '../app/data/models/question.dart';
+import '../app/data/resources/question_resource.dart';
+import '../app/data/resources/option_resource.dart';
 
 class MockFormationData {
   static Session getSession2026() {
     return Session(
-      id: 's2026',
+      id: 1,
       name: 'Session 2026',
       isActive: true,
       concoursTypes: [
         // --- OPTION A : CONCOURS DIRECTS ---
         ConcoursType(
-          id: 'dir',
+          id: 1,
           name: 'Concours Directs',
           category: ConcoursCategory.direct,
           subCategories: [
             SubCategory(
-              id: 'bac',
+              id: 1,
               name: 'Niveau BAC',
               collections: [
                 Collection(
-                  id: 'f_mars',
+                  id: 1,
                   name: 'Formation de Mars',
                   series: [
                     Serie(
-                      id: 'ex_blanc_cg',
+                      id: 1,
                       name: 'Examen Blanc : Culture Générale',
                       questions: _getMockQuestions('Culture Générale (BAC)'),
                     ),
                     Serie(
-                      id: 'quiz_logique',
+                      id: 2,
                       name: 'Quiz : Tests de Logique',
                       questions: _getMockQuestions('Logique (BAC)'),
                     ),
@@ -37,7 +38,7 @@ class MockFormationData {
               ],
             ),
             SubCategory(
-              id: 'bepc',
+              id: 2,
               name: 'Niveau BEPC',
               collections: [],
             ),
@@ -45,20 +46,20 @@ class MockFormationData {
         ),
         // --- OPTION B : CONCOURS PROFESSIONNELS ---
         ConcoursType(
-          id: 'pro',
+          id: 2,
           name: 'Concours Professionnels',
           category: ConcoursCategory.professionnel,
           subCategories: [
             SubCategory(
-              id: 'enam',
+              id: 3,
               name: 'ENAM (Administration)',
               collections: [
                 Collection(
-                  id: 'f_janv',
+                  id: 2,
                   name: 'Formation de Janvier',
                   series: [
                     Serie(
-                      id: 'droit_admin',
+                      id: 3,
                       name: 'Quiz 1 : Droit Administratif',
                       questions: _getMockQuestions('Droit Admin (ENAM)'),
                     ),
@@ -67,7 +68,7 @@ class MockFormationData {
               ],
             ),
             SubCategory(
-              id: 'sante',
+              id: 4,
               name: 'Secteur de la Santé',
               collections: [],
             ),
@@ -77,42 +78,46 @@ class MockFormationData {
     );
   }
 
-  static List<Question> _getMockQuestions(String category) {
+  static List<QuestionResource> _getMockQuestions(String category) {
     return [
-      Question(
-        id: 'q1',
+      QuestionResource(
+        id: 1,
         text: 'Quelle est la capitale économique du Burkina Faso ?',
-        type: QuestionType.qcm,
-        category: category,
-        justification: 'Bobo-Dioulasso est historiquement et économiquement reconnue comme la capitale économique du pays.',
+        typeValue: 'qcm',
+        typeLabel: 'QCM',
+        justification:
+            'Bobo-Dioulasso est historiquement et économiquement reconnue comme la capitale économique du pays.',
         options: [
-          AnswerOption(id: 'o1', text: 'Ouagadougou', isCorrect: false),
-          AnswerOption(id: 'o2', text: 'Bobo-Dioulasso', isCorrect: true),
-          AnswerOption(id: 'o3', text: 'Koudougou', isCorrect: false),
+          OptionResource(id: 1, content: 'Ouagadougou', isCorrect: false),
+          OptionResource(id: 2, content: 'Bobo-Dioulasso', isCorrect: true),
+          OptionResource(id: 3, content: 'Koudougou', isCorrect: false),
         ],
       ),
-      Question(
-        id: 'q2',
+      QuestionResource(
+        id: 2,
         text: 'Le Burkina Faso est un pays enclavé.',
-        type: QuestionType.vraiOuFaux,
-        category: category,
-        justification: 'Vrai. Le Burkina Faso n\'a pas d\'accès direct à la mer.',
+        typeValue: 'vrai_ou_faux',
+        typeLabel: 'Vrai ou Faux',
+        justification:
+            'Vrai. Le Burkina Faso n\'a pas d\'accès direct à la mer.',
         options: [
-          AnswerOption(id: 'v', text: 'Vrai', isCorrect: true),
-          AnswerOption(id: 'f', text: 'Faux', isCorrect: false),
+          OptionResource(id: 1, content: 'Vrai', isCorrect: true),
+          OptionResource(id: 2, content: 'Faux', isCorrect: false),
         ],
       ),
-      Question(
-        id: 'q3',
-        text: 'Quelles sont les couleurs du drapeau burkinabè ? (Choisir toutes les bonnes réponses)',
-        type: QuestionType.qcm,
-        category: category,
-        justification: 'Le drapeau est composé de deux bandes horizontales (rouge et verte) avec une étoile jaune au milieu.',
+      QuestionResource(
+        id: 3,
+        text:
+            'Quelles sont les couleurs du drapeau burkinabè ? (Choisir toutes les bonnes réponses)',
+        typeValue: 'qcm',
+        typeLabel: 'QCM',
+        justification:
+            'Le drapeau est composé de deux bandes horizontales (rouge et verte) avec une étoile jaune au milieu.',
         options: [
-          AnswerOption(id: 'c1', text: 'Rouge', isCorrect: true),
-          AnswerOption(id: 'c2', text: 'Bleu', isCorrect: false),
-          AnswerOption(id: 'c3', text: 'Vert', isCorrect: true),
-          AnswerOption(id: 'c4', text: 'Jaune (Étoile)', isCorrect: true),
+          OptionResource(id: 1, content: 'Rouge', isCorrect: true),
+          OptionResource(id: 2, content: 'Bleu', isCorrect: false),
+          OptionResource(id: 3, content: 'Vert', isCorrect: true),
+          OptionResource(id: 4, content: 'Jaune (Étoile)', isCorrect: true),
         ],
       ),
     ];

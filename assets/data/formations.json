@@ -1,101 +1,101 @@
 {
-  "id": "s2026",
+  "id": 1,
   "name": "Session 2026",
   "isActive": true,
   "concoursTypes": [
     {
-      "id": "dir",
+      "id": 1,
       "name": "Concours Directs",
       "category": "ConcoursCategory.direct",
       "subCategories": [
         {
-          "id": "bac",
+          "id": 1,
           "name": "Niveau BAC",
           "collections": [
             {
-              "id": "f_mars",
+              "id": 1,
               "name": "Formation de Mars",
               "series": [
                 {
-                  "id": "ex_blanc_cg",
+                  "id": 1,
                   "name": "Examen Blanc : Culture Générale",
                   "questions": [
                     {
-                      "id": "q1",
+                      "id": 1,
                       "text": "Quelle est la capitale économique du Burkina Faso ?",
-                      "type": "QuestionType.qcm",
-                      "category": "Culture Générale (BAC)",
+                      "type_value": "qcm",
+                      "type_label": "QCM",
                       "justification": "Bobo-Dioulasso est historiquement et économiquement reconnue comme la capitale économique du pays.",
                       "options": [
-                        { "id": "o1", "text": "Ouagadougou", "isCorrect": false },
-                        { "id": "o2", "text": "Bobo-Dioulasso", "isCorrect": true },
-                        { "id": "o3", "text": "Koudougou", "isCorrect": false }
+                        { "id": 1, "text": "Ouagadougou", "is_correct": false },
+                        { "id": 2, "text": "Bobo-Dioulasso", "is_correct": true },
+                        { "id": 3, "text": "Koudougou", "is_correct": false }
                       ]
                     },
                     {
-                      "id": "q2",
+                      "id": 2,
                       "text": "Le Burkina Faso est un pays enclavé.",
-                      "type": "QuestionType.vraiOuFaux",
-                      "category": "Culture Générale (BAC)",
+                      "type_value": "vrai_ou_faux",
+                      "type_label": "Vrai ou Faux",
                       "justification": "Vrai. Le Burkina Faso n'a pas d'accès direct à la mer.",
                       "options": [
-                        { "id": "v", "text": "Vrai", "isCorrect": true },
-                        { "id": "f", "text": "Faux", "isCorrect": false }
+                        { "id": 1, "text": "Vrai", "is_correct": true },
+                        { "id": 2, "text": "Faux", "is_correct": false }
                       ]
                     },
                     {
-                      "id": "q3",
+                      "id": 3,
                       "text": "Quelles sont les couleurs du drapeau burkinabè ? (Choisir toutes les bonnes réponses)",
-                      "type": "QuestionType.qcm",
-                      "category": "Culture Générale (BAC)",
+                      "type_value": "qcm",
+                      "type_label": "QCM",
                       "justification": "Le drapeau est composé de deux bandes horizontales (rouge et verte) avec une étoile jaune au milieu.",
                       "options": [
-                        { "id": "c1", "text": "Rouge", "isCorrect": true },
-                        { "id": "c2", "text": "Bleu", "isCorrect": false },
-                        { "id": "c3", "text": "Vert", "isCorrect": true },
-                        { "id": "c4", "text": "Jaune (Étoile)", "isCorrect": true }
+                        { "id": 1, "text": "Rouge", "is_correct": true },
+                        { "id": 2, "text": "Bleu", "is_correct": false },
+                        { "id": 3, "text": "Vert", "is_correct": true },
+                        { "id": 4, "text": "Jaune (Étoile)", "is_correct": true }
                       ]
                     }
                   ]
                 },
                 {
-                  "id": "quiz_logique",
+                  "id": 2,
                   "name": "Quiz : Tests de Logique",
                   "questions": [
                     {
-                      "id": "q1",
+                      "id": 1,
                       "text": "Quelle est la capitale économique du Burkina Faso ?",
-                      "type": "QuestionType.qcm",
-                      "category": "Logique (BAC)",
+                      "type_value": "qcm",
+                      "type_label": "QCM",
                       "justification": "Bobo-Dioulasso est historiquement et économiquement reconnue comme la capitale économique du pays.",
                       "options": [
-                        { "id": "o1", "text": "Ouagadougou", "isCorrect": false },
-                        { "id": "o2", "text": "Bobo-Dioulasso", "isCorrect": true },
-                        { "id": "o3", "text": "Koudougou", "isCorrect": false }
+                        { "id": 1, "text": "Ouagadougou", "is_correct": false },
+                        { "id": 2, "text": "Bobo-Dioulasso", "is_correct": true },
+                        { "id": 3, "text": "Koudougou", "is_correct": false }
                       ]
                     },
                     {
-                      "id": "q2",
+                      "id": 2,
                       "text": "Le Burkina Faso est un pays enclavé.",
-                      "type": "QuestionType.vraiOuFaux",
-                      "category": "Logique (BAC)",
+                      "type_value": "vrai_ou_faux",
+                      "type_label": "Vrai ou Faux",
                       "justification": "Vrai. Le Burkina Faso n'a pas d'accès direct à la mer.",
                       "options": [
-                        { "id": "v", "text": "Vrai", "isCorrect": true },
-                        { "id": "f", "text": "Faux", "isCorrect": false }
+                        { "id": 1, "text": "Vrai", "is_correct": true },
+                        { "id": 2, "text": "Faux", "is_correct": false }
                       ]
                     },
                     {
-                      "id": "q3",
+                      "id": 3,
                       "text": "Quelles sont les couleurs du drapeau burkinabè ? (Choisir toutes les bonnes réponses)",
-                      "type": "QuestionType.qcm",
-                      "category": "Logique (BAC)",
+                      "type_value": "qcm",
+                      "type_label": "QCM",
                       "justification": "Le drapeau est composé de deux bandes horizontales (rouge et verte) avec une étoile jaune au milieu.",
                       "options": [
-                        { "id": "c1", "text": "Rouge", "isCorrect": true },
-                        { "id": "c2", "text": "Bleu", "isCorrect": false },
-                        { "id": "c3", "text": "Vert", "isCorrect": true },
-                        { "id": "c4", "text": "Jaune (Étoile)", "isCorrect": true }
+                        { "id": 1, "text": "Rouge", "is_correct": true },
+                        { "id": 2, "text": "Bleu", "is_correct": false },
+                        { "id": 3, "text": "Vert", "is_correct": true },
+                        { "id": 4, "text": "Jaune (Étoile)", "is_correct": true }
                       ]
                     }
                   ]
@@ -105,63 +105,63 @@
           ]
         },
         {
-          "id": "bepc",
+          "id": 2,
           "name": "Niveau BEPC",
           "collections": []
         }
       ]
     },
     {
-      "id": "pro",
+      "id": 2,
       "name": "Concours Professionnels",
       "category": "ConcoursCategory.professionnel",
       "subCategories": [
         {
-          "id": "enam",
+          "id": 3,
           "name": "ENAM (Administration)",
           "collections": [
             {
-              "id": "f_janv",
+              "id": 2,
               "name": "Formation de Janvier",
               "series": [
                 {
-                  "id": "droit_admin",
+                  "id": 3,
                   "name": "Quiz 1 : Droit Administratif",
                   "questions": [
                     {
-                      "id": "q1",
+                      "id": 1,
                       "text": "Quelle est la capitale économique du Burkina Faso ?",
-                      "type": "QuestionType.qcm",
-                      "category": "Droit Admin (ENAM)",
+                      "type_value": "qcm",
+                      "type_label": "QCM",
                       "justification": "Bobo-Dioulasso est historiquement et économiquement reconnue comme la capitale économique du pays.",
                       "options": [
-                        { "id": "o1", "text": "Ouagadougou", "isCorrect": false },
-                        { "id": "o2", "text": "Bobo-Dioulasso", "isCorrect": true },
-                        { "id": "o3", "text": "Koudougou", "isCorrect": false }
+                        { "id": 1, "text": "Ouagadougou", "is_correct": false },
+                        { "id": 2, "text": "Bobo-Dioulasso", "is_correct": true },
+                        { "id": 3, "text": "Koudougou", "is_correct": false }
                       ]
                     },
                     {
-                      "id": "q2",
+                      "id": 2,
                       "text": "Le Burkina Faso est un pays enclavé.",
-                      "type": "QuestionType.vraiOuFaux",
-                      "category": "Droit Admin (ENAM)",
+                      "type_value": "vrai_ou_faux",
+                      "type_label": "Vrai ou Faux",
                       "justification": "Vrai. Le Burkina Faso n'a pas d'accès direct à la mer.",
                       "options": [
-                        { "id": "v", "text": "Vrai", "isCorrect": true },
-                        { "id": "f", "text": "Faux", "isCorrect": false }
+                        { "id": 1, "text": "Vrai", "is_correct": true },
+                        { "id": 2, "text": "Faux", "is_correct": false }
                       ]
                     },
                     {
-                      "id": "q3",
+                      "id": 3,
                       "text": "Quelles sont les couleurs du drapeau burkinabè ? (Choisir toutes les bonnes réponses)",
-                      "type": "QuestionType.qcm",
-                      "category": "Droit Admin (ENAM)",
+                      "type_value": "qcm",
+                      "type_label": "QCM",
                       "justification": "Le drapeau est composé de deux bandes horizontales (rouge et verte) avec une étoile jaune au milieu.",
                       "options": [
-                        { "id": "c1", "text": "Rouge", "isCorrect": true },
-                        { "id": "c2", "text": "Bleu", "isCorrect": false },
-                        { "id": "c3", "text": "Vert", "isCorrect": true },
-                        { "id": "c4", "text": "Jaune (Étoile)", "isCorrect": true }
+                        { "id": 1, "text": "Rouge", "is_correct": true },
+                        { "id": 2, "text": "Bleu", "is_correct": false },
+                        { "id": 3, "text": "Vert", "is_correct": true },
+                        { "id": 4, "text": "Jaune (Étoile)", "is_correct": true }
                       ]
                     }
                   ]
@@ -171,7 +171,7 @@
           ]
         },
         {
-          "id": "sante",
+          "id": 4,
           "name": "Secteur de la Santé",
           "collections": []
         }

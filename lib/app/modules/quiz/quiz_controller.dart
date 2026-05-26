@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
-import 'package:cncours_quiz/data/sample_questions.dart';
-import 'package:cncours_quiz/app/data/models/question.dart';
+import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/data/models/quiz_result.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -11,7 +10,7 @@ import '../history/history_controller.dart';
 class QuizController extends GetxController with WidgetsBindingObserver {
   final String categoryId;
   final String categoryName;
-  final List<Question>? initialQuestions;
+  final List<QuestionResource>? initialQuestions;
 
   QuizController({
     required this.categoryId,
@@ -20,9 +19,9 @@ class QuizController extends GetxController with WidgetsBindingObserver {
   });
 
   // State
-  var questions = <Question>[].obs;
+  var questions = <QuestionResource>[].obs;
   var currentIndex = 0.obs;
-  var selectedAnswerIds = <String>{}.obs;
+  var selectedAnswerIds = <int>{}.obs;
   var isValidated = false.obs;
   var results = <QuestionResult>[].obs;
 
@@ -42,8 +41,6 @@ class QuizController extends GetxController with WidgetsBindingObserver {
   void loadQuestions() {
     if (initialQuestions != null && initialQuestions!.isNotEmpty) {
       questions.assignAll(initialQuestions!);
-    } else {
-      questions.assignAll(SampleQuestions.getQuestionsForCategory(categoryId));
     }
   }
 
@@ -89,15 +86,15 @@ class QuizController extends GetxController with WidgetsBindingObserver {
     return '$m:$s';
   }
 
-  Question get currentQuestion => questions[currentIndex.value];
+  QuestionResource get currentQuestion => questions[currentIndex.value];
   bool get isLastQuestion => currentIndex.value == questions.length - 1;
   double get progressValue =>
       (currentIndex.value + 1) / (questions.isEmpty ? 1 : questions.length);
 
-  void toggleAnswer(String answerId) {
+  void toggleAnswer(int answerId) {
     if (isValidated.value) return;
 
-    if (currentQuestion.type == QuestionType.vraiOuFaux) {
+    if (currentQuestion.isVraiOuFaux) {
       selectedAnswerIds.clear();
       selectedAnswerIds.add(answerId);
     } else {
@@ -124,7 +121,7 @@ class QuizController extends GetxController with WidgetsBindingObserver {
 
     results.add(QuestionResult(
       question: currentQuestion,
-      userAnswerIds: Set.from(selectedAnswerIds),
+      userAnswerIds: Set<int>.from(selectedAnswerIds),
     ));
   }
 
@@ -152,7 +149,7 @@ class QuizController extends GetxController with WidgetsBindingObserver {
         // Ignorer si pas injecté (ex: tests)
       }
 
-      Get.offNamed(Routes.RESULTS , arguments: result);
+      Get.offNamed(Routes.RESULTS, arguments: result);
       return;
     }
 

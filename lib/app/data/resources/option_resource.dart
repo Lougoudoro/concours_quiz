@@ -13,7 +13,7 @@ class OptionResource extends BaseResource {
 
   factory OptionResource.fromJson(Map<String, dynamic> json) => OptionResource(
         id: json['id'],
-        content: json['text'],
+        content: json['content'],
         isCorrect: json['is_correct'] ?? false,
       );
 

@@ -1,5 +1,6 @@
 import 'package:cncours_quiz/app/core/widgets/shimmer_loading.dart';
-import 'package:cncours_quiz/app/data/models/question.dart';
+import 'package:cncours_quiz/app/data/resources/question_resource.dart';
+import 'package:cncours_quiz/app/data/resources/option_resource.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -11,7 +12,7 @@ import 'package:cncours_quiz/app/core/theme/app_theme.dart';
 class QuizScreen extends StatelessWidget {
   final String categoryId;
   final String categoryName;
-  final List<Question>? questions;
+  final List<QuestionResource>? questions;
 
   const QuizScreen({
     super.key,
@@ -62,8 +63,7 @@ class QuizScreen extends StatelessWidget {
                         const SizedBox(height: 14),
                         _buildQuestionText(context, controller),
                         const SizedBox(height: 8),
-                        if (controller.currentQuestion.type ==
-                                QuestionType.qcm &&
+                        if (controller.currentQuestion.isQcm &&
                             controller.currentQuestion.correctAnswerIds.length >
                                 1)
                           _buildMultiHint(),
@@ -215,7 +215,7 @@ class QuizScreen extends StatelessWidget {
 
   Widget _buildQuestionTypeBadge(
       BuildContext context, QuizController controller) {
-    final isVF = controller.currentQuestion.type == QuestionType.vraiOuFaux;
+    final isVF = controller.currentQuestion.isVraiOuFaux;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
@@ -241,7 +241,7 @@ class QuizScreen extends StatelessWidget {
   }
 
   Widget _buildAnswerOptions(BuildContext context, QuizController controller) {
-    if (controller.currentQuestion.type == QuestionType.vraiOuFaux) {
+    if (controller.currentQuestion.isVraiOuFaux) {
       return _buildVraiFauxOptions(context, controller);
     }
     return _buildQCMOptions(context, controller);
@@ -311,7 +311,7 @@ class QuizScreen extends StatelessWidget {
                     _buildCheckbox(context, controller, option, isSelected),
                     const SizedBox(width: 12),
                     Expanded(
-                        child: Text(option.text,
+                        child: Text(option.content,
                             style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: isSelected
@@ -347,7 +347,7 @@ class QuizScreen extends StatelessWidget {
   }
 
   Widget _buildCheckbox(BuildContext context, QuizController controller,
-      AnswerOption option, bool isSelected) {
+      OptionResource option, bool isSelected) {
     Color checkboxColor;
     if (controller.isValidated.value) {
       checkboxColor = option.isCorrect
@@ -394,7 +394,7 @@ class QuizScreen extends StatelessWidget {
     return Row(
       children: controller.currentQuestion.options.map((option) {
         final isSelected = controller.selectedAnswerIds.contains(option.id);
-        final isVrai = option.id == 'vrai';
+        final isVrai = option.content == 'Vrai';
         Color borderColor = Theme.of(context).dividerTheme.color!;
         Color bgColor = Theme.of(context).cardTheme.color!;
         Color iconColor = isVrai
@@ -447,7 +447,7 @@ class QuizScreen extends StatelessWidget {
                       color: iconColor,
                       size: 40),
                   const SizedBox(height: 10),
-                  Text(option.text,
+                  Text(option.content,
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
@@ -520,7 +520,7 @@ class QuizScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildReportButton(BuildContext context, Question question) {
+  Widget _buildReportButton(BuildContext context, QuestionResource question) {
     return GestureDetector(
       onTap: () => _showReportDialog(context, question),
       child: Row(
@@ -553,7 +553,7 @@ class QuizScreen extends StatelessWidget {
     );
   }
 
-  void _showReportDialog(BuildContext context, Question question) {
+  void _showReportDialog(BuildContext context, QuestionResource question) {
     final messageController = TextEditingController();
     showDialog(
       context: context,
@@ -646,7 +646,7 @@ class QuizScreen extends StatelessWidget {
     );
   }
 
-  void _saveReport(Question question, String message) {
+  void _saveReport(QuestionResource question, String message) {
     final box = GetStorage();
     final reports = box.read<List>('question_reports') ?? [];
     reports.add({

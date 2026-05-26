@@ -1,10 +1,10 @@
-import 'question.dart';
+import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 
 class QuestionResult {
-  final Question question;
-  final Set<String> userAnswerIds;
+  final QuestionResource question;
+  final Set<int> userAnswerIds;
 
-  const QuestionResult({
+  QuestionResult({
     required this.question,
     required this.userAnswerIds,
   });
@@ -16,8 +16,8 @@ class QuestionResult {
   }
 
   factory QuestionResult.fromJson(Map<String, dynamic> json) => QuestionResult(
-        question: Question.fromJson(json['question']),
-        userAnswerIds: Set<String>.from(json['userAnswerIds']),
+        question: QuestionResource.fromJson(json['question']),
+        userAnswerIds: Set<int>.from(json['userAnswerIds']),
       );
 
   Map<String, dynamic> toJson() => {

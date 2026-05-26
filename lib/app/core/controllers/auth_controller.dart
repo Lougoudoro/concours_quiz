@@ -47,6 +47,7 @@ class AuthController extends GetxController {
       });
 
       if (response['success'] == true) {
+        
         authResource.value = AuthResource.fromJson(response['data']);
         Token.set(response['token'] as String);
         Get.offNamed(Routes.DASHBOARD);

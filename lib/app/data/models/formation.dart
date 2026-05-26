@@ -1,7 +1,7 @@
-import 'question.dart';
+import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 
 class Session {
-  final String id;
+  final int id;
   final String name;
   final bool isActive;
   final List<ConcoursType> concoursTypes;
@@ -33,7 +33,7 @@ class Session {
 enum ConcoursCategory { direct, professionnel }
 
 class ConcoursType {
-  final String id;
+  final int id;
   final String name; // e.g. "Directs" or "Professionnels"
   final ConcoursCategory category;
   final List<SubCategory> subCategories; // Levels for direct, Sectors for pro
@@ -48,7 +48,8 @@ class ConcoursType {
   factory ConcoursType.fromJson(Map<String, dynamic> json) => ConcoursType(
         id: json['id'],
         name: json['name'],
-        category: ConcoursCategory.values.firstWhere((e) => e.toString() == json['category']),
+        category: ConcoursCategory.values
+            .firstWhere((e) => e.toString() == json['category']),
         subCategories: (json['subCategories'] as List)
             .map((e) => SubCategory.fromJson(e))
             .toList(),
@@ -63,7 +64,7 @@ class ConcoursType {
 }
 
 class SubCategory {
-  final String id;
+  final int id;
   final String name; // e.g. "BAC", "Licence" or "ENAM", "Santé"
   final List<Collection> collections;
 
@@ -89,7 +90,7 @@ class SubCategory {
 }
 
 class Collection {
-  final String id;
+  final int id;
   final String name; // e.g. "Formation de Janvier"
   final List<Serie> series;
 
@@ -113,9 +114,9 @@ class Collection {
 }
 
 class Serie {
-  final String id;
+  final int id;
   final String name; // e.g. "Quiz 1", "Examen Blanc"
-  final List<Question> questions;
+  final List<QuestionResource> questions;
 
   Serie({
     required this.id,
@@ -127,7 +128,7 @@ class Serie {
         id: json['id'],
         name: json['name'],
         questions: (json['questions'] as List)
-            .map((e) => Question.fromJson(e))
+            .map((e) => QuestionResource.fromJson(e))
             .toList(),
       );
 

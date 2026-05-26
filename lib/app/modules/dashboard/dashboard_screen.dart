@@ -1,7 +1,8 @@
 import 'package:cncours_quiz/app/core/controllers/auth_controller.dart';
-import 'package:cncours_quiz/app/data/models/category.dart';
+import 'package:cncours_quiz/app/data/resources/category_resource.dart';
+import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/data/models/formation.dart';
-import 'package:cncours_quiz/app/data/models/question.dart';
+import 'package:cncours_quiz/app/modules/dashboard/dashboard_controller.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,61 +17,14 @@ import 'package:cncours_quiz/app/core/theme/app_theme.dart';
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
-  // ─── Données des catégories (Version Originale) ─────────────────────
-  static const List<ConcourCategory> _categories = [
-    ConcourCategory(
-        id: 'enaref',
-        name: 'ENAREF',
-        description: 'École Nationale des Régies Financières',
-        icon: Icons.account_balance,
-        totalQuestions: 20,
-        progress: 0.35),
-    ConcourCategory(
-        id: 'enam',
-        name: 'ENAM',
-        description: 'École Nationale d\'Administration et de Magistrature',
-        icon: Icons.gavel,
-        totalQuestions: 20,
-        progress: 0.15),
-    ConcourCategory(
-        id: 'sante',
-        name: 'Santé',
-        description: 'Concours du secteur de la santé',
-        icon: Icons.local_hospital,
-        totalQuestions: 20,
-        progress: 0.0),
-    ConcourCategory(
-        id: 'police',
-        name: 'Police',
-        description: 'Concours d\'entrée à la Police Nationale',
-        icon: Icons.shield,
-        totalQuestions: 20,
-        progress: 0.60),
-    ConcourCategory(
-        id: 'douanes',
-        name: 'Douanes',
-        description: 'Concours de la Direction Générale des Douanes',
-        icon: Icons.local_shipping,
-        totalQuestions: 20,
-        progress: 0.0),
-    ConcourCategory(
-        id: 'education',
-        name: 'Éducation',
-        description: 'Concours de l\'éducation nationale',
-        icon: Icons.school,
-        totalQuestions: 20,
-        progress: 0.45),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
+    final dashboardController = Get.find<DashboardController>();
     final formationController = Get.find<FormationController>();
     final authController = Get.find<AuthController>();
 
-    final globalProgress =
-        _categories.map((c) => c.progress).reduce((a, b) => a + b) /
-            _categories.length;
+    final globalProgress = dashboardController.globalProgress;
 
     return Scaffold(
       appBar: AppBar(
@@ -218,9 +172,11 @@ class DashboardScreen extends StatelessWidget {
                   childAspectRatio: 0.95,
                 ),
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) =>
-                      _CategoryCard(category: _categories[index]),
-                  childCount: _categories.length,
+                  (context, index) => _CategoryCard(
+                    category: dashboardController.categories[index],
+                    controller: dashboardController,
+                  ),
+                  childCount: dashboardController.categories.length,
                 ),
               ),
             ),
@@ -399,7 +355,7 @@ class DashboardScreen extends StatelessWidget {
         final fc = Get.find<FormationController>();
         fc.selectSerie(item as Serie);
         Get.toNamed(Routes.QUIZ, arguments: {
-          'categoryId': item.id,
+          'categoryId': item.id.toString(),
           'categoryName': item.name,
           'questions': item.questions.toList(),
         });
@@ -480,7 +436,7 @@ class DashboardScreen extends StatelessWidget {
           'questions': last.questionResults
               .map((e) => (e as dynamic).question)
               .toList()
-              .cast<Question>(),
+              .cast<QuestionResource>(),
         });
       },
       child: Container(
@@ -526,18 +482,170 @@ class DashboardScreen extends StatelessWidget {
 }
 
 class _CategoryCard extends StatelessWidget {
-  final ConcourCategory category;
-  const _CategoryCard({required this.category});
+  final CategoryResource category;
+  final DashboardController controller;
+  const _CategoryCard({required this.category, required this.controller});
+
+  void _showQuizBottomSheet(BuildContext context) {
+    final quizzes = controller.getQuizzesForCategory(category.id);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => DraggableScrollableSheet(
+        initialChildSize: 0.6,
+        maxChildSize: 0.9,
+        minChildSize: 0.4,
+        expand: false,
+        builder: (context, scrollController) => Padding(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  Icon(
+                      DashboardController.categoryIcons[category.id] ??
+                          Icons.book,
+                      color: AppTheme.vertFaso,
+                      size: 24),
+                  const SizedBox(width: 10),
+                  Text(
+                    category.name,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '${quizzes.length} quiz disponible${quizzes.length > 1 ? 's' : ''}',
+                style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+              ),
+              const SizedBox(height: 16),
+              if (quizzes.isEmpty)
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.quiz_outlined,
+                            size: 48, color: Colors.grey[400]),
+                        const SizedBox(height: 12),
+                        Text('Aucun quiz disponible',
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[500])),
+                      ],
+                    ),
+                  ),
+                )
+              else
+                Expanded(
+                  child: ListView.separated(
+                    controller: scrollController,
+                    itemCount: quizzes.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 10),
+                    itemBuilder: (context, index) {
+                      final quiz = quizzes[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pop(ctx);
+                          HapticFeedback.selectionClick();
+                          Get.toNamed(Routes.QUIZ, arguments: {
+                            'categoryId': quiz.id.toString(),
+                            'categoryName': quiz.title,
+                            'questions': quiz.questions,
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardTheme.color,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                                color: AppTheme.vertFaso.withOpacity(0.2)),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: AppTheme.vertFaso.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(Icons.quiz_outlined,
+                                    color: AppTheme.vertFaso, size: 24),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      quiz.title,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      quiz.description,
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium
+                                              ?.color),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                '${quiz.questions.length} Q',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: AppTheme.vertFaso,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const Icon(Icons.chevron_right,
+                                  color: AppTheme.vertFaso, size: 20),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         HapticFeedback.selectionClick();
-        Get.toNamed(Routes.QUIZ, arguments: {
-          'categoryId': category.id,
-          'categoryName': category.name
-        });
+        _showQuizBottomSheet(context);
       },
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -550,7 +658,8 @@ class _CategoryCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(category.icon, color: AppTheme.vertFaso, size: 28),
+            Icon(DashboardController.categoryIcons[category.id] ?? Icons.book,
+                color: AppTheme.vertFaso, size: 28),
             const SizedBox(height: 12),
             Text(category.name,
                 style:
