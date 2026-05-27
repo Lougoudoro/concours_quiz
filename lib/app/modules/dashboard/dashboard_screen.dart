@@ -1,8 +1,9 @@
 import 'package:cncours_quiz/app/core/controllers/auth_controller.dart';
-import 'package:cncours_quiz/app/data/resources/category_resource.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/data/models/formation.dart';
+import 'package:cncours_quiz/app/data/resources/serie_resource.dart';
 import 'package:cncours_quiz/app/modules/dashboard/dashboard_controller.dart';
+import 'package:cncours_quiz/app/modules/dashboard/series_controller.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +24,7 @@ class DashboardScreen extends StatelessWidget {
     final dashboardController = Get.find<DashboardController>();
     final formationController = Get.find<FormationController>();
     final authController = Get.find<AuthController>();
+    final serieController = Get.find<SerieController>();
 
     final globalProgress = dashboardController.globalProgress;
 
@@ -149,7 +151,7 @@ class DashboardScreen extends StatelessWidget {
 
                     const SizedBox(height: 28),
                     Text(
-                      'Concours de référence',
+                      "Concours de référence",
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium
@@ -162,24 +164,24 @@ class DashboardScreen extends StatelessWidget {
             ),
 
             // ─── Grille de catégories (Originale) ────────────────────
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 14,
-                  crossAxisSpacing: 14,
-                  childAspectRatio: 0.95,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => _CategoryCard(
-                    category: dashboardController.categories[index],
-                    controller: dashboardController,
+            Obx(() => SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
+                  sliver: SliverGrid(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 14,
+                      crossAxisSpacing: 14,
+                      childAspectRatio: 0.95,
+                    ),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => _CategoryCard(
+                        serie: serieController.listing[index],
+                      ),
+                      childCount: serieController.listing.length,
+                    ),
                   ),
-                  childCount: dashboardController.categories.length,
-                ),
-              ),
-            ),
+                )),
           ],
         ),
       ),
@@ -355,8 +357,8 @@ class DashboardScreen extends StatelessWidget {
         final fc = Get.find<FormationController>();
         fc.selectSerie(item as Serie);
         Get.toNamed(Routes.QUIZ, arguments: {
-          'categoryId': item.id.toString(),
-          'categoryName': item.name,
+          'quizId': item.id.toString(),
+          'quizName': item.name,
           'questions': item.questions.toList(),
         });
       },
@@ -367,8 +369,8 @@ class DashboardScreen extends StatelessWidget {
     final bookmarks = Get.find<BookmarkController>().bookmarks;
     if (bookmarks.isEmpty) return;
     Get.toNamed(Routes.QUIZ, arguments: {
-      'categoryId': 'bookmarks',
-      'categoryName': 'Mes favoris',
+      'quizId': 'bookmarks',
+      'quizName': 'Mes favoris',
       'questions': bookmarks.toList(),
     });
   }
@@ -431,8 +433,8 @@ class DashboardScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.toNamed(Routes.QUIZ, arguments: {
-          'categoryId': 'last',
-          'categoryName': last.categoryName,
+          'quizId': 'last',
+          'quizName': last.quizName,
           'questions': last.questionResults
               .map((e) => (e as dynamic).question)
               .toList()
@@ -461,7 +463,7 @@ class DashboardScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(last.categoryName,
+                  Text(last.quizName,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 16)),
                   Text(
@@ -482,12 +484,11 @@ class DashboardScreen extends StatelessWidget {
 }
 
 class _CategoryCard extends StatelessWidget {
-  final CategoryResource category;
-  final DashboardController controller;
-  const _CategoryCard({required this.category, required this.controller});
+  final SerieResource serie;
+  const _CategoryCard({required this.serie});
 
   void _showQuizBottomSheet(BuildContext context) {
-    final quizzes = controller.getQuizzesForCategory(category.id);
+    final quizzes = serie.quizes;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -517,14 +518,10 @@ class _CategoryCard extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Icon(
-                      DashboardController.categoryIcons[category.id] ??
-                          Icons.book,
-                      color: AppTheme.vertFaso,
-                      size: 24),
+                  const Icon(Icons.book, color: AppTheme.vertFaso, size: 24),
                   const SizedBox(width: 10),
                   Text(
-                    category.name,
+                    serie.name,
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold),
                   ),
@@ -565,8 +562,8 @@ class _CategoryCard extends StatelessWidget {
                           Navigator.pop(ctx);
                           HapticFeedback.selectionClick();
                           Get.toNamed(Routes.QUIZ, arguments: {
-                            'categoryId': quiz.id.toString(),
-                            'categoryName': quiz.title,
+                            'quizId': quiz.id.toString(),
+                            'quizName': quiz.title,
                             'questions': quiz.questions,
                           });
                         },
@@ -618,8 +615,8 @@ class _CategoryCard extends StatelessWidget {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                '${quiz.questions.length} Q',
-                                style: TextStyle(
+                                '${quiz.questionsCount} Q',
+                                style: const TextStyle(
                                     fontSize: 12,
                                     color: AppTheme.vertFaso,
                                     fontWeight: FontWeight.w600),
@@ -658,14 +655,13 @@ class _CategoryCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(DashboardController.categoryIcons[category.id] ?? Icons.book,
-                color: AppTheme.vertFaso, size: 28),
+            const Icon(Icons.book, color: AppTheme.vertFaso, size: 28),
             const SizedBox(height: 12),
-            Text(category.name,
+            Text(serie.name,
                 style:
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             const SizedBox(height: 4),
-            Text(category.description,
+            Text(serie.description,
                 style: TextStyle(
                     fontSize: 11,
                     color: Theme.of(context).textTheme.bodyMedium?.color),

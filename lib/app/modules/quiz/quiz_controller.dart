@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:cncours_quiz/app/data/providers/crud_provider.dart';
+import 'package:cncours_quiz/app/data/providers/quiz_povider.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/data/models/quiz_result.dart';
@@ -8,13 +11,14 @@ import 'package:get/get.dart';
 import '../history/history_controller.dart';
 
 class QuizController extends GetxController with WidgetsBindingObserver {
-  final String categoryId;
-  final String categoryName;
+  final String quizId;
+  final String quizName;
   final List<QuestionResource>? initialQuestions;
+  late QuizProvider quizProvider;
 
   QuizController({
-    required this.categoryId,
-    required this.categoryName,
+    required this.quizId,
+    required this.quizName,
     this.initialQuestions,
   });
 
@@ -34,15 +38,36 @@ class QuizController extends GetxController with WidgetsBindingObserver {
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
+    quizProvider=QuizProvider();
     loadQuestions();
     startQuiz();
   }
 
-  void loadQuestions() {
+  void loadQuestions() async {
     if (initialQuestions != null && initialQuestions!.isNotEmpty) {
       questions.assignAll(initialQuestions!);
+      return;
+    }
+    await fetchQuestions();
+  }
+
+  Future<void> fetchQuestions() async {
+
+    try {
+      final response =  await quizProvider.questions(id: quizId);
+      if (response case {'data': final List data}) {
+        questions.assignAll(data.map<QuestionResource>((json)=>QuestionResource.fromJson(json)));
+        print(data);
+        print('=============');
+        print(questions);
+      }
+    } catch (e) {
+      print('CrudController.list error: $e');
+    } finally {
     }
   }
+
+ 
 
   void startQuiz() {
     stopwatch.start();
@@ -137,7 +162,7 @@ class QuizController extends GetxController with WidgetsBindingObserver {
       _timer?.cancel();
 
       final result = QuizResult(
-        categoryName: categoryName,
+        quizName: quizName,
         questionResults: results.toList(),
         totalTime: stopwatch.elapsed,
       );

@@ -28,10 +28,16 @@ class CrudController<M, R> extends GetxController with StateMixin<List<R>> {
 // function to get records
   Future<void> list({bool load = false}) async {
     listingLoading.value = load;
-    await crud.list().then((response) {
-      listing.assignAll(response['data'].map<R>(rE));
-      // listingLoading.value=false;
-    }).whenComplete(() => listingLoading.value = false);
+    try {
+      final response = await crud.list();
+      if (response case {'data': final List data}) {
+        listing.assignAll(data.map<R>(rE));
+      }
+    } catch (e) {
+      print('CrudController.list error: $e');
+    } finally {
+      listingLoading.value = false;
+    }
   }
 
   // function to show a record

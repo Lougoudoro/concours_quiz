@@ -107,7 +107,7 @@ class _ResultScreenState extends State<ResultScreen>
                         ),
                       ),
                       const Spacer(),
-                      Text('Résultats — ${result.categoryName}',
+                      Text('Résultats — ${result.quizName}',
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -483,7 +483,7 @@ class _ResultScreenState extends State<ResultScreen>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(question.text,
+              Text(question.content,
                   style: TextStyle(
                       fontSize: 13,
                       color: Theme.of(context).textTheme.bodyMedium?.color,
@@ -562,7 +562,7 @@ class _ResultScreenState extends State<ResultScreen>
     final reports = box.read<List>('question_reports') ?? [];
     reports.add({
       'question_id': question.id,
-      'question_text': question.text,
+      'question_text': question.content,
       'justification': question.justification,
       'message': message,
       'timestamp': DateTime.now().toIso8601String(),
@@ -577,8 +577,8 @@ class _ResultScreenState extends State<ResultScreen>
         .toList();
     if (wrongQuestions.isEmpty) return;
     Get.toNamed(Routes.QUIZ, arguments: {
-      'categoryId': 'revision',
-      'categoryName': 'Révision — ${result.categoryName}',
+      'quizId': 'revision',
+      'quizName': 'Révision — ${result.quizName}',
       'questions': wrongQuestions,
     });
   }
@@ -622,7 +622,7 @@ class _ResultScreenState extends State<ResultScreen>
               ),
             ),
             title: Text(
-              'Q${index + 1}. ${qr.question.text}',
+              'Q${index + 1}. ${qr.question.content}',
               style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,

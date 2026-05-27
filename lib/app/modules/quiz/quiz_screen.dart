@@ -10,20 +10,20 @@ import '../dashboard/bookmark_controller.dart';
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
 
 class QuizScreen extends StatelessWidget {
-  final String categoryId;
-  final String categoryName;
-  final List<QuestionResource>? questions;
+  final String quizId;
+  final String quizName;
+ final List<QuestionResource>? questions;
 
   const QuizScreen({
     super.key,
-    required this.categoryId,
-    required this.categoryName,
+    required this.quizId,
+    required this.quizName,
     this.questions,
   });
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<QuizController>(tag: categoryId);
+    final controller = Get.find<QuizController>(tag: quizId);
 
     return Scaffold(
       body: SafeArea(
@@ -133,7 +133,7 @@ class QuizScreen extends StatelessWidget {
               decoration: BoxDecoration(
                   color: AppTheme.vertFaso.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(20)),
-              child: Text(controller.categoryName,
+              child: Text(controller.quizName,
                   style: const TextStyle(
                       color: AppTheme.vertFaso,
                       fontSize: 12,
@@ -232,7 +232,7 @@ class QuizScreen extends StatelessWidget {
   }
 
   Widget _buildQuestionText(BuildContext context, QuizController controller) {
-    return Text(controller.currentQuestion.text,
+    return Text(controller.currentQuestion.content,
         style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -573,7 +573,7 @@ class QuizScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(question.text,
+              Text(question.content,
                   style: TextStyle(
                       fontSize: 13,
                       color: Theme.of(context).textTheme.bodyMedium!.color,
@@ -651,7 +651,7 @@ class QuizScreen extends StatelessWidget {
     final reports = box.read<List>('question_reports') ?? [];
     reports.add({
       'question_id': question.id,
-      'question_text': question.text,
+      'question_text': question.content,
       'justification': question.justification,
       'message': message,
       'timestamp': DateTime.now().toIso8601String(),

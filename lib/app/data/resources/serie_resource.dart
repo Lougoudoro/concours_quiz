@@ -29,7 +29,7 @@ class SerieResource extends BaseResource {
         name: json['name'],
         icon: Icons.book,
         quizzesCount: json['quizzes_count'] ?? 0,
-        quizes: (json['quizes'] as List?)
+        quizes: (json['quizzes'] as List?)
                 ?.map((o) => QuizResource.fromJson(o))
                 .toList() ??
             [],

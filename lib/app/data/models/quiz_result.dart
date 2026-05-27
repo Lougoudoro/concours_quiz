@@ -27,13 +27,13 @@ class QuestionResult {
 }
 
 class QuizResult {
-  final String categoryName;
+  final String quizName;
   final List<QuestionResult> questionResults;
   final Duration totalTime;
   final DateTime dateTime;
 
   QuizResult({
-    required this.categoryName,
+    required this.quizName,
     required this.questionResults,
     required this.totalTime,
     DateTime? dateTime,
@@ -44,7 +44,7 @@ class QuizResult {
   double get percentage => total > 0 ? (score / total) * 100 : 0;
 
   factory QuizResult.fromJson(Map<String, dynamic> json) => QuizResult(
-        categoryName: json['categoryName'],
+        quizName: json['quizName'],
         questionResults: (json['questionResults'] as List)
             .map((e) => QuestionResult.fromJson(e))
             .toList(),
@@ -54,7 +54,7 @@ class QuizResult {
       );
 
   Map<String, dynamic> toJson() => {
-        'categoryName': categoryName,
+        'quizName': quizName,
         'questionResults': questionResults.map((e) => e.toJson()).toList(),
         'totalSeconds': totalTime.inSeconds,
         'dateTime': dateTime.toIso8601String(),

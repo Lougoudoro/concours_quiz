@@ -2,7 +2,7 @@ import 'package:cncours_quiz/app/data/resources/base_resource.dart';
 import 'package:cncours_quiz/app/data/resources/option_resource.dart';
 
 class QuestionResource extends BaseResource {
-  final String text;
+  final String content;
   final String typeLabel;
   final String typeValue;
   final List<OptionResource> options;
@@ -10,7 +10,7 @@ class QuestionResource extends BaseResource {
 
   QuestionResource({
     required super.id,
-    required this.text,
+    required this.content,
     required this.typeLabel,
     required this.typeValue,
     required this.options,
@@ -20,7 +20,7 @@ class QuestionResource extends BaseResource {
   factory QuestionResource.fromJson(Map<String, dynamic> json) =>
       QuestionResource(
         id: json['id'],
-        text: json['text'],
+        content: json['content'],
         typeValue: json['type_value'],
         typeLabel: json['type_label'],
         options: (json['options'] as List)
@@ -31,7 +31,7 @@ class QuestionResource extends BaseResource {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'text': text,
+        'content': content,
         'type_value': typeValue,
         'type_label': typeLabel,
         'options': options.map((o) => o.toJson()).toList(),

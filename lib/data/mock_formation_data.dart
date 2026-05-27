@@ -82,7 +82,7 @@ class MockFormationData {
     return [
       QuestionResource(
         id: 1,
-        text: 'Quelle est la capitale économique du Burkina Faso ?',
+        content: 'Quelle est la capitale économique du Burkina Faso ?',
         typeValue: 'qcm',
         typeLabel: 'QCM',
         justification:
@@ -95,7 +95,7 @@ class MockFormationData {
       ),
       QuestionResource(
         id: 2,
-        text: 'Le Burkina Faso est un pays enclavé.',
+        content: 'Le Burkina Faso est un pays enclavé.',
         typeValue: 'vrai_ou_faux',
         typeLabel: 'Vrai ou Faux',
         justification:
@@ -107,7 +107,7 @@ class MockFormationData {
       ),
       QuestionResource(
         id: 3,
-        text:
+        content:
             'Quelles sont les couleurs du drapeau burkinabè ? (Choisir toutes les bonnes réponses)',
         typeValue: 'qcm',
         typeLabel: 'QCM',

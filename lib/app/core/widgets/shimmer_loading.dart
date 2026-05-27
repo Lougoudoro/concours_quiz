@@ -90,7 +90,7 @@ class QuizShimmer extends StatelessWidget {
           const SizedBox(height: 24),
           ...List.generate(
               4,
-              (i) => Padding(
+              (i) =>const Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: ShimmerLoading(
                       height: 56,

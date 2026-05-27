@@ -19,7 +19,7 @@ class SampleQuestions {
     // --- QCM : Culture Générale & Histoire ---
     QuestionResource(
       id: 1,
-      text:
+      content:
           'Quels sont les symboles de la République du Burkina Faso inscrits dans la Constitution ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
@@ -46,7 +46,7 @@ class SampleQuestions {
 
     QuestionResource(
       id: 2,
-      text:
+      content:
           'En quelle année la Haute-Volta a-t-elle été rebaptisée « Burkina Faso » ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
@@ -63,7 +63,7 @@ class SampleQuestions {
 
     QuestionResource(
       id: 3,
-      text: 'Quelles villes sont des chefs-lieux de région au Burkina Faso ?',
+      content: 'Quelles villes sont des chefs-lieux de région au Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
       options: [
@@ -82,7 +82,7 @@ class SampleQuestions {
     // --- QCM : Droit & Institutions ---
     QuestionResource(
       id: 4,
-      text:
+      content:
           'Quelles institutions font partie du pouvoir judiciaire au Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
@@ -103,7 +103,7 @@ class SampleQuestions {
     // --- Vrai/Faux ---
     QuestionResource(
       id: 5,
-      text: 'Le Burkina Faso est un État unitaire décentralisé.',
+      content: 'Le Burkina Faso est un État unitaire décentralisé.',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
       options: [
@@ -118,7 +118,7 @@ class SampleQuestions {
 
     QuestionResource(
       id: 6,
-      text:
+      content:
           'Le FCFA utilisé au Burkina Faso est émis par la BCEAO (Banque Centrale des États de l\'Afrique de l\'Ouest).',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
@@ -134,7 +134,7 @@ class SampleQuestions {
     // --- QCM : Géographie ---
     QuestionResource(
       id: 7,
-      text: 'Quels fleuves traversent le territoire du Burkina Faso ?',
+      content: 'Quels fleuves traversent le territoire du Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
       options: [
@@ -157,7 +157,7 @@ class SampleQuestions {
 
     QuestionResource(
       id: 8,
-      text: 'Quelle est la superficie approximative du Burkina Faso ?',
+      content: 'Quelle est la superficie approximative du Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
       options: [
@@ -174,7 +174,7 @@ class SampleQuestions {
     // --- Vrai/Faux Finances ---
     QuestionResource(
       id: 9,
-      text:
+      content:
           'Au Burkina Faso, la loi de finances est votée chaque année par l\'Assemblée nationale avant le 31 décembre.',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
@@ -190,7 +190,7 @@ class SampleQuestions {
 
     QuestionResource(
       id: 10,
-      text:
+      content:
           'Parmi les éléments suivants, lesquels sont des principes budgétaires fondamentaux au Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
@@ -213,7 +213,7 @@ class SampleQuestions {
     // --- QCM : Institutions et fonctionnement ---
     QuestionResource(
       id: 11,
-      text:
+      content:
           'Qui nomme le Premier ministre au Burkina Faso selon la Constitution de 1991 ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
@@ -233,7 +233,7 @@ class SampleQuestions {
 
     QuestionResource(
       id: 12,
-      text: 'Le Burkina Faso est frontalier de combien de pays ?',
+      content: 'Le Burkina Faso est frontalier de combien de pays ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
       options: [
@@ -251,7 +251,7 @@ class SampleQuestions {
     // --- Vrai/Faux Culture ---
     QuestionResource(
       id: 13,
-      text:
+      content:
           'Le FESPACO (Festival Panafricain du Cinéma de Ouagadougou) se tient tous les deux ans à Ouagadougou.',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
@@ -267,7 +267,7 @@ class SampleQuestions {
     // --- QCM Droit administratif ---
     QuestionResource(
       id: 14,
-      text:
+      content:
           'Quelles sont les catégories de collectivités territoriales au Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
@@ -285,7 +285,7 @@ class SampleQuestions {
 
     QuestionResource(
       id: 15,
-      text: 'Le Burkina Faso a obtenu son indépendance le 5 août 1960.',
+      content: 'Le Burkina Faso a obtenu son indépendance le 5 août 1960.',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
       options: [
@@ -300,7 +300,7 @@ class SampleQuestions {
     // --- QCM Économie ---
     QuestionResource(
       id: 16,
-      text:
+      content:
           'Quels sont les principaux produits d\'exportation du Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
@@ -318,7 +318,7 @@ class SampleQuestions {
 
     QuestionResource(
       id: 17,
-      text: 'La devise du Burkina Faso est « Unité – Progrès – Justice ».',
+      content: 'La devise du Burkina Faso est « Unité – Progrès – Justice ».',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
       options: [
@@ -333,7 +333,7 @@ class SampleQuestions {
     // --- QCM Administration ---
     QuestionResource(
       id: 18,
-      text: 'Combien de régions administratives le Burkina Faso compte-t-il ?',
+      content: 'Combien de régions administratives le Burkina Faso compte-t-il ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
       options: [
@@ -349,7 +349,7 @@ class SampleQuestions {
 
     QuestionResource(
       id: 19,
-      text: 'Parmi ces langues, lesquelles sont parlées au Burkina Faso ?',
+      content: 'Parmi ces langues, lesquelles sont parlées au Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
       options: [
@@ -365,7 +365,7 @@ class SampleQuestions {
 
     QuestionResource(
       id: 20,
-      text:
+      content:
           'Le Nahouri est une province du Burkina Faso dont le chef-lieu est Pô.',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
@@ -380,7 +380,7 @@ class SampleQuestions {
   ];
 
   /// Retourne la liste de questions pour une catégorie donnée
-  static List<QuestionResource> getQuestionsForCategory(String categoryId) {
+  static List<QuestionResource> getQuestionsForCategory(String quizId) {
     // Pour l'instant, toutes les catégories retournent les mêmes questions
     // En production, chaque catégorie aurait sa propre banque
     return enarefQuestions;

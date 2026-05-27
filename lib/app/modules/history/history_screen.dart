@@ -178,7 +178,7 @@ class _HistoryCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(result.categoryName,
+                Text(result.quizName,
                     style: const TextStyle(
                         fontSize: 15, fontWeight: FontWeight.w600),
                     maxLines: 1,

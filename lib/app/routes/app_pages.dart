@@ -60,8 +60,8 @@ class AppPages {
         }
         final args = Get.arguments as Map<String, dynamic>;
         return QuizScreen(
-          categoryId: args['categoryId'],
-          categoryName: args['categoryName'],
+          quizId: args['quizId'],
+          quizName: args['quizName'],
           questions: args['questions'] != null
               ? List<QuestionResource>.from(args['questions'])
               : null,

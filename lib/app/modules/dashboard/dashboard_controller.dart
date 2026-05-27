@@ -79,8 +79,8 @@ class DashboardController extends GetxController {
     6: _buildEducationQuizzes(),
   };
 
-  List<QuizResource> getQuizzesForCategory(int categoryId) =>
-      _quizzes[categoryId] ?? [];
+  List<QuizResource> getQuizzesForCategory(int quizId) =>
+      _quizzes[quizId] ?? [];
 
   static List<QuizResource> _buildENAREFQuizzes() => [
         QuizResource(
@@ -193,7 +193,7 @@ class DashboardController extends GetxController {
   static final List<QuestionResource> _sampleQuestions = [
     QuestionResource(
       id: 1,
-      text:
+      content:
           'Quels sont les symboles de la République du Burkina Faso inscrits dans la Constitution ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
@@ -217,7 +217,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 2,
-      text:
+      content:
           'En quelle année la Haute-Volta a-t-elle été rebaptisée « Burkina Faso » ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
@@ -232,7 +232,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 3,
-      text: 'Quelles villes sont des chefs-lieux de région au Burkina Faso ?',
+      content: 'Quelles villes sont des chefs-lieux de région au Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
       options: [
@@ -248,7 +248,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 4,
-      text:
+      content:
           'Quelles institutions font partie du pouvoir judiciaire au Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
@@ -265,7 +265,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 5,
-      text: 'Le Burkina Faso est un État unitaire décentralisé.',
+      content: 'Le Burkina Faso est un État unitaire décentralisé.',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
       options: [
@@ -277,7 +277,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 6,
-      text: 'Le FCFA utilisé au Burkina Faso est émis par la BCEAO.',
+      content: 'Le FCFA utilisé au Burkina Faso est émis par la BCEAO.',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
       options: [
@@ -289,7 +289,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 7,
-      text: 'Quels fleuves traversent le territoire du Burkina Faso ?',
+      content: 'Quels fleuves traversent le territoire du Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
       options: [
@@ -309,7 +309,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 8,
-      text: 'Quelle est la superficie approximative du Burkina Faso ?',
+      content: 'Quelle est la superficie approximative du Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
       options: [
@@ -322,7 +322,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 9,
-      text:
+      content:
           'Au Burkina Faso, la loi de finances est votée chaque année par l\'Assemblée nationale avant le 31 décembre.',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
@@ -335,7 +335,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 10,
-      text:
+      content:
           'Parmi les éléments suivants, lesquels sont des principes budgétaires fondamentaux au Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
@@ -354,7 +354,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 11,
-      text:
+      content:
           'Qui nomme le Premier ministre au Burkina Faso selon la Constitution de 1991 ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
@@ -372,7 +372,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 12,
-      text: 'Le Burkina Faso est frontalier de combien de pays ?',
+      content: 'Le Burkina Faso est frontalier de combien de pays ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
       options: [
@@ -385,7 +385,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 13,
-      text: 'Le FESPACO se tient tous les deux ans à Ouagadougou.',
+      content: 'Le FESPACO se tient tous les deux ans à Ouagadougou.',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
       options: [
@@ -397,7 +397,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 14,
-      text:
+      content:
           'Quelles sont les catégories de collectivités territoriales au Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
@@ -412,7 +412,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 15,
-      text: 'Le Burkina Faso a obtenu son indépendance le 5 août 1960.',
+      content: 'Le Burkina Faso a obtenu son indépendance le 5 août 1960.',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
       options: [
@@ -424,7 +424,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 16,
-      text:
+      content:
           'Quels sont les principaux produits d\'exportation du Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
@@ -439,7 +439,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 17,
-      text: 'La devise du Burkina Faso est « Unité – Progrès – Justice ».',
+      content: 'La devise du Burkina Faso est « Unité – Progrès – Justice ».',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
       options: [
@@ -451,7 +451,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 18,
-      text: 'Combien de régions administratives le Burkina Faso compte-t-il ?',
+      content: 'Combien de régions administratives le Burkina Faso compte-t-il ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
       options: [
@@ -465,7 +465,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 19,
-      text: 'Parmi ces langues, lesquelles sont parlées au Burkina Faso ?',
+      content: 'Parmi ces langues, lesquelles sont parlées au Burkina Faso ?',
       typeValue: 'qcm',
       typeLabel: 'QCM',
       options: [
@@ -479,7 +479,7 @@ class DashboardController extends GetxController {
     ),
     QuestionResource(
       id: 20,
-      text:
+      content:
           'Le Nahouri est une province du Burkina Faso dont le chef-lieu est Pô.',
       typeValue: 'vrai_ou_faux',
       typeLabel: 'Vrai ou Faux',
