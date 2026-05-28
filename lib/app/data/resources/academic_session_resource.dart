@@ -4,7 +4,7 @@ import 'package:cncours_quiz/app/data/resources/concours_type_resource.dart';
 class AcademicSessionResource extends BaseResource {
   final String name;
   final bool isActive;
-  final List<ConcoursTypeRecource> concoursTypes;
+  final List<ConcoursTypeResource> concoursTypes;
 
   AcademicSessionResource({
     required super.id,
@@ -18,7 +18,7 @@ class AcademicSessionResource extends BaseResource {
         name: json['name'],
         isActive: json['is_active'] ?? false,
         concoursTypes: (json['concours_types'] as List)
-            .map((e) => ConcoursTypeRecource.fromJson(e))
+            .map((e) => ConcoursTypeResource.fromJson(e))
             .toList()
       );
 

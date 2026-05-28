@@ -2,25 +2,31 @@
 library;
 
 import 'package:cncours_quiz/app/data/resources/base_resource.dart';
+import 'package:cncours_quiz/app/data/resources/category_resource.dart';
 
 
-class ConcoursTypeRecource extends BaseResource {
+class ConcoursTypeResource extends BaseResource {
   final String name;
   final String statusLabel;
   final String statusValue;
+  final List<CategoryResource> categories;
 
-  ConcoursTypeRecource({
+  ConcoursTypeResource({
     required super.id,
     required this.name,
     required this.statusValue,
     required this.statusLabel,
+    this.categories = const []
   });
 
-  factory ConcoursTypeRecource.fromJson(Map<String, dynamic> json) => ConcoursTypeRecource(
+  factory ConcoursTypeResource.fromJson(Map<String, dynamic> json) => ConcoursTypeResource(
         id: json['id'],
         name: json['name'],
         statusLabel: json['status_label'],
         statusValue: json['status_value'],
+        categories: (json['categories'] as List)
+            .map((e) => CategoryResource.fromJson(e))
+            .toList()
       );
 
   @override
@@ -28,6 +34,7 @@ class ConcoursTypeRecource extends BaseResource {
         'id': id,
         'name': name,
         'status_label':statusLabel,
-        'status_value':statusLabel
+        'status_value':statusLabel,
+        'categories': categories.map((e) => e.toJson()).toList()
       };
 }

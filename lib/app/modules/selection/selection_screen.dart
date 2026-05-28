@@ -1,4 +1,6 @@
-import 'package:cncours_quiz/app/data/models/formation.dart';
+import 'package:cncours_quiz/app/data/resources/category_resource.dart';
+import 'package:cncours_quiz/app/data/resources/quiz_resource.dart';
+import 'package:cncours_quiz/app/data/resources/serie_resource.dart';
 import 'package:flutter/material.dart';
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
 
@@ -47,16 +49,16 @@ class SelectionScreen extends StatelessWidget {
                 String desc = '';
                 IconData icon = Icons.chevron_right;
 
-                if (item is SubCategory) {
+                if (item is CategoryResource) {
                   name = item.name;
-                  desc = '${item.collections.length} formations disponibles';
+                  desc = '${item.series.length} formations disponibles';
                   icon = Icons.layers_outlined;
-                } else if (item is Collection) {
+                } else if (item is SerieResource) {
                   name = item.name;
-                  desc = '${item.series.length} séries de quiz';
+                  desc = '${item.quizes.length} séries de quiz';
                   icon = Icons.folder_open_outlined;
-                } else if (item is Serie) {
-                  name = item.name;
+                } else if (item is QuizResource) {
+                  name = item.title;
                   desc = '${item.questions.length} questions';
                   icon = Icons.assignment_outlined;
                 }

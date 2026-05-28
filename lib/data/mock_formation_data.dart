@@ -1,76 +1,92 @@
-import '../app/data/models/formation.dart';
+import '../app/data/resources/academic_session_resource.dart';
+import '../app/data/resources/category_resource.dart';
+import '../app/data/resources/concours_type_resource.dart';
+import '../app/data/resources/quiz_resource.dart';
 import '../app/data/resources/question_resource.dart';
 import '../app/data/resources/option_resource.dart';
+import '../app/data/resources/serie_resource.dart';
+import 'package:flutter/material.dart';
 
 class MockFormationData {
-  static Session getSession2026() {
-    return Session(
+  static AcademicSessionResource getSession2026() {
+    return AcademicSessionResource(
       id: 1,
       name: 'Session 2026',
       isActive: true,
       concoursTypes: [
-        // --- OPTION A : CONCOURS DIRECTS ---
-        ConcoursType(
+        ConcoursTypeResource(
           id: 1,
           name: 'Concours Directs',
-          category: ConcoursCategory.direct,
-          subCategories: [
-            SubCategory(
+          statusValue: 'direct',
+          statusLabel: 'Concours Directs',
+          categories: [
+            CategoryResource(
               id: 1,
               name: 'Niveau BAC',
-              collections: [
-                Collection(
+              description: 'Candidats de niveau BAC',
+              series: [
+                SerieResource(
                   id: 1,
                   name: 'Formation de Mars',
-                  series: [
-                    Serie(
+                  description: 'Formation intensive de Mars',
+                  icon: Icons.book,
+                  quizes: [
+                    QuizResource(
                       id: 1,
-                      name: 'Examen Blanc : Culture Générale',
+                      title: 'Examen Blanc : Culture Générale',
+                      description: 'Testez votre culture générale',
                       questions: _getMockQuestions('Culture Générale (BAC)'),
                     ),
-                    Serie(
+                    QuizResource(
                       id: 2,
-                      name: 'Quiz : Tests de Logique',
+                      title: 'Quiz : Tests de Logique',
+                      description: 'Évaluez votre raisonnement logique',
                       questions: _getMockQuestions('Logique (BAC)'),
                     ),
                   ],
                 ),
               ],
             ),
-            SubCategory(
+            CategoryResource(
               id: 2,
               name: 'Niveau BEPC',
-              collections: [],
+              description: 'Candidats de niveau BEPC',
+              series: [],
             ),
           ],
         ),
-        // --- OPTION B : CONCOURS PROFESSIONNELS ---
-        ConcoursType(
+        ConcoursTypeResource(
           id: 2,
           name: 'Concours Professionnels',
-          category: ConcoursCategory.professionnel,
-          subCategories: [
-            SubCategory(
+          statusValue: 'professionnel',
+          statusLabel: 'Concours Professionnels',
+          categories: [
+            CategoryResource(
               id: 3,
               name: 'ENAM (Administration)',
-              collections: [
-                Collection(
+              description: 'Concours ENAM filière administration',
+              series: [
+                SerieResource(
                   id: 2,
                   name: 'Formation de Janvier',
-                  series: [
-                    Serie(
+                  description: 'Formation intense de Janvier',
+                  icon: Icons.book,
+                  quizes: [
+                    QuizResource(
                       id: 3,
-                      name: 'Quiz 1 : Droit Administratif',
+                      title: 'Quiz 1 : Droit Administratif',
+                      description: 'Test de droit administratif',
                       questions: _getMockQuestions('Droit Admin (ENAM)'),
                     ),
                   ],
                 ),
               ],
             ),
-            SubCategory(
+            CategoryResource(
               id: 4,
               name: 'Secteur de la Santé',
-              collections: [],
+              description: 'Concours du secteur de la santé',
+              series: [],
             ),
           ],
         ),

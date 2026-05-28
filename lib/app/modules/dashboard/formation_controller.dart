@@ -1,60 +1,62 @@
-import 'package:cncours_quiz/app/data/models/formation.dart';
+import 'package:cncours_quiz/app/data/resources/academic_session_resource.dart';
+import 'package:cncours_quiz/app/data/resources/category_resource.dart';
+import 'package:cncours_quiz/app/data/resources/concours_type_resource.dart';
+import 'package:cncours_quiz/app/data/resources/quiz_resource.dart';
+import 'package:cncours_quiz/app/data/resources/serie_resource.dart';
 import 'package:get/get.dart';
 
 class FormationController extends GetxController {
   // ─── État ──────────────────────────────────────────────────────────
-  final Rx<Session?> activeSession = Rx<Session?>(null);
-  
+  final Rx<AcademicSessionResource?> activeSession =
+      Rx<AcademicSessionResource?>(null);
+
   // Sélections actuelles
-  final Rx<ConcoursType?> selectedConcoursType = Rx<ConcoursType?>(null);
-  final Rx<SubCategory?> selectedSubCategory = Rx<SubCategory?>(null);
-  final Rx<Collection?> selectedCollection = Rx<Collection?>(null);
-  final Rx<Serie?> selectedSerie = Rx<Serie?>(null);
+  final Rx<ConcoursTypeResource?> selectedConcoursType =
+      Rx<ConcoursTypeResource?>(null);
+  final Rx<CategoryResource?> selectedSubCategory = Rx<CategoryResource?>(null);
+  final Rx<SerieResource?> selectedCollection = Rx<SerieResource?>(null);
+  final Rx<QuizResource?> selectedSerie = Rx<QuizResource?>(null);
 
   // ─── Getters de Filtrage Dynamique ──────────────────────────────────
-  
-  // Liste des types (Directs / Professionnels) pour la session active
-  List<ConcoursType> get availableConcoursTypes => 
+
+  List<ConcoursTypeResource> get availableConcoursTypes =>
       activeSession.value?.concoursTypes ?? [];
 
-  // Liste des sous-catégories (Niveaux ou Secteurs)
-  List<SubCategory> get availableSubCategories => 
-      selectedConcoursType.value?.subCategories ?? [];
+  List<CategoryResource> get availableSubCategories =>
+      selectedConcoursType.value?.categories ?? [];
 
-  // Liste des collections
-  List<Collection> get availableCollections => 
-      selectedSubCategory.value?.collections ?? [];
+  List<SerieResource> get availableCollections =>
+      selectedSubCategory.value?.series ?? [];
 
-  // Liste des séries
-  List<Serie> get availableSeries => 
-      selectedCollection.value?.series ?? [];
+  List<QuizResource> get availableSeries =>
+      selectedCollection.value?.quizes ?? [];
 
   // ─── Méthodes de Sélection ──────────────────────────────────────────
-  
-  void setSession(Session session) {
+
+  void setSession(AcademicSessionResource session) {
     activeSession.value = session;
     _resetSelections();
   }
 
-  void selectConcoursType(ConcoursType type) {
+  void selectConcoursType(ConcoursTypeResource type) {
     selectedConcoursType.value = type;
-    selectedSubCategory.value = null; // Réinitialise la suite
+    selectedSubCategory.value = null;
     selectedCollection.value = null;
     selectedSerie.value = null;
   }
 
-  void selectSubCategory(SubCategory sub) {
+  void selectSubCategory(CategoryResource sub) {
     selectedSubCategory.value = sub;
     selectedCollection.value = null;
     selectedSerie.value = null;
   }
 
-  void selectCollection(Collection coll) {
+  void selectCollection(SerieResource coll) {
     selectedCollection.value = coll;
     selectedSerie.value = null;
   }
 
-  void selectSerie(Serie serie) {
+  void selectSerie(QuizResource serie) {
     selectedSerie.value = serie;
   }
 
@@ -64,5 +66,4 @@ class FormationController extends GetxController {
     selectedCollection.value = null;
     selectedSerie.value = null;
   }
-
 }

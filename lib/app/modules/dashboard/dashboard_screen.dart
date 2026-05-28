@@ -1,6 +1,8 @@
 import 'package:cncours_quiz/app/core/controllers/auth_controller.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
-import 'package:cncours_quiz/app/data/models/formation.dart';
+import 'package:cncours_quiz/app/data/resources/category_resource.dart';
+import 'package:cncours_quiz/app/data/resources/concours_type_resource.dart';
+import 'package:cncours_quiz/app/data/resources/quiz_resource.dart';
 import 'package:cncours_quiz/app/data/resources/serie_resource.dart';
 import 'package:cncours_quiz/app/modules/dashboard/dashboard_controller.dart';
 import 'package:cncours_quiz/app/modules/dashboard/series_controller.dart';
@@ -220,7 +222,7 @@ class DashboardScreen extends StatelessWidget {
           Expanded(
             child: Obx(() {
               final session = fc.activeSession.value;
-              if (session == null)
+              if (session == null) {
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.all(32),
@@ -255,66 +257,68 @@ class DashboardScreen extends StatelessWidget {
                     ),
                   ),
                 );
-
-              return ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text('FILTRAGE AVANCÉ',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                            fontSize: 12)),
-                  ),
-                  ...session.concoursTypes.map((type) => ListTile(
-                        leading: Icon(
-                            type.category == ConcoursCategory.direct
-                                ? Icons.group
-                                : Icons.work,
-                            color: AppTheme.vertFaso),
-                        title: Text(type.name,
-                            style:
-                                const TextStyle(fontWeight: FontWeight.w600)),
-                        subtitle: Text(type.category == ConcoursCategory.direct
-                            ? 'Candidats externes'
-                            : 'Professionnels'),
-                        trailing: const Icon(Icons.chevron_right, size: 18),
-                        onTap: () {
-                          Get.back(); // Ferme le drawer
-                          _navigateToSubCategory(type);
-                        },
-                      )),
-                  const Divider(),
-                  ListTile(
-                    leading: const Icon(Icons.history),
-                    title: const Text('Mon historique'),
-                    onTap: () {
-                      Get.back();
-                      Get.toNamed(Routes.HISTORY);
-                    },
-                  ),
-                  Obx(() {
-                    final count =
-                        Get.find<BookmarkController>().bookmarks.length;
-                    return ListTile(
-                      leading: Icon(
-                          count > 0 ? Icons.bookmark : Icons.bookmark_border,
-                          color: AppTheme.orReussite),
-                      title: Text('Mes favoris${count > 0 ? ' ($count)' : ''}'),
+              } else {
+                return ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text('FILTRAGE AVANCÉ',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                              fontSize: 12)),
+                    ),
+                    ...session.concoursTypes.map((type) => ListTile(
+                          leading: Icon(
+                              type.statusValue == 'direct'
+                                  ? Icons.group
+                                  : Icons.work,
+                              color: AppTheme.vertFaso),
+                          title: Text(type.name,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600)),
+                          subtitle: Text(type.statusValue == 'direct'
+                              ? 'Candidats externes'
+                              : 'Professionnels'),
+                          trailing: const Icon(Icons.chevron_right, size: 18),
+                          onTap: () {
+                            Get.back(); // Ferme le drawer
+                            _navigateToCategories(type);
+                          },
+                        )),
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.history),
+                      title: const Text('Mon historique'),
                       onTap: () {
                         Get.back();
-                        _navigateToBookmarks();
+                        Get.toNamed(Routes.HISTORY);
                       },
-                    );
-                  }),
-                  ListTile(
-                    leading: const Icon(Icons.info_outline),
-                    title: const Text('Guide des concours'),
-                    onTap: () {},
-                  ),
-                ],
-              );
+                    ),
+                    Obx(() {
+                      final count =
+                          Get.find<BookmarkController>().bookmarks.length;
+                      return ListTile(
+                        leading: Icon(
+                            count > 0 ? Icons.bookmark : Icons.bookmark_border,
+                            color: AppTheme.orReussite),
+                        title:
+                            Text('Mes favoris${count > 0 ? ' ($count)' : ''}'),
+                        onTap: () {
+                          Get.back();
+                          _navigateToBookmarks();
+                        },
+                      );
+                    }),
+                    ListTile(
+                      leading: const Icon(Icons.info_outline),
+                      title: const Text('Guide des concours'),
+                      onTap: () {},
+                    ),
+                  ],
+                );
+              }
             }),
           ),
         ],
@@ -322,47 +326,46 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  void _navigateToSubCategory(ConcoursType type) {
+  void _navigateToCategories(ConcoursTypeResource type) {
     final fc = Get.find<FormationController>();
     fc.selectConcoursType(type);
     Get.toNamed(Routes.SELECTION, arguments: {
       'title': type.name,
-      'subtitle': type.category == ConcoursCategory.direct
-          ? 'Niveau d\'étude'
-          : 'Secteur / Corps',
+      'subtitle':
+          type.statusValue == 'direct' ? 'Niveau d\'étude' : 'Secteur / Corps',
       'items': fc.availableSubCategories,
-      'onSelect': (item) => _navigateToCollection(item as SubCategory),
+      'onSelect': (item) => _navigateToSeries(item as CategoryResource),
     });
   }
 
-  void _navigateToCollection(SubCategory sub) {
+  void _navigateToSeries(CategoryResource sub) {
     final fc = Get.find<FormationController>();
     fc.selectSubCategory(sub);
     Get.toNamed(Routes.SELECTION, arguments: {
       'title': sub.name,
-      'subtitle': 'Période de formation',
+      'subtitle':sub.description,
       'items': fc.availableCollections,
-      'onSelect': (item) => _navigateToSerie(item as Collection),
-    });
+      'onSelect': (item) => _navigateToQuizzes(item as SerieResource),
+    },preventDuplicates: false);
   }
 
-  void _navigateToSerie(Collection coll) {
+  void _navigateToQuizzes(SerieResource coll) {
     final fc = Get.find<FormationController>();
     fc.selectCollection(coll);
     Get.toNamed(Routes.SELECTION, arguments: {
       'title': coll.name,
-      'subtitle': 'Séries de quiz',
+      'subtitle': coll.description,
       'items': fc.availableSeries,
       'onSelect': (item) {
         final fc = Get.find<FormationController>();
-        fc.selectSerie(item as Serie);
+        fc.selectSerie(item as QuizResource);
         Get.toNamed(Routes.QUIZ, arguments: {
           'quizId': item.id.toString(),
-          'quizName': item.name,
+          'quizName': item.title,
           'questions': item.questions.toList(),
         });
       },
-    });
+    },preventDuplicates: false);
   }
 
   void _navigateToBookmarks() {
