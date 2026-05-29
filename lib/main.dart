@@ -14,7 +14,6 @@ void main() async {
   await DependencyInjection.init();
 
   WidgetsFlutterBinding.ensureInitialized();
-  // Inject Controllers globally
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 

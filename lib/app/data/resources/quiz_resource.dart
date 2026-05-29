@@ -3,10 +3,12 @@ library;
 
 import 'package:cncours_quiz/app/data/resources/base_resource.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
+import 'package:flutter/material.dart';
 
 class QuizResource extends BaseResource {
   final String title;
   final String description;
+  @protected
   final int? questionsCount;
   final List<QuestionResource> questions;
 
@@ -39,4 +41,6 @@ class QuizResource extends BaseResource {
         'questions_count': questionsCount,
         'questions': questions.map((o) => o.toJson()).toList(),
       };
+
+    int getQuesionsCount() => questionsCount??questions.length;
 }

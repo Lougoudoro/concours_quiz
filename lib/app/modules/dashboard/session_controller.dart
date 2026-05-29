@@ -1,3 +1,4 @@
+import 'package:cncours_quiz/app/data/providers/session_povider.dart';
 import 'package:cncours_quiz/app/data/resources/academic_session_resource.dart';
 import 'package:cncours_quiz/app/data/resources/category_resource.dart';
 import 'package:cncours_quiz/app/data/resources/concours_type_resource.dart';
@@ -5,7 +6,8 @@ import 'package:cncours_quiz/app/data/resources/quiz_resource.dart';
 import 'package:cncours_quiz/app/data/resources/serie_resource.dart';
 import 'package:get/get.dart';
 
-class FormationController extends GetxController {
+class SessionController extends GetxController {
+  late SessionProvider provider;
   // ─── État ──────────────────────────────────────────────────────────
   final Rx<AcademicSessionResource?> activeSession =
       Rx<AcademicSessionResource?>(null);
@@ -32,6 +34,26 @@ class FormationController extends GetxController {
       selectedCollection.value?.quizes ?? [];
 
   // ─── Méthodes de Sélection ──────────────────────────────────────────
+
+  @override
+  void onInit() {
+    super.onInit();
+    provider = SessionProvider();
+    fetchSelectedSession();
+  }
+
+  Future<void> fetchSelectedSession() async {
+    try {
+      var response = await provider.selectedSession();
+      if (response['success'] == true) {
+        print(response['data']);
+        setSession(AcademicSessionResource.fromJson(response['data']));
+        print(activeSession);
+      }
+    } catch (_) {
+      print(_);
+    }
+  }
 
   void setSession(AcademicSessionResource session) {
     activeSession.value = session;

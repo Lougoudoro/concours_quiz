@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../core/controllers/theme_controller.dart';
-import 'formation_controller.dart';
+import 'session_controller.dart';
 import '../history/history_controller.dart';
 import 'bookmark_controller.dart';
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
@@ -24,7 +24,7 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
     final dashboardController = Get.find<DashboardController>();
-    final formationController = Get.find<FormationController>();
+    final sessionController = Get.find<SessionController>();
     final authController = Get.find<AuthController>();
     final serieController = Get.find<SerieController>();
 
@@ -62,7 +62,7 @@ class DashboardScreen extends StatelessWidget {
           ),
         ],
       ),
-      drawer: _buildFilterDrawer(context, formationController),
+      drawer: _buildFilterDrawer(context, sessionController),
       body: SafeArea(
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
@@ -191,7 +191,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   // ─── Drawer pour le filtrage hiérarchique ───────────────────────────
-  Widget _buildFilterDrawer(BuildContext context, FormationController fc) {
+  Widget _buildFilterDrawer(BuildContext context, SessionController fc) {
     return Drawer(
       child: Column(
         children: [
@@ -327,7 +327,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   void _navigateToCategories(ConcoursTypeResource type) {
-    final fc = Get.find<FormationController>();
+    final fc = Get.find<SessionController>();
     fc.selectConcoursType(type);
     Get.toNamed(Routes.SELECTION, arguments: {
       'title': type.name,
@@ -339,7 +339,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   void _navigateToSeries(CategoryResource sub) {
-    final fc = Get.find<FormationController>();
+    final fc = Get.find<SessionController>();
     fc.selectSubCategory(sub);
     Get.toNamed(Routes.SELECTION, arguments: {
       'title': sub.name,
@@ -350,14 +350,14 @@ class DashboardScreen extends StatelessWidget {
   }
 
   void _navigateToQuizzes(SerieResource coll) {
-    final fc = Get.find<FormationController>();
+    final fc = Get.find<SessionController>();
     fc.selectCollection(coll);
     Get.toNamed(Routes.SELECTION, arguments: {
       'title': coll.name,
       'subtitle': coll.description,
       'items': fc.availableSeries,
       'onSelect': (item) {
-        final fc = Get.find<FormationController>();
+        final fc = Get.find<SessionController>();
         fc.selectSerie(item as QuizResource);
         Get.toNamed(Routes.QUIZ, arguments: {
           'quizId': item.id.toString(),
@@ -618,7 +618,7 @@ class _CategoryCard extends StatelessWidget {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                '${quiz.questionsCount} Q',
+                                '${quiz.getQuesionsCount()} Q',
                                 style: const TextStyle(
                                     fontSize: 12,
                                     color: AppTheme.vertFaso,
