@@ -7,8 +7,8 @@ import 'package:get_storage/get_storage.dart';
 class DependencyInjection {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   static Future<void> init() async {
+    await GetStorage.init();
     Get.put<ThemeController>(ThemeController());
     Get.put<AuthController>(AuthController());
-    await GetStorage.init();
   }
 }

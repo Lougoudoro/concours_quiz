@@ -27,7 +27,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = _Paths.DASHBOARD;
+  static const INITIAL = _Paths.SPLASH;
   static const LOGIN = _Paths.AUTH;
 
   static final routes = [

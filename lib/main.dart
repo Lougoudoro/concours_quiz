@@ -10,12 +10,12 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 void main() async {
-  await dotenv.load(fileName: ".env");
-  await DependencyInjection.init();
-
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  await dotenv.load(fileName: ".env");
+  await DependencyInjection.init();
 
   runApp(const ConcourQuizApp());
 }

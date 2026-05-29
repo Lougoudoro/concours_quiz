@@ -1,5 +1,4 @@
 import 'package:cncours_quiz/app/core/controllers/auth_controller.dart';
-import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/controllers/theme_controller.dart';
