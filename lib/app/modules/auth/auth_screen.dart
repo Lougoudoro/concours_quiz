@@ -86,23 +86,26 @@ class _AuthScreenState extends State<AuthScreen> {
                   const SizedBox(height: 20),
                 ],
                 _buildLabel('Email'),
-                TextFormField(
+                Obx(() =>  TextFormField(
                   controller: _authController.emailController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'votre@email.com',
-                    prefixIcon: Icon(Icons.mail_outline),
+                    prefixIcon: const Icon(Icons.mail_outline),
+                    errorText: _authController.errors['email']?.first
                   ),
+                  
                   validator: (value) => value == null || value.trim().isEmpty
                       ? 'Champ requis'
                       : null,
-                ),
+                )),
                 const SizedBox(height: 20),
                 _buildLabel('Mot de passe'),
                 Obx(() => TextFormField(
                       controller: _authController.passwordController,
                       obscureText: _authController.obscurePassword.value,
                       decoration: InputDecoration(
+                        errorText: _isLogin? null:_authController.errors['password']?.first,
                         hintText: '••••••••',
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(

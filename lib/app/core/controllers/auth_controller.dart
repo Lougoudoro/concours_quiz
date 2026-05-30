@@ -1,3 +1,4 @@
+import 'package:cncours_quiz/app/core/client/api_exception.dart';
 import 'package:cncours_quiz/app/core/client/error_handler.dart';
 import 'package:cncours_quiz/app/data/models/token.dart';
 import 'package:cncours_quiz/app/data/providers/auth_provider.dart';
@@ -18,11 +19,8 @@ class AuthController extends GetxController {
   RxBool isLoading = false.obs;
   RxString errorMessage = ''.obs;
   RxBool obscurePassword = true.obs;
+  final RxMap<String, List> errors = <String, List>{}.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   void clearInputs() {
     nameController.clear();
@@ -35,67 +33,74 @@ class AuthController extends GetxController {
   Future<void> login() async {
     if (!loginformKey.currentState!.validate()) return;
 
-    isLoading.value = true;
-    errorMessage.value = '';
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+      errors.assignAll({});
 
-    final response = await ErrorHandler.guard(
-      () => _provider.login(data: {
-        'email': emailController.text.trim(),
-        'password': passwordController.text,
-      }),
-      context: 'AuthController.login',
-      showError: false,
-      onError: (e) {
-        errorMessage.value = e.message;
-      },
-    );
+      final response = await ErrorHandler.guard(
+        () => _provider.login(data: {
+          'email': emailController.text.trim(),
+          'password': passwordController.text,
+        }),
+        context: 'AuthController.login',
+        showError: false,
+        onError: (e) {
+            if (e is ApiException) {
+            errors.assignAll({'email':[e.message]});
+          }else{
+          errorMessage.value = e.message;
+          }
+        },
+      );
 
-    if (response != null && response['success'] == true) {
-      authResource.value = AuthResource.fromJson(response['data']);
-      Token.set(response['token'] as String);
-      Get.offNamed(Routes.DASHBOARD);
-    } else if (response != null) {
-      errorMessage.value =
-          response['message'] ?? 'Email ou mot de passe incorrect';
+      if (response != null && response['success'] == true) {
+        authResource.value = AuthResource.fromJson(response['data']);
+        Token.set(response['token'] as String);
+        isLoading.value = false;
+        Get.offNamed(Routes.DASHBOARD);
+        return;
+      }
+    } finally {
+      isLoading.value = false;
     }
-
-    isLoading.value = false;
   }
 
   Future<void> register() async {
     if (!loginformKey.currentState!.validate()) return;
 
-    isLoading.value = true;
-    errorMessage.value = '';
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+       errors.assignAll({});
 
-    final response = await ErrorHandler.guard(
-      () => _provider.register(data: {
-        'name': nameController.text.trim(),
-        'email': emailController.text.trim(),
-        'password': passwordController.text,
-        'password_confirmation': passwordConfirmationController.text,
-      }),
-      context: 'AuthController.register',
-      showError: false,
-      onError: (e) {
-        errorMessage.value = e.message;
-      },
-    );
+      final response = await ErrorHandler.guard(
+        () => _provider.register(data: {
+          'name': nameController.text.trim(),
+          'email': emailController.text.trim(),
+          'password': passwordController.text,
+          'password_confirmation': passwordConfirmationController.text,
+        }),
+        context: 'AuthController.register',
+        showError: false,
+        onError: (e) {
+          if (e is ApiException && e.errors is Map<String, dynamic>) {
+            errors.assignAll((e.errors as Map<String, dynamic>)
+                .map((key, val) => MapEntry(key, val as List)));
+          }else{
+          errorMessage.value = e.message;
+          }
+        },
+      );
 
-    if (response != null && response['success'] == true) {
-      authResource.value = AuthResource.fromJson(response['data']);
-      Token.set(response['token'] as String);
-      Get.offNamed(Routes.DASHBOARD);
-    } else if (response != null) {
-      var message = response['message'] ?? 'Erreur lors de l\'inscription';
-      if (response['errors'] != null) {
-        var errors = response['errors'] as List;
-        message = errors.join('\n');
+      if (response != null && response['success'] == true) {
+        authResource.value = AuthResource.fromJson(response['data']);
+        Token.set(response['token'] as String);
+        Get.offNamed(Routes.DASHBOARD);
       }
-      errorMessage.value = message;
+    } finally {
+      isLoading.value = false;
     }
-
-    isLoading.value = false;
   }
 
   Future<void> logout() async {
