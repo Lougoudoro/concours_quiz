@@ -491,7 +491,7 @@ class _CategoryCard extends StatelessWidget {
   const _CategoryCard({required this.serie});
 
   void _showQuizBottomSheet(BuildContext context) {
-    final quizzes = serie.quizes;
+    final quizzes = serie.quizzes;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

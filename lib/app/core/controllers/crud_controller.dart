@@ -1,4 +1,5 @@
 import 'package:cncours_quiz/app/core/client/error_handler.dart';
+import 'package:cncours_quiz/app/core/helpers/storage_helper.dart';
 import 'package:cncours_quiz/app/data/providers/crud_provider.dart';
 import 'package:get/get.dart';
 
@@ -27,14 +28,36 @@ class CrudController<M, R> extends GetxController with StateMixin<List<R>> {
 
   Future<void> list({bool load = false}) async {
     listingLoading.value = load;
+    bool success = false;
     await ErrorHandler.run(() async {
       final response = await crud.list();
       if (response case {'data': final List data}) {
         listing.assignAll(data.map<R>(rE));
+        _cacheListing();
+        success = true;
       }
     }, context: 'CrudController.list');
+    if (!success && listing.isEmpty) {
+      _loadCachedListing();
+    }
     listingLoading.value = false;
   }
+
+  void _cacheListing() {
+    final data = listing
+        .map((e) => (e as dynamic).toJson() as Map<String, dynamic>)
+        .toList();
+    StorageHelper.set(_cacheKey, data);
+  }
+
+  void _loadCachedListing() {
+    final cached = StorageHelper.get(_cacheKey);
+    if (cached is List) {
+      listing.assignAll(cached.map((e) => rE(e as Map<String, dynamic>)));
+    }
+  }
+
+  String get _cacheKey => StorageHelper.cachedCrudListKey(resource);
 
   Future<void> show({required int id}) async {
     await ErrorHandler.run(() async {

@@ -9,7 +9,7 @@ class SerieResource extends BaseResource {
   final String description;
   final IconData icon;
   final int? quizzesCount;
-  final List<QuizResource> quizes;
+  final List<QuizResource> quizzes;
 
   double progress = 0.0;
 
@@ -18,7 +18,7 @@ class SerieResource extends BaseResource {
     required this.description,
     required this.name,
     required this.icon,
-    this.quizes = const [],
+    this.quizzes = const [],
     this.quizzesCount,
     this.progress = 0.0,
   });
@@ -29,7 +29,7 @@ class SerieResource extends BaseResource {
         name: json['name'],
         icon: Icons.book,
         quizzesCount: json['quizzes_count'] ?? 0,
-        quizes: (json['quizzes'] as List?)
+        quizzes: (json['quizzes'] as List?)
                 ?.map((o) => QuizResource.fromJson(o))
                 .toList() ??
             [],
@@ -42,6 +42,6 @@ class SerieResource extends BaseResource {
         'name': name,
         'icon': icon.codePoint,
         'quizzes_count': quizzesCount,
-        'quizes': quizes.map((o) => o.toJson()).toList(),
+        'quizzes': quizzes.map((o) => o.toJson()).toList(),
       };
 }

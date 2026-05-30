@@ -4,6 +4,13 @@ class StorageHelper {
   static GetStorage? _storage;
   final String _languageKey = 'language';
 
+  static const String cachedUserKey = 'cached_user';
+  static const String cachedSessionKey = 'cached_session';
+  static String cachedCrudListKey(String resource) =>
+      'cached_crud_list_$resource';
+  static String cachedCrudItemKey(String resource, dynamic id) =>
+      'cached_crud_${resource}_$id';
+
   static GetStorage get _getStorage {
     _storage ??= GetStorage();
     return _storage!;

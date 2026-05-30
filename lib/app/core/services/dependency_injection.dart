@@ -1,5 +1,6 @@
 import 'package:cncours_quiz/app/core/client/my_client.dart';
 import 'package:cncours_quiz/app/core/controllers/auth_controller.dart';
+import 'package:cncours_quiz/app/core/controllers/connectivity_controller.dart';
 import 'package:cncours_quiz/app/core/controllers/theme_controller.dart';
 import 'package:cncours_quiz/app/data/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class DependencyInjection {
     // 2. Inject the Provider which relies on MyClient
     Get.put<AuthProvider>(AuthProvider());
     Get.put<ThemeController>(ThemeController());
+    Get.put<ConnectivityController>(ConnectivityController());
     Get.put<AuthController>(AuthController());
   }
 }

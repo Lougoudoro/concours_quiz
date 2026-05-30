@@ -1,6 +1,7 @@
 import 'package:cncours_quiz/app/core/services/dependency_injection.dart';
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
 import 'package:cncours_quiz/app/core/controllers/theme_controller.dart';
+import 'package:cncours_quiz/app/core/widgets/connectivity_banner.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -33,6 +34,7 @@ class ConcourQuizApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: themeController.themeMode,
       getPages: AppPages.routes,
+      // builder: (context, child) => ConnectivityBanner(child: child!),
     );
   }
 }

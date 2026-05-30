@@ -1,5 +1,6 @@
 import 'package:cncours_quiz/app/core/client/api_exception.dart';
 import 'package:cncours_quiz/app/core/client/error_handler.dart';
+import 'package:cncours_quiz/app/core/helpers/storage_helper.dart';
 import 'package:cncours_quiz/app/data/models/token.dart';
 import 'package:cncours_quiz/app/data/providers/auth_provider.dart';
 import 'package:cncours_quiz/app/data/resources/auth_resource.dart';
@@ -20,7 +21,6 @@ class AuthController extends GetxController {
   RxString errorMessage = ''.obs;
   RxBool obscurePassword = true.obs;
   final RxMap<String, List> errors = <String, List>{}.obs;
-
 
   void clearInputs() {
     nameController.clear();
@@ -46,10 +46,12 @@ class AuthController extends GetxController {
         context: 'AuthController.login',
         showError: false,
         onError: (e) {
-            if (e is ApiException) {
-            errors.assignAll({'email':[e.message]});
-          }else{
-          errorMessage.value = e.message;
+          if (e is ApiException) {
+            errors.assignAll({
+              'email': [e.message]
+            });
+          } else {
+            errorMessage.value = e.message;
           }
         },
       );
@@ -57,6 +59,7 @@ class AuthController extends GetxController {
       if (response != null && response['success'] == true) {
         authResource.value = AuthResource.fromJson(response['data']);
         Token.set(response['token'] as String);
+        _cacheUser();
         isLoading.value = false;
         Get.offNamed(Routes.DASHBOARD);
         return;
@@ -72,7 +75,7 @@ class AuthController extends GetxController {
     try {
       isLoading.value = true;
       errorMessage.value = '';
-       errors.assignAll({});
+      errors.assignAll({});
 
       final response = await ErrorHandler.guard(
         () => _provider.register(data: {
@@ -87,8 +90,8 @@ class AuthController extends GetxController {
           if (e is ApiException && e.errors is Map<String, dynamic>) {
             errors.assignAll((e.errors as Map<String, dynamic>)
                 .map((key, val) => MapEntry(key, val as List)));
-          }else{
-          errorMessage.value = e.message;
+          } else {
+            errorMessage.value = e.message;
           }
         },
       );
@@ -96,6 +99,7 @@ class AuthController extends GetxController {
       if (response != null && response['success'] == true) {
         authResource.value = AuthResource.fromJson(response['data']);
         Token.set(response['token'] as String);
+        _cacheUser();
         Get.offNamed(Routes.DASHBOARD);
       }
     } finally {
@@ -107,6 +111,7 @@ class AuthController extends GetxController {
     await ErrorHandler.run(() => _provider.logout(),
         context: 'AuthController.logout', showError: false);
     Token.delete();
+    StorageHelper.delete(StorageHelper.cachedUserKey);
     authResource.value = null;
     clearInputs();
     Get.offNamed(Routes.AUTH);
@@ -117,6 +122,23 @@ class AuthController extends GetxController {
         context: 'AuthController.fetchUser', showError: false);
     if (response != null && response['success'] == true) {
       authResource.value = AuthResource.fromJson(response['data']);
+      _cacheUser();
+    } else if (authResource.value == null) {
+      _loadCachedUser();
+    }
+  }
+
+  void _cacheUser() {
+    if (authResource.value != null) {
+      StorageHelper.set(
+          StorageHelper.cachedUserKey, authResource.value!.toJson());
+    }
+  }
+
+  void _loadCachedUser() {
+    final cached = StorageHelper.get(StorageHelper.cachedUserKey);
+    if (cached is Map<String, dynamic>) {
+      authResource.value = AuthResource.fromJson(cached);
     }
   }
 
