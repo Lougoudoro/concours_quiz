@@ -1,7 +1,6 @@
 import 'package:cncours_quiz/app/core/services/dependency_injection.dart';
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
 import 'package:cncours_quiz/app/core/controllers/theme_controller.dart';
-import 'package:cncours_quiz/app/data/models/token.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -25,11 +24,10 @@ class ConcourQuizApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Token.delete(); // @TODO :: implement this
     final themeController = Get.find<ThemeController>();
 
     return GetMaterialApp(
-      title: 'ConcourQuiz BF',
+      title: 'ConcoursOp BF',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

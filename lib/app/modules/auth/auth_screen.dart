@@ -1,4 +1,5 @@
 import 'package:cncours_quiz/app/core/controllers/auth_controller.dart';
+import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
@@ -32,9 +33,21 @@ class _AuthScreenState extends State<AuthScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppTheme.vertFaso.withOpacity(0.1),
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(16)
+                  ),
+                  child: IconButton(
+                    onPressed: () => Get.offNamed(Routes.ONBOARDING),
+                    icon: const Icon(Icons.chevron_left),
+                    iconSize: 30,
+                  ),
+                ),
                 const SizedBox(height: 20),
                 Text(
-                  _isLogin ? 'Bon retour !' : 'Créer un compte',
+                  _isLogin ? 'Bon retour, futur lauréat 🌟' : 'Créer un compte',
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -86,26 +99,27 @@ class _AuthScreenState extends State<AuthScreen> {
                   const SizedBox(height: 20),
                 ],
                 _buildLabel('Email'),
-                Obx(() =>  TextFormField(
-                  controller: _authController.emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    hintText: 'votre@email.com',
-                    prefixIcon: const Icon(Icons.mail_outline),
-                    errorText: _authController.errors['email']?.first
-                  ),
-                  
-                  validator: (value) => value == null || value.trim().isEmpty
-                      ? 'Champ requis'
-                      : null,
-                )),
+                Obx(() => TextFormField(
+                      controller: _authController.emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                          hintText: 'votre@email.com',
+                          prefixIcon: const Icon(Icons.mail_outline),
+                          errorText: _authController.errors['email']?.first),
+                      validator: (value) =>
+                          value == null || value.trim().isEmpty
+                              ? 'Champ requis'
+                              : null,
+                    )),
                 const SizedBox(height: 20),
                 _buildLabel('Mot de passe'),
                 Obx(() => TextFormField(
                       controller: _authController.passwordController,
                       obscureText: _authController.obscurePassword.value,
                       decoration: InputDecoration(
-                        errorText: _isLogin? null:_authController.errors['password']?.first,
+                        errorText: _isLogin
+                            ? null
+                            : _authController.errors['password']?.first,
                         hintText: '••••••••',
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
@@ -162,7 +176,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 } else {
                                   _authController.register();
                                 }
-                            },
+                              },
                         child: _authController.isLoading.value
                             ? const SizedBox(
                                 width: 24,
@@ -180,17 +194,18 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     )),
                 const SizedBox(height: 24),
-                Row(mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Text(
-                    _isLogin ? 'Pas de compte ?' : 'Déjà un compte ?',
-                    style: TextStyle(
-                        color: Theme.of(context).textTheme.bodyMedium!.color),
+                      _isLogin ? 'Pas de compte ?' : 'Déjà un compte ?',
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyMedium!.color),
                     ),
                     TextButton(
-                        onPressed: () {
+                      onPressed: () {
                         setState(() {
-                            _isLogin = !_isLogin;
+                          _isLogin = !_isLogin;
                         });
                         _authController.clearInputs();
                       },

@@ -9,11 +9,6 @@ class BaseModel {
     this.name,
   });
 
-  @override
-  String toString() {
-    return '{id: $id, name: $name}'; // Customize formatting as needed
-  }
-
   static Map<String, dynamic> generateData(dynamic editing) {
     return {};
   }

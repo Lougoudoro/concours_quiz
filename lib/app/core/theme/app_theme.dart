@@ -1,4 +1,4 @@
-/// Thème visuel de l'application ConcourQuiz BF.
+/// Thème visuel de l'application ConcoursOp BF.
 ///
 /// Palette inspirée de l'identité burkinabè :
 /// - Vert Faso : #009E49 (espoir, nature)

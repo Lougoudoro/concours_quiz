@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cncours_quiz/app/data/models/token.dart';
+import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 
 import 'api_exception.dart';
 import 'app_exception.dart';
@@ -154,6 +158,7 @@ class ErrorHandler {
     IconData icon;
     Color iconColor;
     String title;
+    Callback onFermer=_onFermerForStatusCode(null);
 
     switch (exception.runtimeType) {
       case const (ApiException):
@@ -161,6 +166,7 @@ class ErrorHandler {
         icon = _iconForStatusCode(api.statusCode);
         iconColor = _colorForStatusCode(api.statusCode);
         title = _titleForStatusCode(api.statusCode);
+        onFermer = _onFermerForStatusCode(api.statusCode);
       case const (DataParsingException):
         icon = Icons.bug_report_rounded;
         iconColor = const Color(0xFFFFB800);
@@ -247,7 +253,7 @@ class ErrorHandler {
                         child: _DialogButton(
                           label: 'Fermer',
                           isPrimary: onRetry == null,
-                          onTap: () => Get.back(),
+                          onTap: onFermer,
                         ),
                       ),
                     ],
@@ -272,6 +278,19 @@ class ErrorHandler {
     if (code == 429) return Icons.hourglass_bottom_rounded;
     if (code >= 500) return Icons.cloud_off_rounded;
     return Icons.error_outline_rounded;
+  }
+
+  static Callback _onFermerForStatusCode(int? code) {
+    if (code == 401) {
+        return () {
+          Token.delete();
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+          Get.offAllNamed(Routes.AUTH);
+          });
+        };
+
+    }
+    return (){Get.back();};
   }
 
   static Color _colorForStatusCode(int? code) {

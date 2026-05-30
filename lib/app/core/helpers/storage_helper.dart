@@ -1,10 +1,15 @@
 import 'package:get_storage/get_storage.dart';
 
 class StorageHelper {
-  static final _getStorage = GetStorage();
+  static GetStorage? _storage;
   final String _languageKey = 'language';
 
-  static void set(String key, value) async {
+  static GetStorage get _getStorage {
+    _storage ??= GetStorage();
+    return _storage!;
+  }
+
+  static Future<void> set(String key, value) async {
     await _getStorage.write(key, value);
   }
 
@@ -16,12 +21,10 @@ class StorageHelper {
     _getStorage.remove(key);
   }
 
-  // Sauvegarder la langue
   void saveLanguage(String language) {
     _getStorage.write(_languageKey, language);
   }
 
-  // Récupérer la langue
   String? getLanguage() {
     return _getStorage.read(_languageKey);
   }

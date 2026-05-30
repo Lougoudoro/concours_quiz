@@ -7,7 +7,7 @@ void main() {
     await tester.pumpWidget(const ConcourQuizApp());
 
     // Verify that the app title is present.
-    expect(find.text('ConcourQuiz BF'), findsWidgets);
+    expect(find.text('ConcoursOp BF'), findsWidgets);
     
     // Verify that some category is visible.
     expect(find.text('ENAREF'), findsOneWidget);

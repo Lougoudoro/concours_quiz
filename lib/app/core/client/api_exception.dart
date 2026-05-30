@@ -24,7 +24,7 @@ class ApiException extends AppException {
         case 400:
           return ApiException.badRequest(message: message, errors: errors);
         case 401:
-          return ApiException.unauthorized(message: message);
+          return ApiException.unauthorized();
         case 403:
           return ApiException.forbidden(message: message);
         case 404:
@@ -56,8 +56,8 @@ class ApiException extends AppException {
         errors: errors,
       );
 
-  factory ApiException.unauthorized({String? message}) => ApiException(
-        message: message??'Session expirée, veuillez vous reconnecter',
+  factory ApiException.unauthorized() => const ApiException(
+        message:'Votre session est expirée, veuillez vous reconnecter',
         code: 'UNAUTHORIZED',
         statusCode: 401,
       );

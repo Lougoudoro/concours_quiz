@@ -1,3 +1,5 @@
+import 'package:cncours_quiz/app/core/controllers/auth_controller.dart';
+import 'package:cncours_quiz/app/core/theme/app_theme.dart';
 import 'package:cncours_quiz/app/data/models/token.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +18,6 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _animController;
   late Animation<double> _fadeIn;
   late Animation<double> _scale;
-
   @override
   void initState() {
     super.initState();
@@ -30,6 +31,9 @@ class _SplashScreenState extends State<SplashScreen>
     _scale = Tween<double>(begin: 0.85, end: 1).animate(
       CurvedAnimation(parent: _animController, curve: Curves.easeOutBack),
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      precacheImage(const AssetImage('assets/images/logo.png'), context);
+    });
     _animController.forward();
     _navigateAfterDelay();
   }
@@ -38,14 +42,19 @@ class _SplashScreenState extends State<SplashScreen>
     await Future.delayed(const Duration(milliseconds: 2200));
     if (!mounted) return;
 
-    if (Token.get().isNotEmpty) {
-      Get.offNamed(Routes.DASHBOARD );
-      return;
-    }
+    Future.microtask(() async {
+      if (Token.get().isNotEmpty) {
+        final authController = Get.find<AuthController>();
+        await authController.fetchUser();
+        if (!mounted) return;
+        Get.offAllNamed(Routes.DASHBOARD);
+        return;
+      }
 
-    final box = GetStorage();
-    final onboardingDone = box.read<bool>('onboarding_done') ?? false;
-    Get.offNamed(onboardingDone ? Routes.AUTH : Routes.ONBOARDING);
+      final box = GetStorage();
+      final onboardingDone = box.read<bool>('onboarding_done') ?? false;
+      Get.offAllNamed(onboardingDone ? Routes.AUTH : Routes.ONBOARDING);
+    });
   }
 
   @override
@@ -60,9 +69,9 @@ class _SplashScreenState extends State<SplashScreen>
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF0D4F28), Color(0xFF1A6B3C)],
+            colors: [Theme.of(context).colorScheme.surface, Theme.of(context).colorScheme.surface.withOpacity(0.7)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -83,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen>
                 width: 130,
                 height: 130,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.15),
+                  color: AppTheme.vertFaso.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(32),
                 ),
                 child: ClipRRect(
@@ -95,12 +104,12 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
               ),
               const SizedBox(height: 28),
-              const Text(
-                'ConcourQuiz BF',
+              Text(
+                'ConcoursOp BF',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w800,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onSurface,
                   letterSpacing: 0.5,
                 ),
               ),
@@ -109,19 +118,11 @@ class _SplashScreenState extends State<SplashScreen>
                 'Prépare-toi à réussir',
                 style: TextStyle(
                   fontSize: 15,
-                  color: Colors.white.withOpacity(0.7),
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                   fontWeight: FontWeight.w400,
                 ),
               ),
               const SizedBox(height: 48),
-              SizedBox(
-                width: 28,
-                height: 28,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  color: Colors.white.withOpacity(0.6),
-                ),
-              ),
             ],
           ),
         ),

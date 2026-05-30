@@ -1,3 +1,4 @@
+import 'package:cncours_quiz/app/data/models/onboarding_data.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,7 +18,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<OnboardingData> _pages = [
     OnboardingData(
-      title: 'Bienvenue sur ConcourQuiz BF',
+      title: 'Bienvenue sur ConcoursOp BF',
       description:
           'L\'application de référence pour réussir vos concours de la fonction publique burkinabè.',
       image: 'assets/images/logo.png',
@@ -90,11 +91,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         );
                       } else {
                         GetStorage().write('onboarding_done', true);
-                        Get.offNamed(Routes.AUTH );
+                        Get.offNamed(Routes.AUTH);
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.vertFaso,
+                      backgroundColor: Theme.of(context).colorScheme.onSurface,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -103,26 +104,37 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       _currentPage == _pages.length - 1
                           ? 'Commencer'
                           : 'Suivant',
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                if (_currentPage < _pages.length - 1)
-                  TextButton(
-                    onPressed: () {
-                      GetStorage().write('onboarding_done', true);
-                      Get.offNamed(Routes.AUTH );
-                    },
-                    child: Text(
-                      'Passer',
-                      style: TextStyle(
-                          color: Theme.of(context).textTheme.bodyMedium!.color),
-                    ),
-                  ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        GetStorage().write('onboarding_done', true);
+                        Get.offNamed(Routes.AUTH);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.vertFaso,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: const Text(
+                        'Connecter',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      )),
+                ),
                 const SizedBox(height: 10),
               ],
             ),
@@ -138,21 +150,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (data.image != null)
-            Image.asset(
-              data.image!,
-              height: 300,
-            )
-          else if (data.icon != null)
-            Container(
+          Container(
               height: 200,
               width: 200,
               decoration: BoxDecoration(
                 color: AppTheme.vertFaso.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(data.icon, size: 100, color: AppTheme.vertFaso),
-            ),
+              child: (data.image != null)
+                  ? Image.asset(
+                      data.image!,
+                      height: 200,
+                    )
+                  : Container(
+                      height: 200,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        color: AppTheme.vertFaso.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child:Icon(data.icon, size: 100, color: AppTheme.vertFaso),
+                    )),
           const SizedBox(height: 40),
           Text(
             data.title,
@@ -175,18 +193,4 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
     );
   }
-}
-
-class OnboardingData {
-  final String title;
-  final String description;
-  final String? image;
-  final IconData? icon;
-
-  OnboardingData({
-    required this.title,
-    required this.description,
-    this.image,
-    this.icon,
-  });
 }

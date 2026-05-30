@@ -16,7 +16,7 @@ class ThemeController extends GetxController {
   void onInit() {
     super.onInit();
     // Load preference from storage
-    _isDarkMode.value = _box.read(_key) ?? true;
+    _isDarkMode.value = _box.read(_key) ?? false;
   }
 
   void toggleTheme() {
