@@ -1,23 +1,57 @@
+/// Base application exception with structured information for UI display
 class AppException implements Exception {
-  final String? message;
-  final String? prefix;
-  final String? url;
+  final String message;
+  final String? code;
+  final dynamic originalError;
+  final StackTrace? stackTrace;
 
-  AppException([this.message, this.prefix, this.url]);
+  const AppException({
+    this.message = 'Une erreur est survenue',
+    this.code,
+    this.originalError,
+    this.stackTrace,
+  });
+
+  @override
+  String toString() => '[$code] $message';
 }
 
-class BadRequestException extends AppException {
-  BadRequestException([String? message, String? url]) : super(message, 'Bad Request', url);
+/// Network / connectivity exceptions
+class NetworkException extends AppException {
+  const NetworkException({
+    super.message = 'Problème de connexion réseau',
+    super.code = 'NETWORK_ERROR',
+    super.originalError,
+    super.stackTrace,
+  });
 }
 
-class FetchDataException extends AppException {
-  FetchDataException([String? message, String? url]) : super(message, 'Unable to process', url);
+/// Server did not respond in time
+class TimeoutException extends AppException {
+  const TimeoutException({
+    super.message = 'Le serveur ne répond pas',
+    super.code = 'TIMEOUT',
+    super.originalError,
+    super.stackTrace,
+  });
 }
 
-class ApiNotRespondingException extends AppException {
-  ApiNotRespondingException([String? message, String? url]) : super(message, 'Api not responded in time', url);
+/// Data parsing / serialization errors
+class DataParsingException extends AppException {
+  const DataParsingException({
+    super.message = 'Erreur de lecture des données',
+    super.code = 'PARSE_ERROR',
+    super.originalError,
+    super.stackTrace,
+  });
 }
 
-class UnAuthorizedException extends AppException {
-  UnAuthorizedException([String? message, String? url]) : super(message, 'UnAuthorized request', url);
+/// Generic unknown / unexpected errors
+class UnknownException extends AppException {
+  const UnknownException({
+    super.message = 'Une erreur inattendue est survenue',
+    super.code = 'UNKNOWN',
+    super.originalError,
+    super.stackTrace,
+  });
 }

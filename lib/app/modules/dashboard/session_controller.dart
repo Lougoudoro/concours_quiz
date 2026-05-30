@@ -1,3 +1,4 @@
+import 'package:cncours_quiz/app/core/client/error_handler.dart';
 import 'package:cncours_quiz/app/data/providers/session_povider.dart';
 import 'package:cncours_quiz/app/data/resources/academic_session_resource.dart';
 import 'package:cncours_quiz/app/data/resources/category_resource.dart';
@@ -8,18 +9,15 @@ import 'package:get/get.dart';
 
 class SessionController extends GetxController {
   late SessionProvider provider;
-  // ─── État ──────────────────────────────────────────────────────────
+
   final Rx<AcademicSessionResource?> activeSession =
       Rx<AcademicSessionResource?>(null);
 
-  // Sélections actuelles
   final Rx<ConcoursTypeResource?> selectedConcoursType =
       Rx<ConcoursTypeResource?>(null);
   final Rx<CategoryResource?> selectedSubCategory = Rx<CategoryResource?>(null);
   final Rx<SerieResource?> selectedCollection = Rx<SerieResource?>(null);
   final Rx<QuizResource?> selectedSerie = Rx<QuizResource?>(null);
-
-  // ─── Getters de Filtrage Dynamique ──────────────────────────────────
 
   List<ConcoursTypeResource> get availableConcoursTypes =>
       activeSession.value?.concoursTypes ?? [];
@@ -33,8 +31,6 @@ class SessionController extends GetxController {
   List<QuizResource> get availableSeries =>
       selectedCollection.value?.quizes ?? [];
 
-  // ─── Méthodes de Sélection ──────────────────────────────────────────
-
   @override
   void onInit() {
     super.onInit();
@@ -43,16 +39,12 @@ class SessionController extends GetxController {
   }
 
   Future<void> fetchSelectedSession() async {
-    try {
-      var response = await provider.selectedSession();
+    await ErrorHandler.run(() async {
+      final response = await provider.selectedSession();
       if (response['success'] == true) {
-        print(response['data']);
         setSession(AcademicSessionResource.fromJson(response['data']));
-        print(activeSession);
       }
-    } catch (_) {
-      print(_);
-    }
+    }, context: 'SessionController.fetchSelectedSession');
   }
 
   void setSession(AcademicSessionResource session) {

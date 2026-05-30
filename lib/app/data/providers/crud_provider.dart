@@ -1,7 +1,9 @@
 
 import 'package:cncours_quiz/app/core/client/my_client.dart';
+import 'package:get/get.dart';
 
-class CrudProvider extends MyClient {
+class CrudProvider {
+    final MyClient _client = Get.find<MyClient>();
   final String resource;
   final bool auth;
   CrudProvider({required this.resource, this.auth=true});
@@ -9,33 +11,33 @@ class CrudProvider extends MyClient {
 
 // function to get records
   Future<dynamic> list() async {
-    return await clientGet(apiRoute: "/$resource", auth: auth);
+    return await _client.clientGet(apiRoute: "/$resource", auth: auth);
   }
 
   // function to show a record
   Future<dynamic> show({required int id}) async {
-    return  await clientGet(apiRoute: "/$resource/$id/show", auth: auth);
+    return  await  _client.clientGet(apiRoute: "/$resource/$id/show", auth: auth);
   }
 
 
   // function to edit a record
   Future<dynamic> edit({required String id}) async {
-    return  await clientGet(apiRoute: "/$resource/$id/edit", auth: auth);
+    return  await  _client.clientGet(apiRoute: "/$resource/$id/edit", auth: auth);
   }
 
   // // function to remove a record
   Future<dynamic> remove({required String id}) async {
-    return  clientDelete(apiRoute: "/$resource/$id");
+    return   _client.clientDelete(apiRoute: "/$resource/$id");
   }
 
 // Function to update a record
   Future<dynamic> modify({Map<String, dynamic> data = const {}, required String id}) async {
-    return  await clientPut(auth: auth, apiRoute: "/$resource/$id");
+    return  await  _client.clientPut(auth: auth, apiRoute: "/$resource/$id");
   }
 
 // Function to create a record
   Future<dynamic> create({required Map<String, dynamic> data}) async {
-   return await clientPost(auth: auth, data: data, apiRoute: "/$resource");
+   return await  _client.clientPost(auth: auth, data: data, apiRoute: "/$resource");
   }
 
   // @override

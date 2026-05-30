@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:cncours_quiz/app/data/providers/crud_provider.dart';
+import 'package:cncours_quiz/app/core/client/error_handler.dart';
 import 'package:cncours_quiz/app/data/providers/quiz_povider.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
@@ -38,7 +37,7 @@ class QuizController extends GetxController with WidgetsBindingObserver {
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
-    quizProvider=QuizProvider();
+    quizProvider = QuizProvider();
     loadQuestions();
     startQuiz();
   }
@@ -52,22 +51,15 @@ class QuizController extends GetxController with WidgetsBindingObserver {
   }
 
   Future<void> fetchQuestions() async {
-
-    try {
-      final response =  await quizProvider.questions(id: quizId);
+    await ErrorHandler.run(() async {
+      final response = await quizProvider.questions(id: quizId);
       if (response case {'data': final List data}) {
-        questions.assignAll(data.map<QuestionResource>((json)=>QuestionResource.fromJson(json)));
-        print(data);
-        print('=============');
-        print(questions);
+        questions.assignAll(
+          data.map<QuestionResource>((json) => QuestionResource.fromJson(json)),
+        );
       }
-    } catch (e) {
-      print('CrudController.list error: $e');
-    } finally {
-    }
+    }, context: 'QuizController.fetchQuestions');
   }
-
- 
 
   void startQuiz() {
     stopwatch.start();

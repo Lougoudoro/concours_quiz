@@ -1,3 +1,4 @@
+import 'package:cncours_quiz/app/core/client/error_handler.dart';
 import 'package:cncours_quiz/app/data/providers/crud_provider.dart';
 import 'package:get/get.dart';
 
@@ -8,7 +9,6 @@ class CrudController<M, R> extends GetxController with StateMixin<List<R>> {
   CrudController({required this.resource, required this.mE, required this.rE});
 
   late CrudProvider crud;
-  // state
   RxList<R> listing = RxList<R>([]);
   RxBool listingLoading = RxBool(false);
   Rx<M?> editing = Rx<M?>(null);
@@ -25,54 +25,52 @@ class CrudController<M, R> extends GetxController with StateMixin<List<R>> {
     crud = CrudProvider(resource: resource, auth: false);
   }
 
-// function to get records
   Future<void> list({bool load = false}) async {
     listingLoading.value = load;
-    try {
+    await ErrorHandler.run(() async {
       final response = await crud.list();
       if (response case {'data': final List data}) {
         listing.assignAll(data.map<R>(rE));
       }
-    } catch (e) {
-      print('CrudController.list error: $e');
-    } finally {
-      listingLoading.value = false;
-    }
+    }, context: 'CrudController.list');
+    listingLoading.value = false;
   }
 
-  // function to show a record
   Future<void> show({required int id}) async {
-    await crud
-        .show(id: id)
-        .then((response) => showing.value = rE(response['data']));
+    await ErrorHandler.run(() async {
+      final response = await crud.show(id: id);
+      showing.value = rE(response['data']);
+    }, context: 'CrudController.show');
   }
 
-  // function to edit a record
   Future<void> edit({bool auth = true, required String id}) async {
-    await crud
-        .edit(id: id)
-        .then((response) => editing.value = mE(response['data']));
+    await ErrorHandler.run(() async {
+      final response = await crud.edit(id: id);
+      editing.value = mE(response['data']);
+    }, context: 'CrudController.edit');
   }
 
-  // // function to remove a record
   Future<void> remove({bool auth = true, required String id}) async {
-    await crud
-        .remove(id: id)
-        .then((response) => removed.value = rE(response['data']));
+    await ErrorHandler.run(() async {
+      final response = await crud.remove(id: id);
+      removed.value = rE(response['data']);
+    }, context: 'CrudController.remove');
   }
 
-// Function to update a record
-  Future<void> modify(
-      {Map<String, dynamic> data = const {}, required String id}) async {
-    await crud
-        .modify(data: data, id: id)
-        .then((response) => modified.value = rE(response['data']));
+  Future<void> modify({
+    Map<String, dynamic> data = const {},
+    required String id,
+  }) async {
+    await ErrorHandler.run(() async {
+      final response = await crud.modify(data: data, id: id);
+      modified.value = rE(response['data']);
+    }, context: 'CrudController.modify');
   }
 
-// Function to create a record
   Future<void> create({required Map<String, dynamic> data}) async {
-    await crud
-        .create(data: data)
-        .then((response) => created.value = rE(response['data']));
+    await ErrorHandler.run(() async {
+      final response = await crud.create(data: data);
+      created.value = rE(response['data']);
+    }, context: 'CrudController.create');
   }
 }

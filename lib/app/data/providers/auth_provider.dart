@@ -1,51 +1,22 @@
-import 'dart:io';
 import 'package:cncours_quiz/app/core/client/my_client.dart';
+import 'package:get/get.dart';
 
-class AuthProvider extends MyClient {
+class AuthProvider {
+  final MyClient _client = Get.find<MyClient>();
+
   Future<dynamic> login({required Map<String, dynamic> data}) async {
-    try {
-      var response =
-          await clientPost(auth: false, data: data, apiRoute: "/login");
-      return response;
-    } on SocketException {
-      rethrow;
-    } catch (e) {
-      rethrow;
-    }
+    return _client.clientPost(auth: false, data: data, apiRoute: "/login");
   }
 
   Future<dynamic> register({required Map<String, dynamic> data}) async {
-    try {
-      var response =
-          await clientPost(auth: false, data: data, apiRoute: "/register");
-      return response;
-    } on SocketException {
-      rethrow;
-    } catch (e) {
-      rethrow;
-    }
+    return _client.clientPost(auth: false, data: data, apiRoute: "/register");
   }
 
   Future<dynamic> logout() async {
-    try {
-      var response =
-          await clientPost(auth: true, data: {}, apiRoute: "/logout");
-      return response;
-    } on SocketException {
-      rethrow;
-    } catch (e) {
-      rethrow;
-    }
+    return _client.clientPost(auth: true, data: {}, apiRoute: "/logout");
   }
 
   Future<dynamic> user() async {
-    try {
-      var response = await clientGet(auth: true, apiRoute: "/user");
-      return response;
-    } on SocketException {
-      rethrow;
-    } catch (e) {
-      rethrow;
-    }
+    return _client.clientGet(auth: true, apiRoute: "/user");
   }
 }

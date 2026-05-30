@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:cncours_quiz/app/core/client/error_handler.dart';
 import 'package:cncours_quiz/app/data/models/token.dart';
 import 'package:cncours_quiz/app/data/providers/auth_provider.dart';
 import 'package:cncours_quiz/app/data/resources/auth_resource.dart';
@@ -14,7 +13,7 @@ class AuthController extends GetxController {
   final passwordConfirmationController = TextEditingController();
   final GlobalKey<FormState> loginformKey = GlobalKey<FormState>();
 
-  late AuthProvider provider;
+  final AuthProvider _provider = Get.find<AuthProvider>();
   Rx<AuthResource?> authResource = Rx<AuthResource?>(null);
   RxBool isLoading = false.obs;
   RxString errorMessage = ''.obs;
@@ -23,7 +22,6 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    provider = AuthProvider();
   }
 
   void clearInputs() {
@@ -40,28 +38,28 @@ class AuthController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
 
-    try {
-      var response = await provider.login(data: {
+    final response = await ErrorHandler.guard(
+      () => _provider.login(data: {
         'email': emailController.text.trim(),
         'password': passwordController.text,
-      });
+      }),
+      context: 'AuthController.login',
+      showError: false,
+      onError: (e) {
+        errorMessage.value = e.message;
+      },
+    );
 
-      if (response['success'] == true) {
-        
-        authResource.value = AuthResource.fromJson(response['data']);
-        Token.set(response['token'] as String);
-        Get.offNamed(Routes.DASHBOARD);
-      } else {
-        errorMessage.value =
-            response['message'] ?? 'Email ou mot de passe incorrect';
-      }
-    } on SocketException {
-      errorMessage.value = 'Pas de connexion internet';
-    } catch (e) {
-      errorMessage.value = 'Erreur de connexion au serveur';
-    } finally {
-      isLoading.value = false;
+    if (response != null && response['success'] == true) {
+      authResource.value = AuthResource.fromJson(response['data']);
+      Token.set(response['token'] as String);
+      Get.offNamed(Routes.DASHBOARD);
+    } else if (response != null) {
+      errorMessage.value =
+          response['message'] ?? 'Email ou mot de passe incorrect';
     }
+
+    isLoading.value = false;
   }
 
   Future<void> register() async {
@@ -70,55 +68,51 @@ class AuthController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
 
-    try {
-      var response = await provider.register(data: {
+    final response = await ErrorHandler.guard(
+      () => _provider.register(data: {
         'name': nameController.text.trim(),
         'email': emailController.text.trim(),
         'password': passwordController.text,
         'password_confirmation': passwordConfirmationController.text,
-        
-      });
+      }),
+      context: 'AuthController.register',
+      showError: false,
+      onError: (e) {
+        errorMessage.value = e.message;
+      },
+    );
 
-      if (response['success'] == true) {
-        authResource.value = AuthResource.fromJson(response['data']);
-        Token.set(response['token'] as String);
-        Get.offNamed(Routes.DASHBOARD);
-      } else {
-        var message = response['message'] ?? 'Erreur lors de l\'inscription';
-        if (response['errors'] != null) {
-          var errors = response['errors'] as Map;
-          message = errors.values
-              .expand((e) => (e as List).cast<String>())
-              .join('\n');
-        }
-        errorMessage.value = message;
+    if (response != null && response['success'] == true) {
+      authResource.value = AuthResource.fromJson(response['data']);
+      Token.set(response['token'] as String);
+      Get.offNamed(Routes.DASHBOARD);
+    } else if (response != null) {
+      var message = response['message'] ?? 'Erreur lors de l\'inscription';
+      if (response['errors'] != null) {
+        var errors = response['errors'] as List;
+        message = errors.join('\n');
       }
-    } on SocketException {
-      errorMessage.value = 'Pas de connexion internet';
-    } catch (e) {
-      errorMessage.value = 'Erreur de connexion au serveur';
-    } finally {
-      isLoading.value = false;
+      errorMessage.value = message;
     }
+
+    isLoading.value = false;
   }
 
   Future<void> logout() async {
-    try {
-      await provider.logout();
-    } catch (_) {}
+    await ErrorHandler.run(() => _provider.logout(),
+        context: 'AuthController.logout', showError: false);
     Token.delete();
     authResource.value = null;
     clearInputs();
-    Get.offNamed(Routes.AUTH );
+    Get.offNamed(Routes.AUTH);
   }
 
   Future<void> fetchUser() async {
-    try {
-      var response = await provider.user();
-      if (response['success'] == true) {
-        authResource.value = AuthResource.fromJson(response['data']);
-      }
-    } catch (_) {}
+    final response = await ErrorHandler.guard(() => _provider.user(),
+        context: 'AuthController.fetchUser', showError: false);
+    if (response != null && response['success'] == true) {
+      authResource.value = AuthResource.fromJson(response['data']);
+    }
   }
 
   bool get isLoggedIn => Token.get().isNotEmpty;
