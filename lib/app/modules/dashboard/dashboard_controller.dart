@@ -8,7 +8,7 @@ class DashboardController extends GetxController {
   }
 
   double get globalProgress {
-    return 100.0;
+    return 1.0;
   }
 
 }

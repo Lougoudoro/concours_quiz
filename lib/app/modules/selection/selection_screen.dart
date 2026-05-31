@@ -57,10 +57,6 @@ class SelectionScreen extends StatelessWidget {
                   name = item.name;
                   desc = '${item.quizzes.length} séries de quiz';
                   icon = Icons.folder_open_outlined;
-                } else if (item is QuizResource) {
-                  name = item.title;
-                  desc = '${item.questions.length} questions';
-                  icon = Icons.assignment_outlined;
                 }
 
                 return _SelectionCard(

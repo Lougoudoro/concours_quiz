@@ -15,6 +15,12 @@ import 'package:cncours_quiz/app/modules/selection/selection_binding.dart';
 import 'package:cncours_quiz/app/modules/selection/selection_screen.dart';
 import 'package:cncours_quiz/app/modules/settings/settings_binding.dart';
 import 'package:cncours_quiz/app/modules/settings/settings_screen.dart';
+import 'package:cncours_quiz/app/modules/guide/guide_binding.dart';
+import 'package:cncours_quiz/app/modules/guide/guide_screen.dart';
+import 'package:cncours_quiz/app/modules/notification/notification_binding.dart';
+import 'package:cncours_quiz/app/modules/notification/notification_screen.dart';
+import 'package:cncours_quiz/app/modules/help/help_binding.dart';
+import 'package:cncours_quiz/app/modules/help/help_screen.dart';
 import 'package:cncours_quiz/app/modules/splash/splash_binding.dart';
 import 'package:cncours_quiz/app/modules/splash/splash_screen.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
@@ -96,5 +102,17 @@ class AppPages {
           );
         },
         binding: SelectionBinding()),
+    GetPage(
+        name: _Paths.GUIDE,
+        page: () => const GuideScreen(),
+        binding: GuideBinding()),
+    GetPage(
+        name: _Paths.NOTIFICATION,
+        page: () => const NotificationScreen(),
+        binding: NotificationBinding()),
+    GetPage(
+        name: _Paths.HELP,
+        page: () => const HelpScreen(),
+        binding: HelpBinding()),
   ];
 }

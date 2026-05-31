@@ -30,7 +30,7 @@ class BrandResource extends BaseResource {
         id: json['id'],
         name: json['name'],
         description: json['description'],
-        logoUrl: json['logo_url'],
+        logoUrl: null,//json['logo_url'],
         slug: json['slug'],
         currentSession: json['current_session'],
         createdAt: json['created_at'],

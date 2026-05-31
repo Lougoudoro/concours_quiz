@@ -7,6 +7,7 @@ import 'package:cncours_quiz/app/data/resources/auth_resource.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AuthController extends GetxController {
   final nameController = TextEditingController();
@@ -143,6 +144,128 @@ class AuthController extends GetxController {
   }
 
   bool get isLoggedIn => Token.get().isNotEmpty;
+
+  Future<void> pickAndUploadPhoto(ImageSource source) async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: source);
+    if (picked == null) return;
+
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+      final response = await ErrorHandler.guard(
+        () => _provider.uploadPhoto(filePath: picked.path),
+        context: 'AuthController.pickAndUploadPhoto',
+        showError: false,
+        onError: (e) {
+          errorMessage.value = e.message;
+        },
+      );
+      if (response != null && response['success'] == true) {
+        authResource.value = AuthResource.fromJson(response['data']);
+        _cacheUser();
+      }
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> deleteProfilePhoto() async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+      final response = await ErrorHandler.guard(
+        () => _provider.deletePhoto(),
+        context: 'AuthController.deleteProfilePhoto',
+        showError: false,
+        onError: (e) {
+          errorMessage.value = e.message;
+        },
+      );
+      if (response != null && response['success'] == true) {
+        authResource.value = AuthResource.fromJson(response['data']);
+        _cacheUser();
+      }
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<bool> updateProfile({
+    required String name,
+    required String email,
+  }) async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+      errors.assignAll({});
+
+      final response = await ErrorHandler.guard(
+        () => _provider.updateProfile(data: {
+          'name': name.trim(),
+          'email': email.trim(),
+        }),
+        context: 'AuthController.updateProfile',
+        showError: false,
+        onError: (e) {
+          if (e is ApiException && e.errors is Map<String, dynamic>) {
+            errors.assignAll((e.errors as Map<String, dynamic>)
+                .map((key, val) => MapEntry(key, val as List)));
+          } else {
+            errorMessage.value = e.message;
+          }
+        },
+      );
+
+      if (response != null && response['success'] == true) {
+        authResource.value = AuthResource.fromJson(response['data']);
+        _cacheUser();
+        isLoading.value = false;
+        return true;
+      }
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<bool> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String newPasswordConfirmation,
+  }) async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+      errors.assignAll({});
+
+      final response = await ErrorHandler.guard(
+        () => _provider.changePassword(data: {
+          'current_password': currentPassword,
+          'password': newPassword,
+          'password_confirmation': newPasswordConfirmation,
+        }),
+        context: 'AuthController.changePassword',
+        showError: false,
+        onError: (e) {
+          if (e is ApiException && e.errors is Map<String, dynamic>) {
+            errors.assignAll((e.errors as Map<String, dynamic>)
+                .map((key, val) => MapEntry(key, val as List)));
+          } else {
+            errorMessage.value = e.message;
+          }
+        },
+      );
+
+      if (response != null && response['success'] == true) {
+        isLoading.value = false;
+        return true;
+      }
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   @override
   void onClose() {

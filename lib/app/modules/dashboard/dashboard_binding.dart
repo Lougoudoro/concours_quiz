@@ -3,6 +3,7 @@ import 'package:cncours_quiz/app/modules/dashboard/dashboard_controller.dart';
 import 'package:cncours_quiz/app/modules/dashboard/series_controller.dart';
 import 'package:cncours_quiz/app/modules/dashboard/session_controller.dart';
 import 'package:cncours_quiz/app/modules/history/history_controller.dart';
+import 'package:cncours_quiz/app/modules/notification/notification_controller.dart';
 import 'package:get/get.dart';
 
 class DashboardBinding extends Bindings {
@@ -13,5 +14,6 @@ class DashboardBinding extends Bindings {
     Get.put<HistoryController>(HistoryController());
     Get.put<SerieController>(SerieController());
     Get.put<SessionController>(SessionController());
+    Get.put<NotificationController>(NotificationController());
   }
 }

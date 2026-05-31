@@ -12,6 +12,9 @@ abstract class Routes {
   static const RESULTS = _Paths.RESULTS;
   static const HISTORY = _Paths.HISTORY;
   static const SELECTION = _Paths.SELECTION;
+  static const GUIDE = _Paths.GUIDE;
+  static const NOTIFICATION = _Paths.NOTIFICATION;
+  static const HELP = _Paths.HELP;
 }
 
 abstract class _Paths {
@@ -24,4 +27,7 @@ abstract class _Paths {
   static const RESULTS = '/results';
   static const HISTORY = '/history';
   static const SELECTION = '/selection';
+  static const GUIDE = '/guide';
+  static const NOTIFICATION = '/notification';
+  static const HELP = '/help';
 }

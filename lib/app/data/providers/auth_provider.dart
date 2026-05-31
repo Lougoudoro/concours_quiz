@@ -19,4 +19,30 @@ class AuthProvider {
   Future<dynamic> user() async {
     return _client.clientGet(auth: true, apiRoute: "/user");
   }
+
+  Future<dynamic> changePassword({required Map<String, dynamic> data}) async {
+    return _client.clientPost(
+        auth: true, data: data, apiRoute: "/change-password");
+  }
+
+  Future<dynamic> updateProfile({required Map<String, dynamic> data}) async {
+    return _client.clientPost(
+        auth: true, data: data, apiRoute: "/update-profile");
+  }
+
+  Future<dynamic> uploadPhoto({required String filePath}) async {
+    return _client.clientUpload(
+      auth: true,
+      apiRoute: "/update-profile-photo",
+      fileField: "profile_photo",
+      filePath: filePath,
+    );
+  }
+
+  Future<dynamic> deletePhoto() async {
+    return _client.clientDeletePhoto(
+      auth: true,
+      apiRoute: "/delete-profile-photo",
+    );
+  }
 }

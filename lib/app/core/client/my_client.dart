@@ -28,7 +28,7 @@ class MyClient extends GetConnect {
       }
       return request;
     });
-    
+
     super.onInit();
   }
 
@@ -41,7 +41,7 @@ class MyClient extends GetConnect {
   }
 
   Future<dynamic> clientDelete({
-  bool auth = true,
+    bool auth = true,
     required String apiRoute,
   }) async {
     final response = await delete(apiRoute);
@@ -53,7 +53,9 @@ class MyClient extends GetConnect {
     Map<String, dynamic> data = const {},
     required String apiRoute,
   }) async {
-    final response = await put(apiRoute,jsonEncode(data),
+    final response = await put(
+      apiRoute,
+      jsonEncode(data),
     );
     return processResponse(response);
   }
@@ -70,29 +72,49 @@ class MyClient extends GetConnect {
     return processResponse(response);
   }
 
+  Future<dynamic> clientUpload({
+    required bool auth,
+    required String apiRoute,
+    required String fileField,
+    required String filePath,
+  }) async {
+    final form = FormData({
+      fileField: MultipartFile(filePath, filename: filePath.split('/').last),
+    });
+    final response = await post(apiRoute, form);
+    return processResponse(response);
+  }
+
+  Future<dynamic> clientDeletePhoto({
+    required bool auth,
+    required String apiRoute,
+  }) async {
+    final response = await delete(apiRoute);
+    return processResponse(response);
+  }
+
   /// Processes the API response.
   /// Throws [NetworkException] or standard exceptions when connection drops.
   /// Throws [ApiException] when HTTP status is non-2xx or custom server errors occur.
   dynamic processResponse(Response response) {
-  if (response.status.hasError) {
-    
-    // Check for a literal Timeout first
-    final String errorText = response.statusText?.toLowerCase() ?? '';
-    if (errorText.contains('timed out')) {
-      throw const TimeoutException();
+    if (response.status.hasError) {
+      // Check for a literal Timeout first
+      final String errorText = response.statusText?.toLowerCase() ?? '';
+      if (errorText.contains('timed out')) {
+        throw const TimeoutException();
+      }
+
+      // If it's not a timeout, but still a connection error, it's a Socket issue
+      if (response.status.connectionError) {
+        throw const NetworkException(); // Represents your SocketException (Host unreachable/No internet)
+      }
     }
-    
-    // If it's not a timeout, but still a connection error, it's a Socket issue
-    if (response.status.connectionError) {
-      throw const NetworkException(); // Represents your SocketException (Host unreachable/No internet)
-    }
-  }
 
     final body = response.body;
 
     // 2. Read status code (GetX extracts this directly into response.statusCode)
     final int? statusCode = response.statusCode;
-    
+
     if (statusCode == null) {
       throw ApiException(
         message: 'Réponse invalide du serveur',

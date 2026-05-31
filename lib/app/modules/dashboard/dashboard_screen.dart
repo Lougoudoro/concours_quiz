@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../core/controllers/theme_controller.dart';
 import 'session_controller.dart';
+import '../notification/notification_controller.dart';
 import '../history/history_controller.dart';
 import 'bookmark_controller.dart';
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
@@ -22,7 +22,6 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeController = Get.find<ThemeController>();
     final dashboardController = Get.find<DashboardController>();
     final sessionController = Get.find<SessionController>();
     final authController = Get.find<AuthController>();
@@ -42,12 +41,24 @@ class DashboardScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          Obx(() => IconButton(
-                icon: Icon(themeController.isDarkMode
-                    ? Icons.light_mode_outlined
-                    : Icons.dark_mode_outlined),
-                onPressed: () => themeController.toggleTheme(),
-              )),
+          Obx(() {
+            final count = Get.find<NotificationController>().unreadCount.value;
+            return IconButton(
+              icon: count > 0
+                  ? Badge(
+                      label: Text(
+                        count.toString(),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 10),
+                      ),
+                      child: const Icon(Icons.notifications_outlined,
+                          color: AppTheme.vertFaso, size: 26),
+                    )
+                  : const Icon(Icons.notifications_outlined,
+                      color: AppTheme.vertFaso, size: 26),
+              onPressed: () => Get.toNamed(Routes.NOTIFICATION),
+            );
+          }),
           GestureDetector(
             onTap: () => Get.toNamed(Routes.SETTINGS),
             child: const Padding(
@@ -84,7 +95,7 @@ class DashboardScreen extends StatelessWidget {
                     ),
                     const Text('Prêt pour ton entraînement du jour ?'),
                     const SizedBox(height: 24),
-                    _buildGlobalProgressCard(globalProgress),
+                    _buildGlobalProgressCard(context, globalProgress),
 
                     // --- Section Reprendre (Axe 2) ---
                     Obx(() {
@@ -196,28 +207,82 @@ class DashboardScreen extends StatelessWidget {
       child: Column(
         children: [
           DrawerHeader(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
-                  colors: [AppTheme.vertFaso, Color(0xFF1A6B3C)]),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.filter_alt_outlined,
-                      color: AppTheme.orReussite, size: 40),
-                  const SizedBox(height: 12),
-                  Obx(() => Text(
-                        fc.activeSession.value?.name ??
-                            'Sélectionner une session',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
-                      )),
-                ],
+                colors: Theme.of(context).brightness == Brightness.dark
+                    ? [AppTheme.fondSombre, AppTheme.surfaceCardSombre]
+                    : [AppTheme.vertFaso, const Color(0xFF1A6B3C)],
               ),
             ),
+            child: Obx(() {
+              final session = fc.activeSession.value;
+              final brand = session?.brand;
+              final hasLogo =
+                  brand?.logoUrl != null && brand!.logoUrl!.isNotEmpty;
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    hasLogo
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(brand.logoUrl!,
+                                width: 48,
+                                height: 48,
+                                fit: BoxFit.contain,
+                                errorBuilder: (_, __, ___) => Container(
+                                      width: 48,
+                                      height: 48,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Icon(
+                                          brand.name.isNotEmpty
+                                              ? Icons.school
+                                              : Icons.school,
+                                          color: AppTheme.orReussite,
+                                          size: 28),
+                                    )),
+                          )
+                        : Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(Icons.school,
+                                color: AppTheme.orReussite, size: 28),
+                          ),
+                    const SizedBox(height: 12),
+                    Text(
+                      brand?.name ??
+                          session?.name ??
+                          'Sélectionner une session',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    if (brand?.description != null &&
+                        brand!.description.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          brand.description,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: Colors.white.withOpacity(0.8),
+                              fontSize: 12),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            }),
           ),
           Expanded(
             child: Obx(() {
@@ -259,6 +324,7 @@ class DashboardScreen extends StatelessWidget {
                 );
               } else {
                 return ListView(
+                  physics: const BouncingScrollPhysics(),
                   padding: EdgeInsets.zero,
                   children: [
                     const Padding(
@@ -314,13 +380,27 @@ class DashboardScreen extends StatelessWidget {
                     ListTile(
                       leading: const Icon(Icons.info_outline),
                       title: const Text('Guide des concours'),
-                      onTap: () {},
+                      onTap: () {
+                        Get.back();
+                        Get.toNamed(Routes.GUIDE);
+                      },
                     ),
                   ],
                 );
               }
             }),
           ),
+          const Divider(height: 1),
+          ListTile(
+            leading: const Icon(Icons.logout, color: AppTheme.rougeTerre),
+            title: const Text('Se déconnecter',
+                style: TextStyle(color: AppTheme.rougeTerre)),
+            onTap: () {
+              Get.back();
+              Get.find<AuthController>().logout();
+            },
+          ),
+          SizedBox(height: MediaQuery.of(context).padding.bottom),
         ],
       ),
     );
@@ -341,31 +421,93 @@ class DashboardScreen extends StatelessWidget {
   void _navigateToSeries(CategoryResource sub) {
     final fc = Get.find<SessionController>();
     fc.selectSubCategory(sub);
-    Get.toNamed(Routes.SELECTION, arguments: {
-      'title': sub.name,
-      'subtitle':sub.description,
-      'items': fc.availableCollections,
-      'onSelect': (item) => _navigateToQuizzes(item as SerieResource),
-    },preventDuplicates: false);
+    Get.toNamed(Routes.SELECTION,
+        arguments: {
+          'title': sub.name,
+          'subtitle': sub.description,
+          'items': fc.availableCollections,
+          'onSelect': (item) => _navigateToQuizzes(item as SerieResource),
+        },
+        preventDuplicates: false);
   }
 
   void _navigateToQuizzes(SerieResource coll) {
     final fc = Get.find<SessionController>();
     fc.selectCollection(coll);
-    Get.toNamed(Routes.SELECTION, arguments: {
-      'title': coll.name,
-      'subtitle': coll.description,
-      'items': fc.availableSeries,
-      'onSelect': (item) {
-        final fc = Get.find<SessionController>();
-        fc.selectSerie(item as QuizResource);
-        Get.toNamed(Routes.QUIZ, arguments: {
-          'quizId': item.id.toString(),
-          'quizName': item.title,
-          'questions': item.questions.toList(),
-        });
+    final quizzes = fc.availableSeries;
+
+    showModalBottomSheet(
+      context: Get.context!,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.6,
+          minChildSize: 0.4,
+          maxChildSize: 0.9,
+          expand: false,
+          builder: (_, scrollController) {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  Text(coll.name,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold)),
+                  if (coll.description.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4, bottom: 12),
+                      child: Text(coll.description,
+                          style: TextStyle(
+                              fontSize: 14,
+                              color:
+                                  Theme.of(ctx).textTheme.bodyMedium?.color)),
+                    ),
+                  const SizedBox(height: 4),
+                  Expanded(
+                    child: ListView.separated(
+                      controller: scrollController,
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: quizzes.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                      itemBuilder: (_, i) {
+                        final item = quizzes[i];
+                        return _QuizSheetCard(
+                          item: item,
+                          onTap: () {
+                            Navigator.pop(ctx);
+                            fc.selectSerie(item);
+                            Get.toNamed(Routes.QUIZ, arguments: {
+                              'quizId': item.id.toString(),
+                              'quizName': item.title,
+                              'questions': item.questions.toList(),
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
       },
-    },preventDuplicates: false);
+    );
   }
 
   void _navigateToBookmarks() {
@@ -378,20 +520,15 @@ class DashboardScreen extends StatelessWidget {
     });
   }
 
-  Widget _buildGlobalProgressCard(double progress) {
+  Widget _buildGlobalProgressCard(BuildContext context, double progress) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-            colors: [AppTheme.vertFaso, Color(0xFF1A6B3C)]),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-              color: AppTheme.vertFaso.withOpacity(0.3),
-              blurRadius: 15,
-              offset: const Offset(0, 8))
-        ],
+        color: isDark ? AppTheme.surfaceCardSombre : AppTheme.surfaceCardClair,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Theme.of(context).dividerTheme.color!),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -399,10 +536,12 @@ class DashboardScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Progression Générale',
-                  style: TextStyle(color: Colors.white70, fontSize: 14)),
+              Text('Progression Générale',
+                  style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                      fontSize: 14)),
               Text('${(progress * 100).toStringAsFixed(0)}%',
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: AppTheme.orReussite, fontWeight: FontWeight.bold)),
             ],
           ),
@@ -412,20 +551,50 @@ class DashboardScreen extends StatelessWidget {
             child: LinearProgressIndicator(
                 value: progress,
                 minHeight: 8,
-                backgroundColor: Colors.white10,
+                backgroundColor: isDark
+                    ? AppTheme.borderSubtleSombre
+                    : AppTheme.neutralGreyClair,
                 valueColor: const AlwaysStoppedAnimation(AppTheme.orReussite)),
           ),
           const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.bolt, size: 18),
-            label: const Text('Test Rapide'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.orReussite,
-              foregroundColor: Colors.black,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.bolt, size: 14),
+                  label:
+                      const Text('Test Rapide', style: TextStyle(fontSize: 12)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.vertFaso.withOpacity(0.2),
+                    foregroundColor:
+                        Theme.of(context).textTheme.bodyMedium?.color,
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.bolt, size: 14),
+                  label: const Text('Examen blank',
+                      style: TextStyle(fontSize: 12)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.vertFaso.withOpacity(0.2),
+                    foregroundColor:
+                        Theme.of(context).textTheme.bodyMedium?.color,
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -563,7 +732,6 @@ class _CategoryCard extends StatelessWidget {
                       return GestureDetector(
                         onTap: () {
                           Navigator.pop(ctx);
-                          HapticFeedback.selectionClick();
                           Get.toNamed(Routes.QUIZ, arguments: {
                             'quizId': quiz.id.toString(),
                             'quizName': quiz.title,
@@ -644,7 +812,6 @@ class _CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        HapticFeedback.selectionClick();
         _showQuizBottomSheet(context);
       },
       child: Container(
@@ -670,6 +837,72 @@ class _CategoryCard extends StatelessWidget {
                     color: Theme.of(context).textTheme.bodyMedium?.color),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _QuizSheetCard extends StatelessWidget {
+  final QuizResource item;
+  final VoidCallback onTap;
+
+  const _QuizSheetCard({
+    required this.item,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardTheme.color,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Theme.of(context).dividerTheme.color!,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: AppTheme.vertFaso.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.assignment_outlined,
+                  color: AppTheme.vertFaso),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.title,
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.w600),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${item.questions.length} questions',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios,
+                size: 14, color: AppTheme.vertFaso),
           ],
         ),
       ),
