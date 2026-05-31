@@ -1,6 +1,5 @@
 import 'package:cncours_quiz/app/data/resources/base_resource.dart';
 
-import 'package:flutter/cupertino.dart';
 
 class AuthResource extends BaseResource {
   String? email;
@@ -27,14 +26,6 @@ class AuthResource extends BaseResource {
     return data;
   }
 
-  @override
-  static Map<String, dynamic> generateData(AuthResource? editing) {
-    final data = <String, dynamic>{};
-    data['id'] = editing?.id;
-    data['name'] = TextEditingController(text: editing?.name);
-    data['email'] = TextEditingController(text: editing?.email);
-    return data;
-  }
 
   @override
   String toString() {

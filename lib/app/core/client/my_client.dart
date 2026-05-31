@@ -18,8 +18,6 @@ class MyClient extends GetConnect {
     httpClient.timeout = const Duration(seconds: timeOutDuration);
 
     httpClient.addRequestModifier<dynamic>((request) {
-      // Automatically attach global JSON headers
-      request.headers['Content-Type'] = 'application/json';
       request.headers['Accept'] = 'application/json';
 
       final token = Token.get();
@@ -33,7 +31,6 @@ class MyClient extends GetConnect {
   }
 
   Future<dynamic> clientGet({
-    bool auth = true,
     required String apiRoute,
   }) async {
     final response = await get(apiRoute);
@@ -41,7 +38,6 @@ class MyClient extends GetConnect {
   }
 
   Future<dynamic> clientDelete({
-    bool auth = true,
     required String apiRoute,
   }) async {
     final response = await delete(apiRoute);
@@ -49,9 +45,8 @@ class MyClient extends GetConnect {
   }
 
   Future<dynamic> clientPut({
-    required bool auth,
-    Map<String, dynamic> data = const {},
     required String apiRoute,
+    Map<String, dynamic> data = const {},
   }) async {
     final response = await put(
       apiRoute,
@@ -61,9 +56,8 @@ class MyClient extends GetConnect {
   }
 
   Future<dynamic> clientPost({
-    required bool auth,
-    required Map<String, dynamic> data,
     required String apiRoute,
+    required Map<String, dynamic> data,
   }) async {
     final response = await post(
       apiRoute,
@@ -73,7 +67,6 @@ class MyClient extends GetConnect {
   }
 
   Future<dynamic> clientUpload({
-    required bool auth,
     required String apiRoute,
     required String fileField,
     required String filePath,
@@ -81,12 +74,11 @@ class MyClient extends GetConnect {
     final form = FormData({
       fileField: MultipartFile(filePath, filename: filePath.split('/').last),
     });
-    final response = await post(apiRoute, form);
+    final response = await post(apiRoute, form, contentType: 'multipart/form-data');
     return processResponse(response);
   }
 
   Future<dynamic> clientDeletePhoto({
-    required bool auth,
     required String apiRoute,
   }) async {
     final response = await delete(apiRoute);

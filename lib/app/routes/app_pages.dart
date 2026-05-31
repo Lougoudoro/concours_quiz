@@ -21,6 +21,8 @@ import 'package:cncours_quiz/app/modules/notification/notification_binding.dart'
 import 'package:cncours_quiz/app/modules/notification/notification_screen.dart';
 import 'package:cncours_quiz/app/modules/help/help_binding.dart';
 import 'package:cncours_quiz/app/modules/help/help_screen.dart';
+import 'package:cncours_quiz/app/modules/privacy_policy/privacy_policy_binding.dart';
+import 'package:cncours_quiz/app/modules/privacy_policy/privacy_policy_screen.dart';
 import 'package:cncours_quiz/app/modules/splash/splash_binding.dart';
 import 'package:cncours_quiz/app/modules/splash/splash_screen.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
@@ -114,5 +116,9 @@ class AppPages {
         name: _Paths.HELP,
         page: () => const HelpScreen(),
         binding: HelpBinding()),
+    GetPage(
+        name: _Paths.PRIVACY_POLICY,
+        page: () => const PrivacyPolicyScreen(),
+        binding: PrivacyPolicyBinding()),
   ];
 }

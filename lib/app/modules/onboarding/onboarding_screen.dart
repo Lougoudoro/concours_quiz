@@ -1,3 +1,4 @@
+import 'package:cncours_quiz/app/core/controllers/theme_controller.dart';
 import 'package:cncours_quiz/app/data/models/onboarding_data.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +54,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             itemBuilder: (context, index) {
               return _buildPage(_pages[index]);
             },
+          ),
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 8,
+            right: 16,
+            child: TextButton(
+              onPressed: () => Get.toNamed(Routes.PRIVACY_POLICY),
+              child:const Text(
+                'Politique de confidentialité',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: AppTheme.vertFaso
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 8,
+            left: 8,
+            child: Obx(() {
+              final controller = Get.find<ThemeController>();
+              return IconButton(
+                icon: Icon(
+                  controller.isDarkMode
+                      ? Icons.light_mode_outlined
+                      : Icons.dark_mode_outlined,
+                   color: AppTheme.vertFaso,
+                ),
+                onPressed: controller.toggleTheme,
+              );
+            }),
           ),
           Positioned(
             bottom: 40,
@@ -169,7 +200,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         color: AppTheme.vertFaso.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
-                      child:Icon(data.icon, size: 100, color: AppTheme.vertFaso),
+                      child:
+                          Icon(data.icon, size: 100, color: AppTheme.vertFaso),
                     )),
           const SizedBox(height: 40),
           Text(

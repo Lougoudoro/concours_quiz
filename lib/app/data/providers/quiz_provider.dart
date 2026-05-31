@@ -6,9 +6,8 @@ class QuizProvider
   final MyClient _client = Get.find<MyClient>();
 
   String resource='quizzes';
-  bool auth=true;
 
   Future<dynamic> questions({ required String id}) async {
-    return  await  _client.clientGet(auth:auth,apiRoute: "/$resource/$id/questions");
+    return  await  _client.clientGet(apiRoute: "/$resource/$id/questions");
   }
 }

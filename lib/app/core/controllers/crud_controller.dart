@@ -23,7 +23,7 @@ class CrudController<M, R> extends GetxController with StateMixin<List<R>> {
   @override
   void onInit() {
     super.onInit();
-    crud = CrudProvider(resource: resource, auth: false);
+    crud = CrudProvider(resource: resource);
   }
 
   Future<void> list({bool load = false}) async {
@@ -66,14 +66,14 @@ class CrudController<M, R> extends GetxController with StateMixin<List<R>> {
     }, context: 'CrudController.show');
   }
 
-  Future<void> edit({bool auth = true, required String id}) async {
+  Future<void> edit({required String id}) async {
     await ErrorHandler.run(() async {
       final response = await crud.edit(id: id);
       editing.value = mE(response['data']);
     }, context: 'CrudController.edit');
   }
 
-  Future<void> remove({bool auth = true, required String id}) async {
+  Future<void> remove({required String id}) async {
     await ErrorHandler.run(() async {
       final response = await crud.remove(id: id);
       removed.value = rE(response['data']);

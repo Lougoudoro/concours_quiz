@@ -9,7 +9,4 @@ class BaseModel {
     this.name,
   });
 
-  static Map<String, dynamic> generateData(dynamic editing) {
-    return {};
-  }
 }

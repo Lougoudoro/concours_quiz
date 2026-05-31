@@ -71,7 +71,7 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    "${authController.authResource.value?.name}",
+                  authController.authResource.value?.name??'',
                     style: Theme.of(context)
                         .textTheme
                         .headlineSmall
@@ -255,7 +255,6 @@ class SettingsScreen extends StatelessWidget {
     final authController = Get.find<AuthController>();
     final user = authController.authResource.value;
     final nameCtrl = TextEditingController(text: user?.name ?? '');
-    final emailCtrl = TextEditingController(text: user?.email ?? '');
     final formKey = GlobalKey<FormState>();
 
     showModalBottomSheet(
@@ -305,25 +304,7 @@ class SettingsScreen extends StatelessWidget {
                   validator: (v) =>
                       v == null || v.trim().isEmpty ? 'Champ requis' : null,
                 ),
-                const SizedBox(height: 14),
-                TextFormField(
-                  controller: emailCtrl,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    labelText: 'Adresse email',
-                    prefixIcon: const Icon(Icons.email_outlined),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                  validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Champ requis';
-                    if (!GetUtils.isEmail(v.trim())) {
-                      return 'Email invalide';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 8),
+             const SizedBox(height: 8),
                 Obx(() {
                   if (authController.errorMessage.isNotEmpty) {
                     return Padding(
@@ -347,8 +328,7 @@ class SettingsScreen extends StatelessWidget {
                                 if (!formKey.currentState!.validate()) return;
                                 final success =
                                     await authController.updateProfile(
-                                  name: nameCtrl.text,
-                                  email: emailCtrl.text,
+                                  name: nameCtrl.text
                                 );
                                 if (success && ctx.mounted) {
                                   Navigator.pop(ctx);
@@ -447,6 +427,7 @@ class SettingsScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         labelText: 'Mot de passe actuel',
                         prefixIcon: const Icon(Icons.lock_outline),
+                        errorText: authController.errors['current_password']?.first,
                         suffixIcon: IconButton(
                           icon: Icon(obscureCurrent.value
                               ? Icons.visibility_off_outlined
@@ -466,6 +447,7 @@ class SettingsScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         labelText: 'Nouveau mot de passe',
                         prefixIcon: const Icon(Icons.lock_outline),
+                        errorText: authController.errors['password']?.first,
                         suffixIcon: IconButton(
                           icon: Icon(obscureNew.value
                               ? Icons.visibility_off_outlined
@@ -487,6 +469,7 @@ class SettingsScreen extends StatelessWidget {
                       obscureText: obscureConfirm.value,
                       decoration: InputDecoration(
                         labelText: 'Confirmer le nouveau mot de passe',
+                        errorText: authController.errors['password_confirmation']?.first,
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
                           icon: Icon(obscureConfirm.value

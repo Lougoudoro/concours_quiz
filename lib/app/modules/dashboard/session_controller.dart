@@ -1,6 +1,6 @@
 import 'package:cncours_quiz/app/core/client/error_handler.dart';
 import 'package:cncours_quiz/app/core/helpers/storage_helper.dart';
-import 'package:cncours_quiz/app/data/providers/session_povider.dart';
+import 'package:cncours_quiz/app/data/providers/session_provider.dart';
 import 'package:cncours_quiz/app/data/resources/academic_session_resource.dart';
 import 'package:cncours_quiz/app/data/resources/category_resource.dart';
 import 'package:cncours_quiz/app/data/resources/concours_type_resource.dart';

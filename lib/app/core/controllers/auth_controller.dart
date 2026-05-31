@@ -193,7 +193,6 @@ class AuthController extends GetxController {
 
   Future<bool> updateProfile({
     required String name,
-    required String email,
   }) async {
     try {
       isLoading.value = true;
@@ -203,7 +202,6 @@ class AuthController extends GetxController {
       final response = await ErrorHandler.guard(
         () => _provider.updateProfile(data: {
           'name': name.trim(),
-          'email': email.trim(),
         }),
         context: 'AuthController.updateProfile',
         showError: false,

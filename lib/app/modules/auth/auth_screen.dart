@@ -27,7 +27,7 @@ class _AuthScreenState extends State<AuthScreen> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 5),
           child: Form(
             key: _authController.loginformKey,
             child: Column(
@@ -37,12 +37,12 @@ class _AuthScreenState extends State<AuthScreen> {
                   decoration: BoxDecoration(
                     color: AppTheme.vertFaso.withOpacity(0.1),
                     shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(16)
+                    borderRadius: BorderRadius.circular(10)
                   ),
                   child: IconButton(
                     onPressed: () => Get.offNamed(Routes.ONBOARDING),
                     icon: const Icon(Icons.chevron_left),
-                    iconSize: 30,
+                    iconSize: 25,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -52,7 +52,6 @@ class _AuthScreenState extends State<AuthScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                 ),
-                const SizedBox(height: 8),
                 Text(
                   _isLogin
                       ? 'Connectez-vous pour continuer votre apprentissage.'
@@ -61,7 +60,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         color: Theme.of(context).textTheme.bodyMedium!.color,
                       ),
                 ),
-                const SizedBox(height: 48),
+                const SizedBox(height: 24),
                 Obx(() {
                   if (_authController.errorMessage.value.isEmpty) {
                     return const SizedBox.shrink();
@@ -84,20 +83,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                   );
                 }),
-                if (!_isLogin) ...[
-                  _buildLabel('Nom complet'),
-                  TextFormField(
-                    controller: _authController.nameController,
-                    decoration: const InputDecoration(
-                      hintText: 'Ex: Jean Traoré',
-                      prefixIcon: Icon(Icons.person_outline),
-                    ),
-                    validator: (value) => value == null || value.trim().isEmpty
-                        ? 'Champ requis'
-                        : null,
-                  ),
-                  const SizedBox(height: 20),
-                ],
+               
                 _buildLabel('Email'),
                 Obx(() => TextFormField(
                       controller: _authController.emailController,
@@ -193,12 +179,12 @@ class _AuthScreenState extends State<AuthScreen> {
                               ),
                       ),
                     )),
-                const SizedBox(height: 24),
+              
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      _isLogin ? 'Pas de compte ?' : 'Déjà un compte ?',
+                      _isLogin ? 'Vous n\'avez pas de compte ?' : 'Vous avez déjà un compte ?',
                       style: TextStyle(
                           color: Theme.of(context).textTheme.bodyMedium!.color),
                     ),
@@ -210,7 +196,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         _authController.clearInputs();
                       },
                       child: Text(
-                        _isLogin ? 'S\'inscrire' : 'Se connecter',
+                        _isLogin ? 'Créer-en un ici' : 'Se connecter',
                         style: const TextStyle(
                             color: AppTheme.vertFaso,
                             fontWeight: FontWeight.bold),

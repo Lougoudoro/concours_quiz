@@ -87,7 +87,7 @@ class DashboardScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Salut, ${authController.authResource.value?.name} 👋🏿',
+                      'Salut, ${authController.authResource.value?.name??''} 👋🏿',
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall
