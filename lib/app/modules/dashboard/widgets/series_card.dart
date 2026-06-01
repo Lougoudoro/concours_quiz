@@ -7,44 +7,83 @@ import 'package:get/get.dart';
 
 class SeriesCard extends StatelessWidget {
   final SerieResource serie;
+  final int index;
 
-  const SeriesCard({super.key, required this.serie});
+  static const _cardColors = [
+    [Color(0xFF009E49), Color(0xFF00B86B)],
+    [Color(0xFFFFB800), Color(0xFFFFD000)],
+    [Color(0xFF6C63FF), Color(0xFF8B83FF)],
+    [Color(0xFFE74C3C), Color(0xFFFF6B6B)],
+    [Color(0xFF1E88E5), Color(0xFF42A5F5)],
+    [Color(0xFFFF6F00), Color(0xFFFF8F00)],
+  ];
+
+  const SeriesCard({super.key, required this.serie, this.index = 0});
 
   @override
   Widget build(BuildContext context) {
     final progress = Get.find<GamificationController>()
         .getSeriesProgress(serie.id.toString());
+    final colors = _cardColors[index % _cardColors.length];
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
-      onTap: _openSerie,
+      onTap: _open,
       child: Container(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Theme.of(context).cardTheme.color,
+          color: isDark ? AppTheme.surfaceCardSombre : Colors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Theme.of(context).dividerTheme.color!),
+          border: Border.all(
+            color: colors.first.withOpacity(0.2),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: colors.first.withOpacity(0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.book, color: AppTheme.vertFaso, size: 28),
-            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: colors,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(Icons.book, color: Colors.white, size: 20),
+            ),
+            const SizedBox(height: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(serie.name,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
+                  Text(
+                    serie.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   const SizedBox(height: 4),
-                  Text(serie.description,
-                      style: TextStyle(
-                          fontSize: 11,
-                          color: Theme.of(context).textTheme.bodyMedium?.color),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis),
+                  Text(
+                    serie.description,
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
               ),
             ),
@@ -63,12 +102,8 @@ class SeriesCard extends StatelessWidget {
                       builder: (context, value, _) => LinearProgressIndicator(
                         value: value,
                         minHeight: 4,
-                        backgroundColor: Theme.of(context)
-                            .dividerTheme
-                            .color
-                            ?.withOpacity(0.3),
-                        valueColor:
-                            const AlwaysStoppedAnimation(AppTheme.orReussite),
+                        backgroundColor: colors.first.withOpacity(0.15),
+                        valueColor: AlwaysStoppedAnimation(colors.last),
                       ),
                     ),
                   ),
@@ -77,9 +112,10 @@ class SeriesCard extends StatelessWidget {
                 Text(
                   '$progress',
                   style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).textTheme.bodyMedium?.color),
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: colors.first,
+                  ),
                 ),
               ],
             ),
@@ -89,7 +125,7 @@ class SeriesCard extends StatelessWidget {
     );
   }
 
-  void _openSerie() {
+  void _open() {
     Get.toNamed(Routes.SERIE, arguments: serie);
   }
 }

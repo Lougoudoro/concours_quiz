@@ -1,11 +1,11 @@
 import 'package:cncours_quiz/app/data/resources/quiz_resource.dart';
 import 'package:cncours_quiz/app/data/resources/serie_resource.dart';
+import 'package:cncours_quiz/app/modules/history/history_controller.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
-import 'package:cncours_quiz/app/modules/history/history_controller.dart';
 
 class SerieScreen extends StatelessWidget {
   final SerieResource serie;
@@ -20,17 +20,17 @@ class SerieScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            _buildHeader(context, quizzes),
+            _Header(serie: serie, quizzes: quizzes),
             Expanded(
               child: quizzes.isEmpty
-                  ? _buildEmptyState()
+                  ? const _EmptyState()
                   : ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
                       itemCount: quizzes.length,
                       separatorBuilder: (_, __) => const SizedBox(height: 10),
                       itemBuilder: (_, index) =>
-                          _buildQuizCard(context, quizzes[index]),
+                          _QuizCard(quiz: quizzes[index], index: index),
                     ),
             ),
           ],
@@ -38,10 +38,17 @@ class SerieScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildHeader(BuildContext context, List<QuizResource> quizzes) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+class _Header extends StatelessWidget {
+  final SerieResource serie;
+  final List<QuizResource> quizzes;
+  const _Header({required this.serie, required this.quizzes});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
       child: Column(
         children: [
           Row(
@@ -63,62 +70,130 @@ class SerieScreen extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Text(serie.name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(serie.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                        )),
+                    if (serie.description.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(serie.description,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14,
+                      color: Theme.of(context).textTheme.bodyMedium?.color)),
+                      ),
+                  ],
+                ),
               ),
             ],
           ),
-          if (serie.description.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 8, left: 50),
-              child: Text(serie.description,
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Theme.of(context).textTheme.bodyMedium?.color)),
-            ),
           if (quizzes.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(top: 8, left: 50),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                    '${quizzes.length} quiz${quizzes.length > 1 ? 's' : ''} disponible${quizzes.length > 1 ? 's' : ''}',
-                    style: TextStyle(
-                        fontSize: 13,
-                        color: Theme.of(context).textTheme.bodyMedium?.color)),
+              padding: const EdgeInsets.only(top: 16),
+              child: Row(
+                children: [
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.quiz_outlined, size: 16),
+                        const SizedBox(width: 6),
+                        Text(
+                          '${quizzes.length} quiz${quizzes.length > 1 ? 's' : ''}',
+                          style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                  ),
+          ],
               ),
             ),
-        ],
-      ),
-    );
+        ])
+            );
+        
+      
+    
   }
+}
 
-  Widget _buildEmptyState() {
+class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.quiz_outlined, size: 48, color: Colors.grey[400]),
-          const SizedBox(height: 12),
-          Text('Aucun quiz disponible',
-              style: TextStyle(fontSize: 16, color: Colors.grey[500])),
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [AppTheme.vertFaso, Color(0xFF00B86B)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              shape: BoxShape.circle,
+            ),
+            child:
+                const Icon(Icons.quiz_outlined, color: Colors.white, size: 40),
+          ),
+          const SizedBox(height: 16),
+          const Text('Aucun quiz disponible',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 8),
+          Text(
+            'Reviens bientôt, de nouveaux quiz seront ajoutés.',
+            style: TextStyle(
+                fontSize: 13,
+                color: Theme.of(context).textTheme.bodyMedium?.color),
+          ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildQuizCard(BuildContext context, QuizResource quiz) {
+class _QuizCard extends StatelessWidget {
+  final QuizResource quiz;
+  final int index;
+  const _QuizCard({required this.quiz, required this.index});
+
+  @override
+  Widget build(BuildContext context) {
+    final isExam = quiz.isExam;
     return GestureDetector(
-      onTap: () => _showQuizActions(context, quiz),
+      onTap: () => _showActions(context),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Theme.of(context).cardTheme.color,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppTheme.vertFaso.withOpacity(0.2)),
+          border: Border.all(
+            color: AppTheme.vertFaso.withOpacity(0.15),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.vertFaso.withOpacity(0.05),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           children: [
@@ -126,11 +201,18 @@ class SerieScreen extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: AppTheme.vertFaso.withOpacity(0.1),
+                gradient: const LinearGradient(
+                  colors: [AppTheme.vertFaso, Color(0xFF00B86B)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.quiz_outlined,
-                  color: AppTheme.vertFaso, size: 24),
+              child: Icon(
+                isExam ? Icons.timer_outlined : Icons.menu_book_outlined,
+                color: Colors.white,
+                size: 22,
+              ),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -155,35 +237,33 @@ class SerieScreen extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis),
                     ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      _Tag(
+                        label: quiz.typeLabel,
+                        color: AppTheme.vertFaso,
+                      ),
+                      const SizedBox(width: 6),
+                      _Tag(
+                        label: '${quiz.getQuesionsCount()} Q',
+                        color: AppTheme.orReussite,
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
-            const SizedBox(width: 8),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(quiz.typeLabel,
-                    style: const TextStyle(
-                        fontSize: 10,
-                        color: AppTheme.vertFaso,
-                        fontWeight: FontWeight.w500)),
-                const SizedBox(height: 4),
-                Text('${quiz.getQuesionsCount()} Q',
-                    style: const TextStyle(
-                        fontSize: 12,
-                        color: AppTheme.vertFaso,
-                        fontWeight: FontWeight.w600)),
-              ],
-            ),
-            const Icon(Icons.chevron_right, color: AppTheme.vertFaso, size: 20),
+            const SizedBox(width: 4),
+            Icon(Icons.chevron_right,
+                color: Theme.of(context).textTheme.bodyMedium?.color, size: 20),
           ],
         ),
       ),
     );
   }
 
-  void _showQuizActions(BuildContext context, QuizResource quiz) {
+  void _showActions(BuildContext context) {
     late final HistoryController historyCtrl;
     try {
       historyCtrl = Get.find<HistoryController>();
@@ -216,7 +296,7 @@ class SerieScreen extends StatelessWidget {
               ),
               Text(quiz.title,
                   style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
+                      fontSize: 20, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center),
               if (quiz.description.isNotEmpty)
                 Padding(
@@ -229,9 +309,9 @@ class SerieScreen extends StatelessWidget {
                 ),
               const SizedBox(height: 8),
               if (quiz.isExam) ...[
-                _ActionButton(
+                _ActionBtn(
                   icon: Icons.play_arrow_rounded,
-                  label: 'Démarrer',
+                  label: 'Démarrer l\'examen',
                   color: AppTheme.vertFaso,
                   onTap: () {
                     Navigator.pop(ctx);
@@ -239,10 +319,10 @@ class SerieScreen extends StatelessWidget {
                   },
                 ),
                 if (hasResult) ...[
-                  const SizedBox(height: 12),
-                  _ActionButton(
+                  const SizedBox(height: 10),
+                  _ActionBtn(
                     icon: Icons.assignment_rounded,
-                    label: 'Résultat',
+                    label: 'Voir le résultat',
                     color: AppTheme.orReussite,
                     onTap: () {
                       Navigator.pop(ctx);
@@ -250,10 +330,10 @@ class SerieScreen extends StatelessWidget {
                     },
                   ),
                 ],
-                const SizedBox(height: 12),
-                _ActionButton(
+                const SizedBox(height: 10),
+                _ActionBtn(
                   icon: Icons.rate_review_outlined,
-                  label: 'Correction',
+                  label: 'Mode correction',
                   color: AppTheme.rougeTerre,
                   onTap: () {
                     Navigator.pop(ctx);
@@ -261,19 +341,19 @@ class SerieScreen extends StatelessWidget {
                   },
                 ),
               ] else ...[
-                _ActionButton(
+                _ActionBtn(
                   icon: Icons.menu_book_outlined,
-                  label: 'Cours',
+                  label: 'Apprendre le cours',
                   color: AppTheme.vertFaso,
                   onTap: () {
                     Navigator.pop(ctx);
                     _startLesson(quiz);
                   },
                 ),
-                const SizedBox(height: 12),
-                _ActionButton(
+                const SizedBox(height: 10),
+                _ActionBtn(
                   icon: Icons.quiz_outlined,
-                  label: 'Test',
+                  label: 'Test de connaissances',
                   color: AppTheme.orReussite,
                   onTap: () {
                     Navigator.pop(ctx);
@@ -325,13 +405,38 @@ class SerieScreen extends StatelessWidget {
   }
 }
 
-class _ActionButton extends StatelessWidget {
+class _Tag extends StatelessWidget {
+  final String label;
+  final Color color;
+  const _Tag({required this.label, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
+          color: color,
+        ),
+      ),
+    );
+  }
+}
+
+class _ActionBtn extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color color;
   final VoidCallback onTap;
 
-  const _ActionButton({
+  const _ActionBtn({
     required this.icon,
     required this.label,
     required this.color,
@@ -345,7 +450,7 @@ class _ActionButton extends StatelessWidget {
       child: ElevatedButton.icon(
         onPressed: onTap,
         icon: Icon(icon, size: 20),
-        label: Text(label, style: const TextStyle(fontSize: 16)),
+        label: Text(label, style: const TextStyle(fontSize: 15)),
         style: ElevatedButton.styleFrom(
           backgroundColor: color.withOpacity(0.12),
           foregroundColor: color,
@@ -354,6 +459,7 @@ class _ActionButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
           ),
           elevation: 0,
+          side: BorderSide(color: color.withOpacity(0.2)),
         ),
       ),
     );

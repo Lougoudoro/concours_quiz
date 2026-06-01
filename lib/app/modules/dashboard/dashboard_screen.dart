@@ -1,11 +1,11 @@
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
 import 'package:cncours_quiz/app/modules/dashboard/dashboard_controller.dart';
-import 'package:cncours_quiz/app/modules/dashboard/series_controller.dart';
+import 'package:cncours_quiz/app/modules/dashboard/gamification_controller.dart';
+import 'package:cncours_quiz/app/modules/dashboard/widgets/continue_learning.dart';
 import 'package:cncours_quiz/app/modules/dashboard/widgets/dashboard_header.dart';
 import 'package:cncours_quiz/app/modules/dashboard/widgets/filter_drawer.dart';
 import 'package:cncours_quiz/app/modules/dashboard/widgets/progress_card.dart';
-import 'package:cncours_quiz/app/modules/dashboard/widgets/resume_card.dart';
-import 'package:cncours_quiz/app/modules/dashboard/widgets/series_grid.dart';
+import 'package:cncours_quiz/app/modules/dashboard/widgets/stats_row.dart';
 import 'package:cncours_quiz/app/modules/notification/notification_controller.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
@@ -16,80 +16,69 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<DashboardController>();
-
+    final ctrl = Get.find<DashboardController>();
     return Scaffold(
       appBar: _AppBar(),
       drawer: const FilterDrawer(),
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: controller.refresh,
-          child: CustomScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            slivers: [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const DashboardHeader(),
-                      const SizedBox(height: 20),
-                      Obx(() => ProgressCard(
-                            progress: controller.globalProgress.value,
-                            totalQuizzesDone: controller.totalQuizzesDone.value,
-                            averageScore: controller.averageScore.value,
-                          )),
-                      Obx(() {
-                        if (controller.lastActivity.value == null &&
-                            controller.totalQuizzesDone.value == 0) {
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 24),
-                            child: ResumeCard(lastActivity: null),
-                          );
-                        }
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 28),
-                            Text(
-                              'Continuer l\'apprentissage',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 12),
-                            ResumeCard(
-                                lastActivity: controller.lastActivity.value),
-                          ],
-                        );
-                      }),
-                      const SizedBox(height: 28),
-                      Text(
-                        'Concours de référence',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                  ),
-                ),
-              ),
-              Obx(() {
-                final serieController = Get.find<SerieController>();
-                return SeriesGrid(
-                  series: serieController.listing,
-                  isLoading: serieController.listingLoading.value &&
-                      serieController.listing.isEmpty,
-                );
-              }),
-            ],
-          ),
+      body: RefreshIndicator(
+        onRefresh: ctrl.refresh,
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+              child: _buildBody(context, ctrl),
+            ),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 24),
+            ),
+          ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context, DashboardController ctrl) {
+    final gamification = Get.find<GamificationController>();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 8),
+          const DashboardHeader(),
+          const SizedBox(height: 20),
+          Obx(
+            () => ProgressCard(
+              progress: ctrl.globalProgress.value,
+              totalQuizzesDone: ctrl.totalQuizzesDone.value,
+              averageScore: ctrl.averageScore.value,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Obx(
+            () => StatsRow(
+              totalQuizzes: ctrl.totalQuizzesDone.value,
+              avgScore: ctrl.averageScore.value,
+              streak: gamification.streak.value,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            ctrl.lastActivity.value == null && ctrl.totalQuizzesDone.value == 0
+                ? 'Premiers pas'
+                : 'Continuer l\'apprentissage',
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 12),
+          Obx(
+            () => ContinueLearning(
+              lastActivity: ctrl.lastActivity.value,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -103,6 +92,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -125,18 +115,28 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
                     child: const Icon(Icons.notifications_outlined,
                         color: AppTheme.vertFaso, size: 26),
                   )
-                : const Icon(Icons.notifications_outlined,
-                    color: AppTheme.vertFaso, size: 26),
+                : Icon(
+                    Icons.notifications_outlined,
+                    color:
+                        isDark ? AppTheme.textPrimarySombre : AppTheme.vertFaso,
+                    size: 26,
+                  ),
             onPressed: () => Get.toNamed(Routes.NOTIFICATION),
           );
         }),
         GestureDetector(
           onTap: () => Get.toNamed(Routes.SETTINGS),
-          child: const Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: CircleAvatar(
+          child: Container(
+            margin: const EdgeInsets.only(right: 12),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [AppTheme.vertFaso, Color(0xFF00B86B)],
+              ),
+              shape: BoxShape.circle,
+            ),
+            child: const CircleAvatar(
               radius: 18,
-              backgroundColor: AppTheme.vertFaso,
+              backgroundColor: Colors.transparent,
               child: Icon(Icons.person_outline, color: Colors.white, size: 18),
             ),
           ),

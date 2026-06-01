@@ -242,7 +242,8 @@ class _ConcoursTypeList extends StatelessWidget {
       'subtitle': sub.description,
       'items': fc.availableCollections,
       'onSelect': (item) => _navigateToQuizzes(item as SerieResource),
-    });
+    },
+    preventDuplicates: false);
   }
 
   void _navigateToQuizzes(SerieResource coll) {

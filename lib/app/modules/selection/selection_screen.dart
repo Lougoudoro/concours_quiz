@@ -1,5 +1,4 @@
 import 'package:cncours_quiz/app/data/resources/category_resource.dart';
-import 'package:cncours_quiz/app/data/resources/quiz_resource.dart';
 import 'package:cncours_quiz/app/data/resources/serie_resource.dart';
 import 'package:flutter/material.dart';
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
@@ -18,6 +17,14 @@ class SelectionScreen extends StatelessWidget {
     required this.onSelect,
   });
 
+  static const _palette = [
+    [Color(0xFF009E49), Color(0xFF00B86B)],
+    [Color(0xFFFFB800), Color(0xFFFFD000)],
+    [Color(0xFF6C63FF), Color(0xFF8B83FF)],
+    [Color(0xFFE74C3C), Color(0xFFFF6B6B)],
+    [Color(0xFF1E88E5), Color(0xFF42A5F5)],
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,11 +38,27 @@ class SelectionScreen extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-            child: Text(
-              subtitle,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).textTheme.bodyMedium?.color,
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppTheme.vertFaso.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
                   ),
+                  child: const Icon(Icons.filter_list,
+                      color: AppTheme.vertFaso, size: 18),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    subtitle,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).textTheme.bodyMedium?.color,
+                        ),
+                  ),
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -45,17 +68,20 @@ class SelectionScreen extends StatelessWidget {
               separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final item = items[index];
+                final colors = _palette[index % _palette.length];
                 String name = '';
                 String desc = '';
                 IconData icon = Icons.chevron_right;
 
                 if (item is CategoryResource) {
                   name = item.name;
-                  desc = '${item.series.length} formations disponibles';
+                  desc =
+                      '${item.series.length} formation${item.series.length > 1 ? 's' : ''} disponible${item.series.length > 1 ? 's' : ''}';
                   icon = Icons.layers_outlined;
                 } else if (item is SerieResource) {
                   name = item.name;
-                  desc = '${item.quizzes.length} séries de quiz';
+                  desc =
+                      '${item.quizzes.length} série${item.quizzes.length > 1 ? 's' : ''} de quiz';
                   icon = Icons.folder_open_outlined;
                 }
 
@@ -63,6 +89,7 @@ class SelectionScreen extends StatelessWidget {
                   name: name,
                   description: desc,
                   icon: icon,
+                  colors: colors,
                   onTap: () => onSelect(item),
                 );
               },
@@ -78,12 +105,14 @@ class _SelectionCard extends StatelessWidget {
   final String name;
   final String description;
   final IconData icon;
+  final List<Color> colors;
   final VoidCallback onTap;
 
   const _SelectionCard({
     required this.name,
     required this.description,
     required this.icon,
+    required this.colors,
     required this.onTap,
   });
 
@@ -97,9 +126,15 @@ class _SelectionCard extends StatelessWidget {
           color: Theme.of(context).cardTheme.color,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Theme.of(context).dividerTheme.color!,
-            width: 1,
+            color: colors.first.withOpacity(0.15),
           ),
+          boxShadow: [
+            BoxShadow(
+              color: colors.first.withOpacity(0.05),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           children: [
@@ -107,10 +142,14 @@ class _SelectionCard extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: AppTheme.vertFaso.withOpacity(0.1),
+                gradient: LinearGradient(
+                  colors: colors,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: AppTheme.vertFaso),
+              child: Icon(icon, color: Colors.white),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -135,7 +174,15 @@ class _SelectionCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: colors.first.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child:
+                  Icon(Icons.arrow_forward_ios, size: 14, color: colors.first),
+            ),
           ],
         ),
       ),

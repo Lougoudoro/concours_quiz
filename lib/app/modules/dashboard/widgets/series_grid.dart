@@ -22,17 +22,18 @@ class SeriesGrid extends StatelessWidget {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
     return SliverPadding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
       sliver: SliverGrid(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           mainAxisSpacing: 14,
           crossAxisSpacing: 14,
-          childAspectRatio: 0.95,
+          childAspectRatio: 0.85,
         ),
         delegate: SliverChildBuilderDelegate(
           (context, index) => SeriesCard(
             serie: series[index],
+            index: index,
           ),
           childCount: series.length,
         ),
@@ -53,27 +54,28 @@ class _SeriesShimmer extends StatelessWidget {
           children: [
             const SizedBox(height: 8),
             ...List.generate(
-                3,
-                (row) => Padding(
-                      padding: const EdgeInsets.only(bottom: 14),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: ShimmerLoading(
-                              height: 160,
-                              borderRadius: 18,
-                            ),
-                          ),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: ShimmerLoading(
-                              height: 160,
-                              borderRadius: 18,
-                            ),
-                          ),
-                        ],
+              3,
+              (row) => Padding(
+                padding: const EdgeInsets.only(bottom: 14),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ShimmerLoading(
+                        height: 160,
+                        borderRadius: 18,
                       ),
-                    )),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: ShimmerLoading(
+                        height: 160,
+                        borderRadius: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
