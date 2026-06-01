@@ -7,6 +7,8 @@ class QuestionResource extends BaseResource {
   final String typeValue;
   final List<OptionResource> options;
   final String justification;
+  final bool isVraiOuFaux;
+final bool isQcm;
 
   QuestionResource({
     required super.id,
@@ -15,6 +17,8 @@ class QuestionResource extends BaseResource {
     required this.typeValue,
     required this.options,
     required this.justification,
+    required this.isVraiOuFaux,
+    required this.isQcm,
   });
 
   factory QuestionResource.fromJson(Map<String, dynamic> json) =>
@@ -23,6 +27,8 @@ class QuestionResource extends BaseResource {
         content: json['content'],
         typeValue: json['type_value'],
         typeLabel: json['type_label'],
+        isVraiOuFaux: json['is_vrai_ou_faux'],
+        isQcm: json['is_qcm'],
         options: (json['options'] as List)
             .map((o) => OptionResource.fromJson(o))
             .toList(),
@@ -34,12 +40,11 @@ class QuestionResource extends BaseResource {
         'content': content,
         'type_value': typeValue,
         'type_label': typeLabel,
+        'is_vrai_ou_faux':isVraiOuFaux,
+        'is_qcm': isQcm,
         'options': options.map((o) => o.toJson()).toList(),
         'justification': justification,
       };
-
-  bool get isVraiOuFaux => typeValue == 'vrai_ou_faux';
-  bool get isQcm => typeValue == 'qcm';
 
   List<dynamic> get correctAnswerIds =>
       options.where((o) => o.isCorrect).map((o) => o.id).toList();

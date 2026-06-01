@@ -2,7 +2,6 @@ import 'package:cncours_quiz/app/core/controllers/auth_controller.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/data/resources/category_resource.dart';
 import 'package:cncours_quiz/app/data/resources/concours_type_resource.dart';
-import 'package:cncours_quiz/app/data/resources/quiz_resource.dart';
 import 'package:cncours_quiz/app/data/resources/serie_resource.dart';
 import 'package:cncours_quiz/app/modules/dashboard/dashboard_controller.dart';
 import 'package:cncours_quiz/app/modules/dashboard/series_controller.dart';
@@ -87,7 +86,7 @@ class DashboardScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Salut, ${authController.authResource.value?.name??''} 👋🏿',
+                      'Salut, ${authController.authResource.value?.name ?? ''} 👋🏿',
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall
@@ -434,80 +433,7 @@ class DashboardScreen extends StatelessWidget {
   void _navigateToQuizzes(SerieResource coll) {
     final fc = Get.find<SessionController>();
     fc.selectCollection(coll);
-    final quizzes = fc.availableSeries;
-
-    showModalBottomSheet(
-      context: Get.context!,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.6,
-          minChildSize: 0.4,
-          maxChildSize: 0.9,
-          expand: false,
-          builder: (_, scrollController) {
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      margin: const EdgeInsets.only(bottom: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  ),
-                  Text(coll.name,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold)),
-                  if (coll.description.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4, bottom: 12),
-                      child: Text(coll.description,
-                          style: TextStyle(
-                              fontSize: 14,
-                              color:
-                                  Theme.of(ctx).textTheme.bodyMedium?.color)),
-                    ),
-                  const SizedBox(height: 4),
-                  Expanded(
-                    child: ListView.separated(
-                      controller: scrollController,
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: quizzes.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 10),
-                      itemBuilder: (_, i) {
-                        final item = quizzes[i];
-                        return _QuizSheetCard(
-                          item: item,
-                          onTap: () {
-                            Navigator.pop(ctx);
-                            fc.selectSerie(item);
-                            Get.toNamed(Routes.QUIZ, arguments: {
-                              'quizId': item.id.toString(),
-                              'quizName': item.title,
-                              'questions': item.questions.toList(),
-                            });
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
+    Get.toNamed(Routes.SERIE, arguments: coll);
   }
 
   void _navigateToBookmarks() {
@@ -659,161 +585,14 @@ class _CategoryCard extends StatelessWidget {
   final SerieResource serie;
   const _CategoryCard({required this.serie});
 
-  void _showQuizBottomSheet(BuildContext context) {
-    final quizzes = serie.quizzes;
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) => DraggableScrollableSheet(
-        initialChildSize: 0.6,
-        maxChildSize: 0.9,
-        minChildSize: 0.4,
-        expand: false,
-        builder: (context, scrollController) => Padding(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.book, color: AppTheme.vertFaso, size: 24),
-                  const SizedBox(width: 10),
-                  Text(
-                    serie.name,
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Text(
-                '${quizzes.length} quiz disponible${quizzes.length > 1 ? 's' : ''}',
-                style: TextStyle(fontSize: 13, color: Colors.grey[600]),
-              ),
-              const SizedBox(height: 16),
-              if (quizzes.isEmpty)
-                Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.quiz_outlined,
-                            size: 48, color: Colors.grey[400]),
-                        const SizedBox(height: 12),
-                        Text('Aucun quiz disponible',
-                            style: TextStyle(
-                                fontSize: 16, color: Colors.grey[500])),
-                      ],
-                    ),
-                  ),
-                )
-              else
-                Expanded(
-                  child: ListView.separated(
-                    controller: scrollController,
-                    itemCount: quizzes.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
-                    itemBuilder: (context, index) {
-                      final quiz = quizzes[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pop(ctx);
-                          Get.toNamed(Routes.QUIZ, arguments: {
-                            'quizId': quiz.id.toString(),
-                            'quizName': quiz.title,
-                            'questions': quiz.questions,
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).cardTheme.color,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                                color: AppTheme.vertFaso.withOpacity(0.2)),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 48,
-                                height: 48,
-                                decoration: BoxDecoration(
-                                  color: AppTheme.vertFaso.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: const Icon(Icons.quiz_outlined,
-                                    color: AppTheme.vertFaso, size: 24),
-                              ),
-                              const SizedBox(width: 14),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      quiz.title,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 15),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      quiz.description,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium
-                                              ?.color),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                '${quiz.getQuesionsCount()} Q',
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    color: AppTheme.vertFaso,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              const Icon(Icons.chevron_right,
-                                  color: AppTheme.vertFaso, size: 20),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
+  void _openSerieScreen() {
+    Get.toNamed(Routes.SERIE, arguments: serie);
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        _showQuizBottomSheet(context);
-      },
+      onTap: _openSerieScreen,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -837,72 +616,6 @@ class _CategoryCard extends StatelessWidget {
                     color: Theme.of(context).textTheme.bodyMedium?.color),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _QuizSheetCard extends StatelessWidget {
-  final QuizResource item;
-  final VoidCallback onTap;
-
-  const _QuizSheetCard({
-    required this.item,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardTheme.color,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Theme.of(context).dividerTheme.color!,
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: AppTheme.vertFaso.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(Icons.assignment_outlined,
-                  color: AppTheme.vertFaso),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.title,
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.w600),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${item.questions.length} questions',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Theme.of(context).textTheme.bodyMedium?.color,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Icon(Icons.arrow_forward_ios,
-                size: 14, color: AppTheme.vertFaso),
           ],
         ),
       ),

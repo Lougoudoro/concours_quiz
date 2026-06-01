@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cncours_quiz/app/core/client/error_handler.dart';
+import 'package:cncours_quiz/app/data/models/question_result.dart';
 import 'package:cncours_quiz/app/data/providers/quiz_provider.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';

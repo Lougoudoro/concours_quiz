@@ -12,7 +12,7 @@ import 'package:cncours_quiz/app/core/theme/app_theme.dart';
 class QuizScreen extends StatelessWidget {
   final String quizId;
   final String quizName;
- final List<QuestionResource>? questions;
+  final List<QuestionResource>? questions;
 
   const QuizScreen({
     super.key,
@@ -127,17 +127,21 @@ class QuizScreen extends StatelessWidget {
                     color: Theme.of(context).textTheme.bodyMedium!.color,
                     size: 20)),
           ),
-          const Spacer(),
-          Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-              decoration: BoxDecoration(
-                  color: AppTheme.vertFaso.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(20)),
-              child: Text(controller.quizName,
-                  style: const TextStyle(
-                      color: AppTheme.vertFaso,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600))),
+          const Spacer(flex: 1),
+          Expanded(
+            flex: 100,
+            child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                child: Text(controller.quizName,
+                    style:  TextStyle(
+                        color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600))),
+          ),
           const Spacer(),
           Obx(() {
             final bookmarkController = Get.find<BookmarkController>();

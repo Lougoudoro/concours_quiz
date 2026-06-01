@@ -8,6 +8,10 @@ import 'package:flutter/material.dart';
 class QuizResource extends BaseResource {
   final String title;
   final String description;
+  final String typeLabel;
+  final String typeValue;
+  final bool isExam;
+  final bool isSimple;
   @protected
   final int? questionsCount;
   final List<QuestionResource> questions;
@@ -18,6 +22,10 @@ class QuizResource extends BaseResource {
     required super.id,
     required this.title,
     required this.description,
+    required this.typeLabel,
+    required this.typeValue,
+    required this.isExam,
+    required this.isSimple,
     this.questions = const [],
     this.questionsCount,
   });
@@ -25,6 +33,10 @@ class QuizResource extends BaseResource {
   factory QuizResource.fromJson(Map<String, dynamic> json) => QuizResource(
         id: json['id'],
         title: json['title'],
+        typeValue: json['type_value'],
+        typeLabel: json['type_label'],
+        isExam: json['is_exam'],
+        isSimple: json['is_simple'],
         description: json['description'],
         questionsCount: json['questions_count'] ?? 0,
         questions: (json['questions'] as List?)
@@ -38,6 +50,10 @@ class QuizResource extends BaseResource {
         'id': id,
         'title': title,
         'description': description,
+        'type_value': typeValue,
+        'type_label': typeLabel,
+        'is_simple': isSimple,
+        'is_exam': isExam,
         'questions_count': questionsCount,
         'questions': questions.map((o) => o.toJson()).toList(),
       };

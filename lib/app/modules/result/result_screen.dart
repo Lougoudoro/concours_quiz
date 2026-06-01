@@ -1,3 +1,4 @@
+import 'package:cncours_quiz/app/data/models/question_result.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/data/models/quiz_result.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
@@ -106,15 +107,18 @@ class _ResultScreenState extends State<ResultScreen>
                               size: 20),
                         ),
                       ),
-                      const Spacer(),
-                      Text('Résultats — ${result.quizName}',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge!
-                                  .color)),
+                      const Spacer(flex: 1),
+                      Expanded(
+                        flex: 100,
+                        child: Text('Résultats — ${result.quizName}',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color)),
+                      ),
                       const Spacer(),
                       const SizedBox(width: 38),
                     ],
@@ -576,9 +580,10 @@ class _ResultScreenState extends State<ResultScreen>
         .map((qr) => qr.question)
         .toList();
     if (wrongQuestions.isEmpty) return;
-    Get.toNamed(Routes.QUIZ, arguments: {
+    final baseName = result.quizName.replaceFirst(RegExp(r'^Révision — '), '');
+    Get.offNamed(Routes.QUIZ, arguments: {
       'quizId': 'revision',
-      'quizName': 'Révision — ${result.quizName}',
+      'quizName': 'Révision — $baseName',
       'questions': wrongQuestions,
     });
   }

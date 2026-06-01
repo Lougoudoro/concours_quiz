@@ -23,9 +23,14 @@ import 'package:cncours_quiz/app/modules/help/help_binding.dart';
 import 'package:cncours_quiz/app/modules/help/help_screen.dart';
 import 'package:cncours_quiz/app/modules/privacy_policy/privacy_policy_binding.dart';
 import 'package:cncours_quiz/app/modules/privacy_policy/privacy_policy_screen.dart';
+import 'package:cncours_quiz/app/modules/serie/serie_binding.dart';
+import 'package:cncours_quiz/app/modules/serie/serie_screen.dart';
+import 'package:cncours_quiz/app/modules/lesson/lesson_binding.dart';
+import 'package:cncours_quiz/app/modules/lesson/lesson_screen.dart';
 import 'package:cncours_quiz/app/modules/splash/splash_binding.dart';
 import 'package:cncours_quiz/app/modules/splash/splash_screen.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
+import 'package:cncours_quiz/app/data/resources/serie_resource.dart';
 import 'package:cncours_quiz/app/data/models/quiz_result.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -104,6 +109,30 @@ class AppPages {
           );
         },
         binding: SelectionBinding()),
+    GetPage(
+        name: _Paths.SERIE,
+        page: () {
+          if (Get.arguments == null) {
+            Future.microtask(() => Get.offAllNamed(_Paths.DASHBOARD));
+            return const Scaffold();
+          }
+          return SerieScreen(serie: Get.arguments as SerieResource);
+        },
+        binding: SerieBinding()),
+    GetPage(
+        name: _Paths.LESSON,
+        page: () {
+          if (Get.arguments == null) {
+            Future.microtask(() => Get.offAllNamed(_Paths.DASHBOARD));
+            return const Scaffold();
+          }
+          final args = Get.arguments as Map<String, dynamic>;
+          return LessonScreen(
+            quizId: args['quizId'],
+            quizName: args['quizName'],
+          );
+        },
+        binding: LessonBinding()),
     GetPage(
         name: _Paths.GUIDE,
         page: () => const GuideScreen(),

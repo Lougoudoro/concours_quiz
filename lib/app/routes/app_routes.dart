@@ -14,6 +14,8 @@ abstract class Routes {
   static const SELECTION = _Paths.SELECTION;
   static const GUIDE = _Paths.GUIDE;
   static const NOTIFICATION = _Paths.NOTIFICATION;
+  static const SERIE = _Paths.SERIE;
+  static const LESSON = _Paths.LESSON;
   static const HELP = _Paths.HELP;
   static const PRIVACY_POLICY = _Paths.PRIVACY_POLICY;
 }
@@ -30,6 +32,8 @@ abstract class _Paths {
   static const SELECTION = '/selection';
   static const GUIDE = '/guide';
   static const NOTIFICATION = '/notification';
+  static const SERIE = '/serie';
+  static const LESSON = '/lesson';
   static const HELP = '/help';
   static const PRIVACY_POLICY = '/privacy-policy';
 }
