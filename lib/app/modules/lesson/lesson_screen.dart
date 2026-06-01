@@ -10,11 +10,13 @@ import 'package:get_storage/get_storage.dart';
 class LessonScreen extends StatelessWidget {
   final String quizId;
   final String quizName;
+  final bool isExam;
 
   const LessonScreen({
     super.key,
     required this.quizId,
     required this.quizName,
+    this.isExam = false,
   });
 
   @override
@@ -143,7 +145,7 @@ class LessonScreen extends StatelessWidget {
                         color: Theme.of(context).textTheme.bodyLarge!.color,
                         height: 1.45)),
                 const SizedBox(height: 16),
-                _buildAnswersSection(context, correctOptions),
+                _buildAnswersSection(context, question, correctOptions),
               ],
             ),
           ),
@@ -211,8 +213,60 @@ class LessonScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAnswersSection(
-      BuildContext context, List<OptionResource> correctOptions) {
+  Widget _buildAnswersSection(BuildContext context, QuestionResource question,
+      List<OptionResource> correctOptions) {
+    if (isExam) {
+      return Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: AppTheme.neutralGreyClair.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppTheme.neutralGrey.withOpacity(0.2)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.checklist, size: 16, color: AppTheme.neutralGrey),
+                const SizedBox(width: 6),
+                Text('Toutes les options',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.neutralGrey)),
+              ],
+            ),
+            const SizedBox(height: 10),
+            ...question.options.map((opt) => Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Row(
+                    children: [
+                      Icon(opt.isCorrect ? Icons.check_circle : Icons.radio_button_unchecked,
+                          color: opt.isCorrect
+                              ? AppTheme.correctGreen
+                              : Theme.of(context).textTheme.bodyMedium?.color ??
+                        Colors.grey,
+                          size: 18),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(opt.content,
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: opt.isCorrect
+                                    ? AppTheme.correctGreen
+                                    : null,
+                                fontWeight: FontWeight.w600,
+                                height: 1.4)),
+                      ),
+                    ],
+                  ),
+                )),
+          ],
+        ),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(

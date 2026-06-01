@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
+import 'package:cncours_quiz/app/modules/history/history_controller.dart';
 
 class SerieScreen extends StatelessWidget {
   final SerieResource serie;
@@ -183,6 +184,16 @@ class SerieScreen extends StatelessWidget {
   }
 
   void _showQuizActions(BuildContext context, QuizResource quiz) {
+    late final HistoryController historyCtrl;
+    try {
+      historyCtrl = Get.find<HistoryController>();
+    } catch (_) {
+      historyCtrl = HistoryController()..onInit();
+    }
+    final hasResult = historyCtrl.history.any(
+      (r) => r.quizId == quiz.id.toString(),
+    );
+
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -224,13 +235,25 @@ class SerieScreen extends StatelessWidget {
                   color: AppTheme.vertFaso,
                   onTap: () {
                     Navigator.pop(ctx);
-                    _startQuiz(quiz);
+                    _startExam(quiz);
                   },
                 ),
+                if (hasResult) ...[
+                  const SizedBox(height: 12),
+                  _ActionButton(
+                    icon: Icons.assignment_rounded,
+                    label: 'Résultat',
+                    color: AppTheme.orReussite,
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _showResult(quiz);
+                    },
+                  ),
+                ],
                 const SizedBox(height: 12),
                 _ActionButton(
                   icon: Icons.rate_review_outlined,
-                  label: 'Réponses',
+                  label: 'Correction',
                   color: AppTheme.rougeTerre,
                   onTap: () {
                     Navigator.pop(ctx);
@@ -270,7 +293,27 @@ class SerieScreen extends StatelessWidget {
       'quizId': quiz.id.toString(),
       'quizName': quiz.title,
       'questions': quiz.questions,
+      'isExam': quiz.isExam,
     });
+  }
+
+  void _startExam(QuizResource quiz) {
+    Get.toNamed(Routes.EXAM, arguments: {
+      'quizId': quiz.id.toString(),
+      'quizName': quiz.title,
+      'totalSeconds': quiz.duration ?? 0,
+      'questions': quiz.questions,
+    });
+  }
+
+  void _showResult(QuizResource quiz) {
+    final historyCtrl = Get.find<HistoryController>();
+    final result = historyCtrl.history.firstWhereOrNull(
+      (r) => r.quizId == quiz.id.toString(),
+    );
+    if (result != null) {
+      Get.toNamed(Routes.RESULTS, arguments: result);
+    }
   }
 
   void _startQuiz(QuizResource quiz) {

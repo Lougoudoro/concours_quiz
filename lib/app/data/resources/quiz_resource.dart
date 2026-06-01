@@ -12,6 +12,7 @@ class QuizResource extends BaseResource {
   final String typeValue;
   final bool isExam;
   final bool isSimple;
+  final int? duration;
   @protected
   final int? questionsCount;
   final List<QuestionResource> questions;
@@ -26,6 +27,7 @@ class QuizResource extends BaseResource {
     required this.typeValue,
     required this.isExam,
     required this.isSimple,
+    this.duration,
     this.questions = const [],
     this.questionsCount,
   });
@@ -38,6 +40,7 @@ class QuizResource extends BaseResource {
         isExam: json['is_exam'],
         isSimple: json['is_simple'],
         description: json['description'],
+        duration: json['duration'],
         questionsCount: json['questions_count'] ?? 0,
         questions: (json['questions'] as List?)
                 ?.map((o) => QuestionResource.fromJson(o))
@@ -50,6 +53,7 @@ class QuizResource extends BaseResource {
         'id': id,
         'title': title,
         'description': description,
+        'duration': duration,
         'type_value': typeValue,
         'type_label': typeLabel,
         'is_simple': isSimple,

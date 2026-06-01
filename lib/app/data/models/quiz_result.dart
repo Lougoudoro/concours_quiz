@@ -5,12 +5,14 @@ class QuizResult {
   final List<QuestionResult> questionResults;
   final Duration totalTime;
   final DateTime dateTime;
+  final String? quizId;
 
   QuizResult({
     required this.quizName,
     required this.questionResults,
     required this.totalTime,
     DateTime? dateTime,
+    this.quizId,
   }) : dateTime = dateTime ?? DateTime.now();
 
   int get score => questionResults.where((r) => r.isCorrect).length;
@@ -25,6 +27,7 @@ class QuizResult {
         totalTime: Duration(seconds: json['totalSeconds'] ?? 0),
         dateTime:
             json['dateTime'] != null ? DateTime.parse(json['dateTime']) : null,
+        quizId: json['quizId'] as String?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -32,5 +35,6 @@ class QuizResult {
         'questionResults': questionResults.map((e) => e.toJson()).toList(),
         'totalSeconds': totalTime.inSeconds,
         'dateTime': dateTime.toIso8601String(),
+        'quizId': quizId,
       };
 }

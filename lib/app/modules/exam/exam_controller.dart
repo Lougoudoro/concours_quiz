@@ -10,29 +10,29 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import '../history/history_controller.dart';
 
-class QuizController extends GetxController with WidgetsBindingObserver {
+class ExamController extends GetxController with WidgetsBindingObserver {
   final String quizId;
   final String quizName;
   final List<QuestionResource>? initialQuestions;
+  final int totalSeconds;
   late QuizProvider quizProvider;
 
-  QuizController({
+  ExamController({
     required this.quizId,
     required this.quizName,
     this.initialQuestions,
+    required this.totalSeconds,
   });
 
-  // State
   var questions = <QuestionResource>[].obs;
   var currentIndex = 0.obs;
   var selectedAnswerIds = <int>{}.obs;
   var isValidated = false.obs;
   var results = <QuestionResult>[].obs;
 
-  // Timer state
-  var elapsedSeconds = 0.obs;
-  Timer? _timer;
-  final Stopwatch stopwatch = Stopwatch();
+  var remainingSeconds = 0.obs;
+  Timer? _countdownTimer;
+  var isTimeUp = false.obs;
 
   @override
   void onInit() {
@@ -40,7 +40,7 @@ class QuizController extends GetxController with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     quizProvider = QuizProvider();
     loadQuestions();
-    startQuiz();
+    _startCountdown();
   }
 
   void loadQuestions() async {
@@ -59,14 +59,63 @@ class QuizController extends GetxController with WidgetsBindingObserver {
           data.map<QuestionResource>((json) => QuestionResource.fromJson(json)),
         );
       }
-    }, context: 'QuizController.fetchQuestions');
+    }, context: 'ExamController.fetchQuestions');
   }
 
-  void startQuiz() {
-    stopwatch.start();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      elapsedSeconds.value = stopwatch.elapsed.inSeconds;
+  void _startCountdown() {
+    remainingSeconds.value = totalSeconds;
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (remainingSeconds.value > 0) {
+        remainingSeconds.value--;
+      } else {
+        _onTimeUp();
+      }
     });
+  }
+
+  void _onTimeUp() {
+    _countdownTimer?.cancel();
+    _countdownTimer = null;
+    isTimeUp.value = true;
+
+    if (!isValidated.value && selectedAnswerIds.isNotEmpty) {
+      _validateAndRecord();
+    }
+
+    _submitExam();
+  }
+
+  void _validateAndRecord() {
+    isValidated.value = true;
+    results.add(QuestionResult(
+      question: currentQuestion,
+      userAnswerIds: Set<int>.from(selectedAnswerIds),
+    ));
+  }
+
+  void _submitExam() {
+    for (var i = currentIndex.value + 1; i < questions.length; i++) {
+      results.add(QuestionResult(
+        question: questions[i],
+        userAnswerIds: {},
+      ));
+    }
+
+    final elapsed = Duration(seconds: totalSeconds - remainingSeconds.value);
+    final result = QuizResult(
+      quizName: quizName,
+      questionResults: results.toList(),
+      totalTime: elapsed,
+      quizId: quizId,
+    );
+
+    try {
+      Get.find<HistoryController>().addResult(result);
+    } catch (e) {
+      // Ignorer si pas injecté
+    }
+
+    Get.offNamed(Routes.RESULTS, arguments: result);
   }
 
   @override
@@ -80,27 +129,29 @@ class QuizController extends GetxController with WidgetsBindingObserver {
   }
 
   void _pauseTimer() {
-    if (stopwatch.isRunning) {
-      stopwatch.stop();
-      _timer?.cancel();
-      _timer = null;
-    }
+    _countdownTimer?.cancel();
+    _countdownTimer = null;
   }
 
   void _resumeTimer() {
-    if (!stopwatch.isRunning && !isValidated.value && !isLastQuestion) {
-      stopwatch.start();
-      _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-        elapsedSeconds.value = stopwatch.elapsed.inSeconds;
+    if (!isTimeUp.value && _countdownTimer == null) {
+      _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+        if (remainingSeconds.value > 0) {
+          remainingSeconds.value--;
+        } else {
+          _onTimeUp();
+        }
       });
     }
   }
 
-  String get elapsedFormatted {
-    final seconds = elapsedSeconds.value;
+  String get remainingFormatted {
+    final seconds = remainingSeconds.value;
     final d = Duration(seconds: seconds);
+    final h = d.inHours.toString().padLeft(2, '0');
     final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
     final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+    if (d.inHours > 0) return '$h:$m:$s';
     return '$m:$s';
   }
 
@@ -110,7 +161,7 @@ class QuizController extends GetxController with WidgetsBindingObserver {
       (currentIndex.value + 1) / (questions.isEmpty ? 1 : questions.length);
 
   void toggleAnswer(int answerId) {
-    if (isValidated.value) return;
+    if (isValidated.value || isTimeUp.value) return;
 
     if (currentQuestion.isVraiOuFaux) {
       selectedAnswerIds.clear();
@@ -125,12 +176,11 @@ class QuizController extends GetxController with WidgetsBindingObserver {
   }
 
   void validateAnswer() {
-    if (selectedAnswerIds.isEmpty) return;
+    if (selectedAnswerIds.isEmpty || isTimeUp.value) return;
 
     isValidated.value = true;
     final isCorrect = _checkIsCorrect();
 
-    // Feedback haptique
     if (isCorrect) {
       HapticFeedback.lightImpact();
     } else {
@@ -150,38 +200,22 @@ class QuizController extends GetxController with WidgetsBindingObserver {
   }
 
   void nextQuestion() {
-    if (isLastQuestion) {
-      stopwatch.stop();
-      _timer?.cancel();
-
-      final result = QuizResult(
-        quizName: quizName,
-        questionResults: results.toList(),
-        totalTime: stopwatch.elapsed,
-        quizId: quizId,
-      );
-
-      // Sauvegarde dans l'historique
-      try {
-        Get.find<HistoryController>().addResult(result);
-      } catch (e) {
-        // Ignorer si pas injecté (ex: tests)
-      }
-
-      Get.offNamed(Routes.RESULTS, arguments: result);
-      return;
-    }
+    if (isLastQuestion || isTimeUp.value) return;
 
     currentIndex.value++;
     selectedAnswerIds.clear();
     isValidated.value = false;
   }
 
+  void submitExam() {
+    _countdownTimer?.cancel();
+    _submitExam();
+  }
+
   @override
   void onClose() {
     WidgetsBinding.instance.removeObserver(this);
-    _timer?.cancel();
-    stopwatch.stop();
+    _countdownTimer?.cancel();
     super.onClose();
   }
 }

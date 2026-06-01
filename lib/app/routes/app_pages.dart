@@ -25,6 +25,8 @@ import 'package:cncours_quiz/app/modules/privacy_policy/privacy_policy_binding.d
 import 'package:cncours_quiz/app/modules/privacy_policy/privacy_policy_screen.dart';
 import 'package:cncours_quiz/app/modules/serie/serie_binding.dart';
 import 'package:cncours_quiz/app/modules/serie/serie_screen.dart';
+import 'package:cncours_quiz/app/modules/exam/exam_binding.dart';
+import 'package:cncours_quiz/app/modules/exam/exam_screen.dart';
 import 'package:cncours_quiz/app/modules/lesson/lesson_binding.dart';
 import 'package:cncours_quiz/app/modules/lesson/lesson_screen.dart';
 import 'package:cncours_quiz/app/modules/splash/splash_binding.dart';
@@ -130,9 +132,29 @@ class AppPages {
           return LessonScreen(
             quizId: args['quizId'],
             quizName: args['quizName'],
+            isExam: args['isExam'] as bool? ?? false,
           );
         },
         binding: LessonBinding()),
+    GetPage(
+      name: _Paths.EXAM,
+      page: () {
+        if (Get.arguments == null) {
+          Future.microtask(() => Get.offAllNamed(_Paths.DASHBOARD));
+          return const Scaffold(body: Center(child: QuizShimmer()));
+        }
+        final args = Get.arguments as Map<String, dynamic>;
+        return ExamScreen(
+          quizId: args['quizId'],
+          quizName: args['quizName'],
+          totalSeconds: args['totalSeconds'] as int,
+          questions: args['questions'] != null
+              ? List<QuestionResource>.from(args['questions'])
+              : null,
+        );
+      },
+      binding: ExamBinding(),
+    ),
     GetPage(
         name: _Paths.GUIDE,
         page: () => const GuideScreen(),
