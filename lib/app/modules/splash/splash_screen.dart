@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen>
         final authController = Get.find<AuthController>();
         await authController.fetchUser();
         if (!mounted) return;
-        Get.offAllNamed(Routes.DASHBOARD);
+        Get.offAllNamed(Routes.MAIN);
         return;
       }
 
@@ -71,7 +71,10 @@ class _SplashScreenState extends State<SplashScreen>
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Theme.of(context).colorScheme.surface, Theme.of(context).colorScheme.surface.withOpacity(0.7)],
+            colors: [
+              Theme.of(context).colorScheme.surface,
+              Theme.of(context).colorScheme.surface.withOpacity(0.7)
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -118,7 +121,8 @@ class _SplashScreenState extends State<SplashScreen>
                 'Prépare-toi à réussir',
                 style: TextStyle(
                   fontSize: 15,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                   fontWeight: FontWeight.w400,
                 ),
               ),

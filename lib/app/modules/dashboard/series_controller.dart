@@ -11,6 +11,6 @@ class SerieController extends CrudController<SerieResource, SerieResource> {
   @override
   void onInit() {
     super.onInit();
-    list();
+    list(load: true);
   }
 }

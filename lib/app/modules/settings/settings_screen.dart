@@ -8,7 +8,8 @@ import '../notification/notification_controller.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+  const SettingsScreen({super.key, this.showBackButton = true});
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +21,12 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Paramètres'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Get.back(),
-          ),
+          leading: showBackButton
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Get.back(),
+                )
+              : const SizedBox.shrink(),
         ),
         body: SingleChildScrollView(
             padding: const EdgeInsets.all(20),

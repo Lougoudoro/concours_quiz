@@ -245,7 +245,7 @@ class _ResultScreenState extends State<ResultScreen>
                           width: double.infinity,
                           height: 54,
                           child: ElevatedButton.icon(
-                            onPressed: () => Get.offAllNamed('/dashboard'),
+                            onPressed: () => Get.offAllNamed(Routes.MAIN),
                             icon: const Icon(Icons.home_outlined, size: 20),
                             label: const Text('Retour à l\'accueil'),
                             style: ElevatedButton.styleFrom(

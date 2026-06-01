@@ -62,7 +62,7 @@ class AuthController extends GetxController {
         Token.set(response['token'] as String);
         _cacheUser();
         isLoading.value = false;
-        Get.offNamed(Routes.DASHBOARD);
+        Get.offNamed(Routes.MAIN);
         return;
       }
     } finally {
@@ -101,7 +101,7 @@ class AuthController extends GetxController {
         authResource.value = AuthResource.fromJson(response['data']);
         Token.set(response['token'] as String);
         _cacheUser();
-        Get.offNamed(Routes.DASHBOARD);
+        Get.offNamed(Routes.MAIN);
       }
     } finally {
       isLoading.value = false;

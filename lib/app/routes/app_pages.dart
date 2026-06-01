@@ -3,6 +3,8 @@ import 'package:cncours_quiz/app/modules/auth/auth_binding.dart';
 import 'package:cncours_quiz/app/modules/auth/auth_screen.dart';
 import 'package:cncours_quiz/app/modules/dashboard/dashboard_binding.dart';
 import 'package:cncours_quiz/app/modules/dashboard/dashboard_screen.dart';
+import 'package:cncours_quiz/app/modules/main_navigation/main_binding.dart';
+import 'package:cncours_quiz/app/modules/main_navigation/main_screen.dart';
 import 'package:cncours_quiz/app/modules/history/history_binding.dart';
 import 'package:cncours_quiz/app/modules/history/history_screen.dart';
 import 'package:cncours_quiz/app/modules/onboarding/onboarding_binding.dart';
@@ -61,6 +63,10 @@ class AppPages {
         page: () => const AuthScreen(),
         binding: AuthBinding()),
     GetPage(
+        name: _Paths.MAIN,
+        page: () => const MainScreen(),
+        binding: MainBinding()),
+    GetPage(
         name: _Paths.DASHBOARD,
         page: () => const DashboardScreen(),
         binding: DashboardBinding()),
@@ -72,7 +78,7 @@ class AppPages {
       name: _Paths.QUIZ,
       page: () {
         if (Get.arguments == null) {
-          Future.microtask(() => Get.offAllNamed(_Paths.DASHBOARD));
+          Future.microtask(() => Get.offAllNamed(_Paths.MAIN));
           return const Scaffold(body: Center(child: QuizShimmer()));
         }
         final args = Get.arguments as Map<String, dynamic>;
@@ -90,7 +96,7 @@ class AppPages {
       name: _Paths.RESULTS,
       page: () {
         if (Get.arguments == null) {
-          Future.microtask(() => Get.offAllNamed(_Paths.DASHBOARD));
+          Future.microtask(() => Get.offAllNamed(_Paths.MAIN));
           return const Scaffold(body: Center(child: QuizShimmer()));
         }
         return ResultScreen(quizResult: Get.arguments as QuizResult);
@@ -117,7 +123,7 @@ class AppPages {
         name: _Paths.SERIE,
         page: () {
           if (Get.arguments == null) {
-            Future.microtask(() => Get.offAllNamed(_Paths.DASHBOARD));
+            Future.microtask(() => Get.offAllNamed(_Paths.MAIN));
             return const Scaffold();
           }
           return SerieScreen(serie: Get.arguments as SerieResource);
@@ -127,7 +133,7 @@ class AppPages {
         name: _Paths.LESSON,
         page: () {
           if (Get.arguments == null) {
-            Future.microtask(() => Get.offAllNamed(_Paths.DASHBOARD));
+            Future.microtask(() => Get.offAllNamed(_Paths.MAIN));
             return const Scaffold();
           }
           final args = Get.arguments as Map<String, dynamic>;
@@ -142,7 +148,7 @@ class AppPages {
       name: _Paths.EXAM,
       page: () {
         if (Get.arguments == null) {
-          Future.microtask(() => Get.offAllNamed(_Paths.DASHBOARD));
+          Future.microtask(() => Get.offAllNamed(_Paths.MAIN));
           return const Scaffold(body: Center(child: QuizShimmer()));
         }
         final args = Get.arguments as Map<String, dynamic>;

@@ -6,7 +6,8 @@ import 'history_controller.dart';
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
 
 class HistoryScreen extends StatelessWidget {
-  const HistoryScreen({super.key});
+  const HistoryScreen({super.key, this.showBackButton = true});
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +16,12 @@ class HistoryScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mon historique'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Get.back(),
-        ),
+        leading: showBackButton
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Get.back(),
+              )
+            : null,
         actions: [
           Obx(() {
             if (controller.history.isEmpty) return const SizedBox.shrink();
