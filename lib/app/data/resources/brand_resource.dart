@@ -14,38 +14,28 @@ class BrandResource extends BaseResource {
   /// Progression de l'étudiant (0.0 à 1.0)
   double progress = 0.0;
 
-  BrandResource({
-    required super.id,
-    required this.name,
-    required this.description,
-    required this.logoUrl,
-    this.slug,
-    this.currentSession,
-    super.createdAt,
-    super.updatedAt
-  });
+  BrandResource(
+      {required super.id,
+      required this.name,
+      required this.description,
+      required this.logoUrl,
+      this.slug,
+      this.currentSession,
+      super.createdAt,
+      super.updatedAt});
 
-  
-  factory BrandResource.fromJson(Map<String, dynamic> json) => BrandResource(
-        id: json['id'],
-        name: json['name'],
-        description: json['description'],
-        logoUrl: json['logo_url'],
-        slug: json['slug'],
-        currentSession: json['current_session'],
-        createdAt: json['created_at'],
-        updatedAt: json['updated_at'],
-      );
-
-    @override
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'description': description,
-        'logo_url': logoUrl,
-        'slug': slug,
-        'current_session': currentSession,
-        'created_at': createdAt,
-        'updated_at': updatedAt,
-      };
+  factory BrandResource.fromJson(Map<String, dynamic> json) {
+    return BrandResource(
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      logoUrl: json['logo_url'],
+      slug: json['slug'],
+      currentSession: json['current_session'] != null
+          ? AcademicSessionResource.fromJson(json['current_session'])
+          : null,
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+    );
+  }
 }

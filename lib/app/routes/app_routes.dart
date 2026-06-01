@@ -17,6 +17,7 @@ abstract class Routes {
   static const SERIE = _Paths.SERIE;
   static const LESSON = _Paths.LESSON;
   static const EXAM = _Paths.EXAM;
+  static const BRANDS = _Paths.BRANDS;
   static const HELP = _Paths.HELP;
   static const PRIVACY_POLICY = _Paths.PRIVACY_POLICY;
 }
@@ -36,6 +37,7 @@ abstract class _Paths {
   static const SERIE = '/serie';
   static const LESSON = '/lesson';
   static const EXAM = '/exam';
+  static const BRANDS = '/brands';
   static const HELP = '/help';
   static const PRIVACY_POLICY = '/privacy-policy';
 }

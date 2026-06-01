@@ -2,6 +2,7 @@ import 'package:cncours_quiz/app/core/client/error_handler.dart';
 import 'package:cncours_quiz/app/core/helpers/storage_helper.dart';
 import 'package:cncours_quiz/app/data/providers/session_provider.dart';
 import 'package:cncours_quiz/app/data/resources/academic_session_resource.dart';
+import 'package:cncours_quiz/app/data/resources/brand_resource.dart';
 import 'package:cncours_quiz/app/data/resources/category_resource.dart';
 import 'package:cncours_quiz/app/data/resources/concours_type_resource.dart';
 import 'package:cncours_quiz/app/data/resources/quiz_resource.dart';
@@ -20,6 +21,9 @@ class SessionController extends GetxController {
   final Rx<SerieResource?> selectedCollection = Rx<SerieResource?>(null);
   final Rx<QuizResource?> selectedSerie = Rx<QuizResource?>(null);
 
+  final RxList<BrandResource> brands = RxList<BrandResource>([]);
+  final RxBool brandsLoading = RxBool(false);
+
   List<ConcoursTypeResource> get availableConcoursTypes =>
       activeSession.value?.concoursTypes ?? [];
 
@@ -31,6 +35,8 @@ class SessionController extends GetxController {
 
   List<QuizResource> get availableSeries =>
       selectedCollection.value?.quizzes ?? [];
+
+  BrandResource? get activeBrand => activeSession.value?.brand;
 
   @override
   void onInit() {
@@ -52,6 +58,34 @@ class SessionController extends GetxController {
     if (!success && activeSession.value == null) {
       _loadCachedSession();
     }
+  }
+
+  Future<void> fetchBrands() async {
+    brandsLoading.value = true;
+    await ErrorHandler.run(() async {
+      final response = await provider.brands();
+      if (response['success'] == true) {
+        final data = response['data'] as List;
+        brands.assignAll(data.map((e) => BrandResource.fromJson(e)));
+      }
+    }, context: 'SessionController.fetchBrands');
+    brandsLoading.value = false;
+  }
+
+  Future<bool> selectBrandSession(BrandResource brand) async {
+    final session = brand.currentSession;
+    if (session == null) return false;
+
+    bool success = false;
+    await ErrorHandler.run(() async {
+      final response = await provider.selectSession(session.id as int);
+      if (response['success'] == true) {
+        setSession(AcademicSessionResource.fromJson(response['data']));
+        _cacheSession();
+        success = true;
+      }
+    }, context: 'SessionController.selectBrandSession');
+    return success;
   }
 
   void _cacheSession() {

@@ -8,30 +8,33 @@ class AcademicSessionResource extends BaseResource {
   final List<ConcoursTypeResource> concoursTypes;
   final BrandResource? brand;
 
-  AcademicSessionResource({
-    required super.id,
-    required this.name,
-    required this.isActive,
-    required this.concoursTypes,
-    this.brand
-  });
+  AcademicSessionResource(
+      {required super.id,
+      required this.name,
+      required this.isActive,
+      this.concoursTypes = const [],
+      this.brand});
 
-  factory AcademicSessionResource.fromJson(Map<String, dynamic> json) => AcademicSessionResource(
-        id: json['id'],
-        name: json['name'],
-        isActive: json['is_active'] ?? false,
-        brand: json['brand']!=null ? BrandResource.fromJson(json['brand']) : null,
-        concoursTypes: (json['concours_types'] as List)
-            .map((e) => ConcoursTypeResource.fromJson(e))
-            .toList()
-      );
+  factory AcademicSessionResource.fromJson(Map<String, dynamic> json) =>
+      AcademicSessionResource(
+          id: json['id'],
+          name: json['name'],
+          isActive: json['is_active'] ?? false,
+          brand: json['brand'] != null
+              ? BrandResource.fromJson(json['brand'])
+              : null,
+          concoursTypes: json['concours_types'] != null
+              ? (json['concours_types'] as List)
+                  .map((e) => ConcoursTypeResource.fromJson(e))
+                  .toList()
+              : []);
 
   @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
         'is_active': isActive,
-        'brand':brand?.toJson(),
+        'brand': brand?.toJson(),
         'concours_types': concoursTypes.map((e) => e.toJson()).toList(),
       };
 }

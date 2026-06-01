@@ -205,83 +205,115 @@ class DashboardScreen extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: Theme.of(context).brightness == Brightness.dark
-                    ? [AppTheme.fondSombre, AppTheme.surfaceCardSombre]
-                    : [AppTheme.vertFaso, const Color(0xFF1A6B3C)],
+          GestureDetector(
+            onTap: () {
+              Get.back();
+              Get.toNamed(Routes.BRANDS);
+            },
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: Theme.of(context).brightness == Brightness.dark
+                      ? [AppTheme.fondSombre, AppTheme.surfaceCardSombre]
+                      : [AppTheme.vertFaso, const Color(0xFF1A6B3C)],
+                ),
+              ),
+              child: SafeArea(
+                bottom: false,
+                child: Obx(() {
+                  final session = fc.activeSession.value;
+                  final brand = session?.brand;
+                  final hasLogo =
+                      brand?.logoUrl != null && brand!.logoUrl!.isNotEmpty;
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        hasLogo
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(brand.logoUrl!,
+                                    width: 40,
+                                    height: 40,
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (_, __, ___) => Container(
+                                          width: 40,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Colors.white.withOpacity(0.2),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: Icon(
+                                              brand.name.isNotEmpty
+                                                  ? Icons.school
+                                                  : Icons.school,
+                                              color: AppTheme.orReussite,
+                                              size: 24),
+                                        )),
+                              )
+                            : Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Icon(Icons.school,
+                                    color: AppTheme.orReussite, size: 24),
+                              ),
+                        const SizedBox(height: 10),
+                        Text(
+                          brand?.name ??
+                              session?.name ??
+                              'Sélectionner une session',
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        if (brand?.description != null &&
+                            brand!.description.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Text(
+                              brand.description,
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 11),
+                            ),
+                          ),
+                        const SizedBox(height: 4),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.swap_horiz,
+                                color: Colors.white.withOpacity(0.6), size: 12),
+                            const SizedBox(width: 2),
+                            Text(
+                              'Changer',
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.6),
+                                  fontSize: 10),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }),
               ),
             ),
-            child: Obx(() {
-              final session = fc.activeSession.value;
-              final brand = session?.brand;
-              final hasLogo =
-                  brand?.logoUrl != null && brand!.logoUrl!.isNotEmpty;
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    hasLogo
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.network(brand.logoUrl!,
-                                width: 48,
-                                height: 48,
-                                fit: BoxFit.contain,
-                                errorBuilder: (_, __, ___) => Container(
-                                      width: 48,
-                                      height: 48,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.2),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Icon(
-                                          brand.name.isNotEmpty
-                                              ? Icons.school
-                                              : Icons.school,
-                                          color: AppTheme.orReussite,
-                                          size: 28),
-                                    )),
-                          )
-                        : Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(Icons.school,
-                                color: AppTheme.orReussite, size: 28),
-                          ),
-                    const SizedBox(height: 12),
-                    Text(
-                      brand?.name ??
-                          session?.name ??
-                          'Sélectionner une session',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    if (brand?.description != null &&
-                        brand!.description.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: Text(
-                          brand.description,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: Colors.white.withOpacity(0.8),
-                              fontSize: 12),
-                        ),
-                      ),
-                  ],
-                ),
-              );
-            }),
           ),
           Expanded(
             child: Obx(() {

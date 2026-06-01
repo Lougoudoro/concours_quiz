@@ -19,6 +19,8 @@ import 'package:cncours_quiz/app/modules/guide/guide_binding.dart';
 import 'package:cncours_quiz/app/modules/guide/guide_screen.dart';
 import 'package:cncours_quiz/app/modules/notification/notification_binding.dart';
 import 'package:cncours_quiz/app/modules/notification/notification_screen.dart';
+import 'package:cncours_quiz/app/modules/brands/brands_binding.dart';
+import 'package:cncours_quiz/app/modules/brands/brands_screen.dart';
 import 'package:cncours_quiz/app/modules/help/help_binding.dart';
 import 'package:cncours_quiz/app/modules/help/help_screen.dart';
 import 'package:cncours_quiz/app/modules/privacy_policy/privacy_policy_binding.dart';
@@ -155,6 +157,10 @@ class AppPages {
       },
       binding: ExamBinding(),
     ),
+    GetPage(
+        name: _Paths.BRANDS,
+        page: () => const BrandsScreen(),
+        binding: BrandsBinding()),
     GetPage(
         name: _Paths.GUIDE,
         page: () => const GuideScreen(),

@@ -71,7 +71,7 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                  authController.authResource.value?.name??'',
+                    authController.authResource.value?.name ?? '',
                     style: Theme.of(context)
                         .textTheme
                         .headlineSmall
@@ -304,7 +304,7 @@ class SettingsScreen extends StatelessWidget {
                   validator: (v) =>
                       v == null || v.trim().isEmpty ? 'Champ requis' : null,
                 ),
-             const SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Obx(() {
                   if (authController.errorMessage.isNotEmpty) {
                     return Padding(
@@ -326,10 +326,8 @@ class SettingsScreen extends StatelessWidget {
                             ? null
                             : () async {
                                 if (!formKey.currentState!.validate()) return;
-                                final success =
-                                    await authController.updateProfile(
-                                  name: nameCtrl.text
-                                );
+                                final success = await authController
+                                    .updateProfile(name: nameCtrl.text);
                                 if (success && ctx.mounted) {
                                   Navigator.pop(ctx);
                                   Get.snackbar(
@@ -427,7 +425,8 @@ class SettingsScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         labelText: 'Mot de passe actuel',
                         prefixIcon: const Icon(Icons.lock_outline),
-                        errorText: authController.errors['current_password']?.first,
+                        errorText:
+                            authController.errors['current_password']?.first,
                         suffixIcon: IconButton(
                           icon: Icon(obscureCurrent.value
                               ? Icons.visibility_off_outlined
@@ -469,7 +468,8 @@ class SettingsScreen extends StatelessWidget {
                       obscureText: obscureConfirm.value,
                       decoration: InputDecoration(
                         labelText: 'Confirmer le nouveau mot de passe',
-                        errorText: authController.errors['password_confirmation']?.first,
+                        errorText: authController
+                            .errors['password_confirmation']?.first,
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
                           icon: Icon(obscureConfirm.value
