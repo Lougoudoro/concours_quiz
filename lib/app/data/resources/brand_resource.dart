@@ -8,7 +8,6 @@ class BrandResource extends BaseResource {
   final String name;
   final String description;
   final String? logoUrl;
-  final String? slug;
   final AcademicSessionResource? currentSession;
 
   /// Progression de l'étudiant (0.0 à 1.0)
@@ -19,7 +18,6 @@ class BrandResource extends BaseResource {
       required this.name,
       required this.description,
       required this.logoUrl,
-      this.slug,
       this.currentSession,
       super.createdAt,
       super.updatedAt});
@@ -30,7 +28,6 @@ class BrandResource extends BaseResource {
       name: json['name'],
       description: json['description'],
       logoUrl: json['logo_url'],
-      slug: json['slug'],
       currentSession: json['current_session'] != null
           ? AcademicSessionResource.fromJson(json['current_session'])
           : null,
