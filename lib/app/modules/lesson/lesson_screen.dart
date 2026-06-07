@@ -98,14 +98,14 @@ class LessonScreen extends StatelessWidget {
               color: AppTheme.vertFaso.withOpacity(0.12),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const Row(
+            child:  Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.menu_book_outlined,
+                const Icon(Icons.menu_book_outlined,
                     color: AppTheme.vertFaso, size: 16),
-                SizedBox(width: 4),
-                Text('Cours',
-                    style: TextStyle(
+                const SizedBox(width: 4),
+                Text(isExam?'Corretions':'Cours',
+                    style: const TextStyle(
                         color: AppTheme.vertFaso,
                         fontSize: 12,
                         fontWeight: FontWeight.w600)),
@@ -215,7 +215,6 @@ class LessonScreen extends StatelessWidget {
 
   Widget _buildAnswersSection(BuildContext context, QuestionResource question,
       List<OptionResource> correctOptions) {
-    if (isExam) {
       return Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
@@ -226,7 +225,7 @@ class LessonScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+           const Row(
               children: [
                 Icon(Icons.checklist, size: 16, color: AppTheme.neutralGrey),
                 const SizedBox(width: 6),
@@ -265,55 +264,7 @@ class LessonScreen extends StatelessWidget {
           ],
         ),
       );
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppTheme.correctGreen.withOpacity(0.06),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.correctGreen.withOpacity(0.2)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.checklist, size: 16, color: AppTheme.correctGreen),
-              const SizedBox(width: 6),
-              Text(
-                  correctOptions.length > 1
-                      ? 'Réponses correctes'
-                      : 'Réponse correcte',
-                  style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.correctGreen)),
-            ],
-          ),
-          const SizedBox(height: 10),
-          ...correctOptions.map((opt) => Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Row(
-                  children: [
-                    Icon(Icons.check_circle,
-                        color: AppTheme.correctGreen, size: 18),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(opt.content,
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: AppTheme.correctGreen,
-                              fontWeight: FontWeight.w600,
-                              height: 1.4)),
-                    ),
-                  ],
-                ),
-              )),
-        ],
-      ),
-    );
-  }
+}
 
   Widget _buildJustification(BuildContext context, QuestionResource question) {
     return Container(

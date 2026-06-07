@@ -312,7 +312,7 @@ class _QuizCard extends StatelessWidget {
                 _ActionBtn(
                   icon: Icons.play_arrow_rounded,
                   label: 'Démarrer l\'examen',
-                  color: AppTheme.vertFaso,
+                  color: AppTheme.rougeTerre,
                   onTap: () {
                     Navigator.pop(ctx);
                     _startExam(quiz);
@@ -330,37 +330,29 @@ class _QuizCard extends StatelessWidget {
                     },
                   ),
                 ],
-                const SizedBox(height: 10),
-                _ActionBtn(
-                  icon: Icons.rate_review_outlined,
-                  label: 'Mode correction',
-                  color: AppTheme.rougeTerre,
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    _startLesson(quiz);
-                  },
-                ),
               ] else ...[
-                _ActionBtn(
-                  icon: Icons.menu_book_outlined,
-                  label: 'Apprendre le cours',
-                  color: AppTheme.vertFaso,
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    _startLesson(quiz);
-                  },
-                ),
                 const SizedBox(height: 10),
                 _ActionBtn(
                   icon: Icons.quiz_outlined,
                   label: 'Test de connaissances',
-                  color: AppTheme.orReussite,
+                  color: AppTheme.rougeTerre,
                   onTap: () {
                     Navigator.pop(ctx);
                     _startQuiz(quiz);
                   },
                 ),
               ],
+
+                const SizedBox(height: 10),
+                _ActionBtn(
+                  icon: Icons.menu_book_outlined,
+                  label: 'Mode correction',
+                  color: AppTheme.vertFaso,
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _startLesson(quiz);
+                  },
+                ),
             ],
           ),
         );
