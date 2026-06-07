@@ -1,9 +1,9 @@
 import 'package:cncours_quiz/app/core/widgets/shimmer_loading.dart';
-import 'package:cncours_quiz/app/data/resources/question_resource.dart';
+import 'package:cncours_quiz/app/data/providers/question_report_provider.dart';
 import 'package:cncours_quiz/app/data/resources/option_resource.dart';
+import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 import 'quiz_controller.dart';
 import '../dashboard/bookmark_controller.dart';
@@ -134,11 +134,8 @@ class QuizScreen extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                 child: Text(controller.quizName,
-                    style:  TextStyle(
-                        color: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .color,
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyLarge!.color,
                         fontSize: 12,
                         fontWeight: FontWeight.w600))),
           ),
@@ -651,16 +648,8 @@ class QuizScreen extends StatelessWidget {
   }
 
   void _saveReport(QuestionResource question, String message) {
-    final box = GetStorage();
-    final reports = box.read<List>('question_reports') ?? [];
-    reports.add({
-      'question_id': question.id,
-      'question_text': question.content,
-      'justification': question.justification,
-      'message': message,
-      'timestamp': DateTime.now().toIso8601String(),
-    });
-    box.write('question_reports', reports);
+    final provider = QuestionReportProvider();
+    provider.report(questionId: question.id, message: message);
   }
 
   Widget _buildFooter(BuildContext context, QuizController controller) {

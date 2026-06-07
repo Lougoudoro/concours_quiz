@@ -209,9 +209,7 @@ class _ConcoursTypeList extends StatelessWidget {
                   color: AppTheme.vertFaso),
               title: Text(type.name,
                   style: const TextStyle(fontWeight: FontWeight.w600)),
-              subtitle: Text(type.statusValue == 'direct'
-                  ? 'Candidats externes'
-                  : 'Professionnels'),
+              subtitle: Text("${type.getCategoriesCount} Categorie(s)"),
               trailing: const Icon(Icons.chevron_right, size: 18),
               onTap: () {
                 Get.back();

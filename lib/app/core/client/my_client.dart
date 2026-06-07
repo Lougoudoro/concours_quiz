@@ -9,7 +9,7 @@ import 'app_exception.dart';
 import '../helpers/env_helper.dart';
 
 class MyClient extends GetConnect {
-  static const int timeOutDuration = 5;
+  static const int timeOutDuration = 15;
 
   @override
   void onInit() {

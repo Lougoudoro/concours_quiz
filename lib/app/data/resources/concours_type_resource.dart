@@ -35,4 +35,6 @@ class ConcoursTypeResource extends BaseResource {
         'status_value': statusValue,
         'categories': categories.map((e) => e.toJson()).toList()
       };
+
+      int get getCategoriesCount => categories.length;
 }
