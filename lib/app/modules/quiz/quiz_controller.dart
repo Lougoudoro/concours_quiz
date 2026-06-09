@@ -167,6 +167,16 @@ class QuizController extends GetxController with WidgetsBindingObserver {
         // Ignorer si pas injecté (ex: tests)
       }
 
+if(quizId>0){
+      // Envoi des résultats à l'API
+      unawaited(ErrorHandler.run(() async {
+        await quizProvider.submitAttempt(
+          id: quizId,
+          data: result.toRequestBody(),
+        );
+      },showError: false, context: 'QuizController.submitAttempt'));
+}
+
       Get.offNamed(Routes.RESULTS, arguments: result);
       return;
     }

@@ -62,8 +62,15 @@ class ExamController extends GetxController with WidgetsBindingObserver {
     }, context: 'ExamController.fetchQuestions');
   }
 
-  Future<void> submitResult() async {
-    
+  Future<void> submitResult({required QuizResult result}) async {
+    await ErrorHandler.run(() async {
+      await quizProvider.submitAttempt(
+        id: quizId,
+        data: result.toRequestBody(),
+      );
+    }, 
+    showError: false,
+    context: 'ExamController.submitResult');
   }
 
   void _startCountdown() {
@@ -119,6 +126,10 @@ class ExamController extends GetxController with WidgetsBindingObserver {
       // Ignorer si pas injecté
     }
 
+if(quizId>0){
+    // Envoi des résultats à l'API (fire-and-forget)
+    unawaited(submitResult(result: result));
+}
     Get.offNamed(Routes.RESULTS, arguments: result);
   }
 

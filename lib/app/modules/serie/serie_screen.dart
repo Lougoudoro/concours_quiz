@@ -362,7 +362,7 @@ class _QuizCard extends StatelessWidget {
 
   void _startLesson(QuizResource quiz) {
     Get.toNamed(Routes.LESSON, arguments: {
-      'quizId': quiz,
+      'quizId': quiz.id,
       'quizName': quiz.title,
       'questions': quiz.questions,
       'isExam': quiz.isExam,
