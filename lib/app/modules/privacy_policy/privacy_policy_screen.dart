@@ -54,13 +54,13 @@ class PrivacyPolicyScreen extends StatelessWidget {
             content:
                 'Vous avez le droit d\'accéder, de modifier ou de supprimer vos données '
                 'personnelles à tout moment. Pour exercer ces droits, contactez-nous à '
-                'support@concoursop.bf.',
+                'slougoudoro@gmail.com.',
           ),
           _section(
             title: '6. Contact',
             content:
                 'Pour toute question concernant cette politique de confidentialité, '
-                'veuillez nous contacter à support@concoursop.bf.',
+                'veuillez nous contacter à slougoudoro@gmail.com.',
           ),
           const SizedBox(height: 32),
           Center(

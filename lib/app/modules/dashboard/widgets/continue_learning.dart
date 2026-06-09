@@ -1,4 +1,5 @@
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
+import 'package:cncours_quiz/app/data/models/quiz_custom_ids.dart';
 import 'package:cncours_quiz/app/data/models/quiz_result.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
@@ -195,8 +196,8 @@ class _ResumeCard extends StatelessWidget {
 
   void _continue() {
     Get.toNamed(Routes.QUIZ, arguments: {
-      'quizId': 'last',
-      'quizName': lastActivity.quizName,
+      'quizId': CustomQuiz.last.id,
+      'quizName': "${CustomQuiz.last.name}-${lastActivity.quizName}",
       'questions': lastActivity.questionResults
           .map((e) => (e as dynamic).question)
           .toList()

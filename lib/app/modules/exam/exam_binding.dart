@@ -7,7 +7,7 @@ class ExamBinding extends Bindings {
   void dependencies() {
     if (Get.arguments == null) return;
     final args = Get.arguments as Map<String, dynamic>;
-    final quizId = args['quizId'] as String;
+    final quizId = args['quizId'] as int;
     final questions = args['questions'] != null
         ? List<QuestionResource>.from(args['questions'])
         : null;
@@ -19,7 +19,7 @@ class ExamBinding extends Bindings {
         initialQuestions: questions,
         totalSeconds: args['totalSeconds'] as int,
       ),
-      tag: quizId,
+      tag: quizId as String,
     );
   }
 }

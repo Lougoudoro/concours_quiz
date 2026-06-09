@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 import '../history/history_controller.dart';
 
 class QuizController extends GetxController with WidgetsBindingObserver {
-  final String quizId;
+  final int quizId;
   final String quizName;
   final List<QuestionResource>? initialQuestions;
   late QuizProvider quizProvider;
@@ -22,7 +22,6 @@ class QuizController extends GetxController with WidgetsBindingObserver {
     this.initialQuestions,
   });
 
-  // State
   var questions = <QuestionResource>[].obs;
   var currentIndex = 0.obs;
   var selectedAnswerIds = <int>{}.obs;

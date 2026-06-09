@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 import '../history/history_controller.dart';
 
 class ExamController extends GetxController with WidgetsBindingObserver {
-  final String quizId;
+  final int quizId;
   final String quizName;
   final List<QuestionResource>? initialQuestions;
   final int totalSeconds;
@@ -60,6 +60,10 @@ class ExamController extends GetxController with WidgetsBindingObserver {
         );
       }
     }, context: 'ExamController.fetchQuestions');
+  }
+
+  Future<void> submitResult() async {
+    
   }
 
   void _startCountdown() {

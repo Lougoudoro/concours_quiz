@@ -1,3 +1,4 @@
+import 'package:cncours_quiz/app/data/models/quiz_custom_ids.dart';
 import 'package:cncours_quiz/app/modules/dashboard/bookmark_controller.dart';
 import 'package:cncours_quiz/app/modules/dashboard/dashboard_screen.dart';
 import 'package:cncours_quiz/app/modules/history/history_screen.dart';
@@ -134,8 +135,8 @@ class _BookmarksTab extends StatelessWidget {
     final bookmarks = Get.find<BookmarkController>().bookmarks;
     if (bookmarks.isEmpty) return;
     Get.toNamed(Routes.QUIZ, arguments: {
-      'quizId': 'bookmarks',
-      'quizName': 'Mes favoris',
+      'quizId': CustomQuiz.bookmarks.id,
+      'quizName': CustomQuiz.bookmarks.name,
       'questions': bookmarks.toList(),
     });
   }

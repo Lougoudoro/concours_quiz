@@ -24,13 +24,13 @@ class HelpScreen extends StatelessWidget {
             items: [
               _HelpItem(
                 icon: Icons.email_outlined,
-                text: 'support@concoursop.bf',
+                text: 'slougoudoro@gmail.com',
                 detail:
                     'Envoyez-nous un email pour toute question. Réponse sous 48h.',
               ),
               _HelpItem(
                 icon: Icons.phone_outlined,
-                text: '+226 XX XX XX XX',
+                text: '+226 56 80 96 35',
                 detail: 'Appelez-nous du lundi au vendredi de 8h à 17h.',
               ),
             ],
@@ -74,14 +74,14 @@ class HelpScreen extends StatelessWidget {
                 icon: Icons.bug_report_outlined,
                 text: 'Signaler un bug',
                 detail: 'Si tu rencontres un bug technique, décris-le nous par '
-                    'email à support@concoursop.bf avec une capture d\'écran.',
+                    'email à slougoudoro@gmail.com avec une capture d\'écran.',
               ),
               _HelpItem(
                 icon: Icons.feedback_outlined,
                 text: 'Envoyer un feedback',
                 detail:
                     'Tes suggestions nous aident à améliorer l\'application. '
-                    'Écris-nous à support@concoursop.bf.',
+                    'Écris-nous à slougoudoro@gmail.com.',
               ),
             ],
           ),

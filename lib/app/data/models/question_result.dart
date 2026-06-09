@@ -24,4 +24,9 @@ class QuestionResult {
         'question': question.toJson(),
         'userAnswerIds': userAnswerIds.toList(),
       };
+
+  Map<String, dynamic> toRequestBody() => {
+        'question_id': question.id,
+        'user_response_ids': userAnswerIds.toList(),
+      };
 }

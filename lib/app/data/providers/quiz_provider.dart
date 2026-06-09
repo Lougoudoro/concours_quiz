@@ -7,7 +7,11 @@ class QuizProvider
 
   String resource='quizzes';
 
-  Future<dynamic> questions({ required String id}) async {
+  Future<dynamic> questions({ required int id}) async {
     return  await  _client.clientGet(apiRoute: "/$resource/$id/questions");
+  }
+
+  Future<dynamic> submitAttempt({ required int id, required Map<String, dynamic> data}) async {
+    return  await  _client.clientPost(apiRoute: "/$resource/$id/attempts", data: data);
   }
 }

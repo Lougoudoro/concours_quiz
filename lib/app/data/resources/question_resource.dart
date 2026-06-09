@@ -9,6 +9,7 @@ class QuestionResource extends BaseResource {
   final String justification;
   final bool isVraiOuFaux;
 final bool isQcm;
+List<OptionResource>? _cachedShuffledOptions;
 
   QuestionResource({
     required super.id,
@@ -35,6 +36,7 @@ final bool isQcm;
         justification: json['justification'] ?? '',
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         'id': id,
         'content': content,
@@ -48,4 +50,10 @@ final bool isQcm;
 
   List<dynamic> get correctAnswerIds =>
       options.where((o) => o.isCorrect).map((o) => o.id).toList();
+
+    List<OptionResource> get shuffledOptions {
+    // If not already shuffled, create and cache the shuffled list
+    _cachedShuffledOptions ??= List<OptionResource>.from(options)..shuffle();
+    return _cachedShuffledOptions!;
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
+import 'package:cncours_quiz/app/data/models/quiz_custom_ids.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
@@ -10,8 +11,8 @@ class QuickActions extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Get.toNamed(Routes.EXAM, arguments: {
-        'quizId': 'blanc',
-        'quizName': 'Examen Blanc',
+        'quizId': CustomQuiz.blanc.id,
+        'quizName': CustomQuiz.blanc.name,
         'totalSeconds': 3600,
         'questions': null,
       }),

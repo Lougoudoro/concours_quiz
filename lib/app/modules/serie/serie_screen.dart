@@ -271,7 +271,7 @@ class _QuizCard extends StatelessWidget {
       historyCtrl = HistoryController()..onInit();
     }
     final hasResult = historyCtrl.history.any(
-      (r) => r.quizId == quiz.id.toString(),
+      (r) => r.quizId == quiz.id,
     );
 
     showModalBottomSheet(
@@ -362,7 +362,7 @@ class _QuizCard extends StatelessWidget {
 
   void _startLesson(QuizResource quiz) {
     Get.toNamed(Routes.LESSON, arguments: {
-      'quizId': quiz.id.toString(),
+      'quizId': quiz,
       'quizName': quiz.title,
       'questions': quiz.questions,
       'isExam': quiz.isExam,
@@ -371,7 +371,7 @@ class _QuizCard extends StatelessWidget {
 
   void _startExam(QuizResource quiz) {
     Get.toNamed(Routes.EXAM, arguments: {
-      'quizId': quiz.id.toString(),
+      'quizId': quiz.id,
       'quizName': quiz.title,
       'totalSeconds': quiz.duration ?? 0,
       'questions': quiz.questions,
@@ -381,7 +381,7 @@ class _QuizCard extends StatelessWidget {
   void _showResult(QuizResource quiz) {
     final historyCtrl = Get.find<HistoryController>();
     final result = historyCtrl.history.firstWhereOrNull(
-      (r) => r.quizId == quiz.id.toString(),
+      (r) => r.quizId == quiz.id,
     );
     if (result != null) {
       Get.toNamed(Routes.RESULTS, arguments: result);
@@ -390,7 +390,7 @@ class _QuizCard extends StatelessWidget {
 
   void _startQuiz(QuizResource quiz) {
     Get.toNamed(Routes.QUIZ, arguments: {
-      'quizId': quiz.id.toString(),
+      'quizId': quiz.id,
       'quizName': quiz.title,
       'questions': quiz.questions,
     });

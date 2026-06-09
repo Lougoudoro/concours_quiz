@@ -10,7 +10,7 @@ import '../dashboard/bookmark_controller.dart';
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
 
 class ExamScreen extends StatelessWidget {
-  final String quizId;
+  final int quizId;
   final String quizName;
   final int totalSeconds;
   final List<QuestionResource>? questions;
@@ -25,7 +25,7 @@ class ExamScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<ExamController>(tag: quizId);
+    final controller = Get.find<ExamController>(tag: quizId.toString());
 
     return Scaffold(
       body: SafeArea(
@@ -307,7 +307,7 @@ class ExamScreen extends StatelessWidget {
 
   Widget _buildQCMOptions(BuildContext context, ExamController controller) {
     return Column(
-      children: controller.currentQuestion.options.map((option) {
+      children: controller.currentQuestion.shuffledOptions.map((option) {
         final isSelected = controller.selectedAnswerIds.contains(option.id);
         Color borderColor = Theme.of(context).dividerTheme.color!;
         Color bgColor = Theme.of(context).cardTheme.color!;
@@ -450,7 +450,7 @@ class ExamScreen extends StatelessWidget {
   Widget _buildVraiFauxOptions(
       BuildContext context, ExamController controller) {
     return Row(
-      children: controller.currentQuestion.options.map((option) {
+      children: controller.currentQuestion.shuffledOptions.map((option) {
         final isSelected = controller.selectedAnswerIds.contains(option.id);
         final isVrai = option.content == 'Vrai';
         Color borderColor = Theme.of(context).dividerTheme.color!;

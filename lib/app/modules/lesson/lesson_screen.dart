@@ -8,7 +8,7 @@ import 'package:cncours_quiz/app/core/theme/app_theme.dart';
 import 'package:get_storage/get_storage.dart';
 
 class LessonScreen extends StatelessWidget {
-  final String quizId;
+  final int quizId;
   final String quizName;
   final bool isExam;
 
@@ -21,7 +21,7 @@ class LessonScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<QuizController>(tag: quizId);
+    final controller = Get.find<QuizController>(tag: quizId.toString());
 
     return Scaffold(
       body: SafeArea(

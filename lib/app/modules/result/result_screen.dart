@@ -1,4 +1,5 @@
 import 'package:cncours_quiz/app/data/models/question_result.dart';
+import 'package:cncours_quiz/app/data/models/quiz_custom_ids.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/data/models/quiz_result.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
@@ -582,8 +583,8 @@ class _ResultScreenState extends State<ResultScreen>
     if (wrongQuestions.isEmpty) return;
     final baseName = result.quizName.replaceFirst(RegExp(r'^Révision — '), '');
     Get.offNamed(Routes.QUIZ, arguments: {
-      'quizId': 'revision',
-      'quizName': 'Révision — $baseName',
+      'quizId': CustomQuiz.revision.id,
+      'quizName': "${CustomQuiz.revision.name} — $baseName",
       'questions': wrongQuestions,
     });
   }
