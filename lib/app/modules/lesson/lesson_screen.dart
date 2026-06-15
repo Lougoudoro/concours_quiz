@@ -1,3 +1,4 @@
+import 'package:cncours_quiz/app/core/widgets/empty_state.dart';
 import 'package:cncours_quiz/app/core/widgets/shimmer_loading.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/data/resources/option_resource.dart';
@@ -27,8 +28,16 @@ class LessonScreen extends StatelessWidget {
       body: SafeArea(
         child: Obx(() {
           final questions = controller.questions;
-          if (questions.isEmpty && controller.questions.isEmpty) {
-            return const QuizShimmer();
+          if (questions.isEmpty) {
+            if (controller.listingLoading.value) {
+              return const QuizShimmer();
+            }
+            return const EmptyState(
+              icon: Icons.menu_book_outlined,
+              title: 'Aucune question disponible',
+              subtitle:
+                  'Les questions pour ce cours seront bientôt disponibles.',
+            );
           }
           return Column(
             children: [
@@ -98,13 +107,13 @@ class LessonScreen extends StatelessWidget {
               color: AppTheme.vertFaso.withOpacity(0.12),
               borderRadius: BorderRadius.circular(20),
             ),
-            child:  Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Icon(Icons.menu_book_outlined,
                     color: AppTheme.vertFaso, size: 16),
                 const SizedBox(width: 4),
-                Text(isExam?'Corretions':'Cours',
+                Text(isExam ? 'Corretions' : 'Cours',
                     style: const TextStyle(
                         color: AppTheme.vertFaso,
                         fontSize: 12,
@@ -215,56 +224,58 @@ class LessonScreen extends StatelessWidget {
 
   Widget _buildAnswersSection(BuildContext context, QuestionResource question,
       List<OptionResource> correctOptions) {
-      return Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: AppTheme.neutralGreyClair.withOpacity(0.15),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppTheme.neutralGrey.withOpacity(0.2)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-           const Row(
-              children: [
-                Icon(Icons.checklist, size: 16, color: AppTheme.neutralGrey),
-                const SizedBox(width: 6),
-                Text('Toutes les options',
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: AppTheme.neutralGrey)),
-              ],
-            ),
-            const SizedBox(height: 10),
-            ...question.options.map((opt) => Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    children: [
-                      Icon(opt.isCorrect ? Icons.check_circle : Icons.radio_button_unchecked,
-                          color: opt.isCorrect
-                              ? AppTheme.correctGreen
-                              : Theme.of(context).textTheme.bodyMedium?.color ??
-                        Colors.grey,
-                          size: 18),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(opt.content,
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: opt.isCorrect
-                                    ? AppTheme.correctGreen
-                                    : null,
-                                fontWeight: FontWeight.w600,
-                                height: 1.4)),
-                      ),
-                    ],
-                  ),
-                )),
-          ],
-        ),
-      );
-}
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppTheme.neutralGreyClair.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppTheme.neutralGrey.withOpacity(0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.checklist, size: 16, color: AppTheme.neutralGrey),
+              const SizedBox(width: 6),
+              Text('Toutes les options',
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.neutralGrey)),
+            ],
+          ),
+          const SizedBox(height: 10),
+          ...question.options.map((opt) => Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  children: [
+                    Icon(
+                        opt.isCorrect
+                            ? Icons.check_circle
+                            : Icons.radio_button_unchecked,
+                        color: opt.isCorrect
+                            ? AppTheme.correctGreen
+                            : Theme.of(context).textTheme.bodyMedium?.color ??
+                                Colors.grey,
+                        size: 18),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(opt.content,
+                          style: TextStyle(
+                              fontSize: 14,
+                              color:
+                                  opt.isCorrect ? AppTheme.correctGreen : null,
+                              fontWeight: FontWeight.w600,
+                              height: 1.4)),
+                    ),
+                  ],
+                ),
+              )),
+        ],
+      ),
+    );
+  }
 
   Widget _buildJustification(BuildContext context, QuestionResource question) {
     return Container(

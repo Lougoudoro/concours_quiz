@@ -15,6 +15,7 @@ class QuizController extends GetxController with WidgetsBindingObserver {
   final String quizName;
   final List<QuestionResource>? initialQuestions;
   late QuizProvider quizProvider;
+  RxBool listingLoading = RxBool(false);
 
   QuizController({
     required this.quizId,
@@ -47,7 +48,9 @@ class QuizController extends GetxController with WidgetsBindingObserver {
       questions.assignAll(initialQuestions!);
       return;
     }
+    listingLoading.value = true;
     await fetchQuestions();
+    listingLoading.value = false;
   }
 
   Future<void> fetchQuestions() async {
@@ -167,15 +170,15 @@ class QuizController extends GetxController with WidgetsBindingObserver {
         // Ignorer si pas injecté (ex: tests)
       }
 
-if(quizId>0){
-      // Envoi des résultats à l'API
-      unawaited(ErrorHandler.run(() async {
-        await quizProvider.submitAttempt(
-          id: quizId,
-          data: result.toRequestBody(),
-        );
-      },showError: false, context: 'QuizController.submitAttempt'));
-}
+      if (quizId >= 0) {
+        // Envoi des résultats à l'API
+        unawaited(ErrorHandler.run(() async {
+          await quizProvider.submitAttempt(
+            id: quizId,
+            data: result.toRequestBody(),
+          );
+        }, showError: false, context: 'QuizController.submitAttempt'));
+      }
 
       Get.offNamed(Routes.RESULTS, arguments: result);
       return;

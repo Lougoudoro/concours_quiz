@@ -1,3 +1,4 @@
+import 'package:cncours_quiz/app/core/widgets/empty_state.dart';
 import 'package:cncours_quiz/app/core/widgets/shimmer_loading.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/data/resources/option_resource.dart';
@@ -31,7 +32,15 @@ class ExamScreen extends StatelessWidget {
       body: SafeArea(
         child: Obx(() {
           if (controller.questions.isEmpty) {
-            return const QuizShimmer();
+            if (controller.listingLoading.value) {
+              return const QuizShimmer();
+            }
+            return const EmptyState(
+              icon: Icons.timer_outlined,
+              title: 'Aucune question disponible',
+              subtitle:
+                  'Cet examen ne contient aucune question pour le moment.',
+            );
           }
 
           if (controller.isTimeUp.value) {

@@ -1,6 +1,6 @@
 enum CustomQuiz {
-    last(0, 'Bis'),
-    blanc(-1, 'Examen Blanc'),
+    blanc(0, 'Exam'),
+    last(-1, 'Bis'),
     bookmarks(-2, 'Mes favoris'),
     revision(-3, 'Révision');
 

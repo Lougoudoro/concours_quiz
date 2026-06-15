@@ -14,10 +14,11 @@ class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
   void _quickQuiz() {
-    final series = Get.find<SerieController>().listing;
-    if (series.isEmpty) return;
-    final random = (series..shuffle()).first;
-    Get.toNamed(Routes.SERIE, arguments: random);
+    Get.toNamed(Routes.QUIZ, arguments: {
+      'quizId': CustomQuiz.blanc.id,
+      'quizName': CustomQuiz.blanc.name,
+      'questions': null,
+    });
   }
 
   @override

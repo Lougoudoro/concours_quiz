@@ -1,3 +1,4 @@
+import 'package:cncours_quiz/app/core/widgets/empty_state.dart';
 import 'package:cncours_quiz/app/core/widgets/shimmer_loading.dart';
 import 'package:cncours_quiz/app/data/providers/question_report_provider.dart';
 import 'package:cncours_quiz/app/data/resources/option_resource.dart';
@@ -29,7 +30,10 @@ class QuizScreen extends StatelessWidget {
       body: SafeArea(
         child: Obx(() {
           if (controller.questions.isEmpty) {
-            return const QuizShimmer();
+            if (controller.listingLoading.value) {
+              return const QuizShimmer();
+            }
+            return const EmptyState();
           }
 
           return Column(
