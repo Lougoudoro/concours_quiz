@@ -5,6 +5,7 @@ import 'package:cncours_quiz/app/modules/history/history_screen.dart';
 import 'package:cncours_quiz/app/modules/main_navigation/main_controller.dart';
 import 'package:cncours_quiz/app/modules/dashboard/series_controller.dart';
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
+import 'package:cncours_quiz/app/core/widgets/serie_card.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -260,6 +261,14 @@ class _BookmarksTab extends StatelessWidget {
 class _TrainingTab extends StatelessWidget {
   const _TrainingTab();
 
+  static const _palette = [
+    [Color(0xFF009E49), Color(0xFF00B86B)],
+    [Color(0xFFFFB800), Color(0xFFFFD000)],
+    [Color(0xFF6C63FF), Color(0xFF8B83FF)],
+    [Color(0xFFE74C3C), Color(0xFFFF6B6B)],
+    [Color(0xFF1E88E5), Color(0xFF42A5F5)],
+  ];
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<SerieController>();
@@ -303,18 +312,18 @@ class _TrainingTab extends StatelessWidget {
           onRefresh: () => controller.list(),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-            child: GridView.builder(
+            child: ListView.separated(
               physics: const AlwaysScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                childAspectRatio: 0.85,
-              ),
               itemCount: controller.listing.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final serie = controller.listing[index];
-                return _TrainingCard(serie: serie);
+                final colors = _palette[index % _palette.length];
+                return SerieCard(
+                  serie: serie,
+                  colors: colors,
+                  onTap: () => Get.toNamed(Routes.SERIE, arguments: serie),
+                );
               },
             ),
           ),
@@ -324,57 +333,4 @@ class _TrainingTab extends StatelessWidget {
   }
 }
 
-class _TrainingCard extends StatelessWidget {
-  final dynamic serie;
-  const _TrainingCard({required this.serie});
 
-  void _openSerie() {
-    Get.toNamed(Routes.SERIE, arguments: serie);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _openSerie,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardTheme.color,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Theme.of(context).dividerTheme.color!),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: AppTheme.vertFaso.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(Icons.quiz_outlined,
-                  color: AppTheme.vertFaso, size: 24),
-            ),
-            const SizedBox(height: 14),
-            Text(
-              serie.name ?? '',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 6),
-            Text(
-              serie.description ?? '',
-              style: TextStyle(
-                  fontSize: 11,
-                  color: Theme.of(context).textTheme.bodyMedium?.color),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

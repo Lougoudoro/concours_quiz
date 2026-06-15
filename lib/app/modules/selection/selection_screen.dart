@@ -2,6 +2,8 @@ import 'package:cncours_quiz/app/data/resources/category_resource.dart';
 import 'package:cncours_quiz/app/data/resources/serie_resource.dart';
 import 'package:flutter/material.dart';
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
+import 'package:cncours_quiz/app/core/widgets/category_card.dart';
+import 'package:cncours_quiz/app/core/widgets/serie_card.dart';
 
 class SelectionScreen extends StatelessWidget {
   final String title;
@@ -69,122 +71,26 @@ class SelectionScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final item = items[index];
                 final colors = _palette[index % _palette.length];
-                String name = '';
-                String desc = '';
-                IconData icon = Icons.chevron_right;
 
                 if (item is CategoryResource) {
-                  name = item.name;
-                  desc =
-                      '${item.series.length} formation${item.series.length > 1 ? 's' : ''} disponible${item.series.length > 1 ? 's' : ''}';
-                  icon = Icons.layers_outlined;
+                  return CategoryCard(
+                    category: item,
+                    colors: colors,
+                    onTap: () => onSelect(item),
+                  );
                 } else if (item is SerieResource) {
-                  name = item.name;
-                  desc =
-                      '${item.quizzes.length} série${item.quizzes.length > 1 ? 's' : ''} de quiz';
-                  icon = Icons.folder_open_outlined;
+                  return SerieCard(
+                    serie: item,
+                    colors: colors,
+                    onTap: () => onSelect(item),
+                  );
                 }
 
-                return _SelectionCard(
-                  name: name,
-                  description: desc,
-                  icon: icon,
-                  colors: colors,
-                  onTap: () => onSelect(item),
-                );
+                return const SizedBox.shrink();
               },
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _SelectionCard extends StatelessWidget {
-  final String name;
-  final String description;
-  final IconData icon;
-  final List<Color> colors;
-  final VoidCallback onTap;
-
-  const _SelectionCard({
-    required this.name,
-    required this.description,
-    required this.icon,
-    required this.colors,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardTheme.color,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: colors.first.withOpacity(0.15),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: colors.first.withOpacity(0.05),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: colors,
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: Colors.white),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    description,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Theme.of(context).textTheme.bodyMedium?.color,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: colors.first.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child:
-                  Icon(Icons.arrow_forward_ios, size: 14, color: colors.first),
-            ),
-          ],
-        ),
       ),
     );
   }

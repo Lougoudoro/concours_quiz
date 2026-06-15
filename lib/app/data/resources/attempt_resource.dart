@@ -17,7 +17,8 @@ class AttemptResource  extends BaseResource{
     this.score,
     this.quiz,
     this.totalPoints,
-    super.createdAt
+    super.createdAt,
+    super.updatedAt,
   });
 
   factory AttemptResource.fromJson(Map<String, dynamic> json) => AttemptResource(
@@ -30,6 +31,7 @@ class AttemptResource  extends BaseResource{
         totalPoints:json['total_points'],
         score: json['score'],
         createdAt: json['created_at'],
+        updatedAt: json['updated_at'],
       );
 
 
@@ -40,6 +42,7 @@ class AttemptResource  extends BaseResource{
         'answers': answers.map((e) => e.toJson()).toList(),
         'delay': delay.inSeconds,
         'created_at': createdAt,
+        'updated_at': updatedAt,
         'quiz': quiz?.toJson(),
       };
 }

@@ -142,8 +142,8 @@ class _EmptyState extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
                 colors: [AppTheme.vertFaso, Color(0xFF00B86B)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -177,6 +177,7 @@ class _QuizCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isExam = quiz.isExam;
+    final hasAttempt = quiz.hasUserAttempt;
     return GestureDetector(
       onTap: () => _showActions(context),
       child: Container(
@@ -185,11 +186,14 @@ class _QuizCard extends StatelessWidget {
           color: Theme.of(context).cardTheme.color,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: AppTheme.vertFaso.withOpacity(0.15),
+            color: hasAttempt 
+                ? AppTheme.vertFaso.withOpacity(0.3)
+                : AppTheme.vertFaso.withOpacity(0.15),
+            width: hasAttempt ? 1 : 0,
           ),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.vertFaso.withOpacity(0.05),
+              color: AppTheme.vertFaso.withOpacity(hasAttempt ? 0.15 : 0.05),
               blurRadius: 6,
               offset: const Offset(0, 2),
             ),
@@ -249,6 +253,14 @@ class _QuizCard extends StatelessWidget {
                         label: '${quiz.getQuesionsCount} Q',
                         color: AppTheme.orReussite,
                       ),
+                      if (hasAttempt && quiz.userAttempt?.updatedAt != null)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6),
+                          child: _Tag(
+                            label: quiz.userAttempt!.updatedAt!,
+                            color: AppTheme.vertFaso,
+                          ),
+                        ),
                     ],
                   ),
                 ],
