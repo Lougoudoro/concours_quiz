@@ -246,7 +246,7 @@ class _QuizCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
                       _Tag(
-                        label: '${quiz.getQuesionsCount()} Q',
+                        label: '${quiz.getQuesionsCount} Q',
                         color: AppTheme.orReussite,
                       ),
                     ],
