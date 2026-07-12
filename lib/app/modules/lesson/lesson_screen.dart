@@ -1,12 +1,12 @@
 import 'package:cncours_quiz/app/core/widgets/empty_state.dart';
 import 'package:cncours_quiz/app/core/widgets/shimmer_loading.dart';
+import 'package:cncours_quiz/app/data/providers/question_report_provider.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/data/resources/option_resource.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cncours_quiz/app/modules/quiz/quiz_controller.dart';
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
-import 'package:get_storage/get_storage.dart';
 
 class LessonScreen extends StatelessWidget {
   final int quizId;
@@ -445,15 +445,7 @@ class LessonScreen extends StatelessWidget {
   }
 
   void _saveReport(QuestionResource question, String message) {
-    final box = GetStorage();
-    final reports = box.read<List>('question_reports') ?? [];
-    reports.add({
-      'question_id': question.id,
-      'question_text': question.content,
-      'justification': question.justification,
-      'message': message,
-      'timestamp': DateTime.now().toIso8601String(),
-    });
-    box.write('question_reports', reports);
+    final provider = QuestionReportProvider();
+    provider.report(questionId: question.id, message: message);
   }
 }

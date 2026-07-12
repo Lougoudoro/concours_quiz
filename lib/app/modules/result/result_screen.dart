@@ -1,11 +1,11 @@
 import 'package:cncours_quiz/app/data/models/question_result.dart';
 import 'package:cncours_quiz/app/data/models/quiz_custom_ids.dart';
+import 'package:cncours_quiz/app/data/providers/question_report_provider.dart';
 import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/data/models/quiz_result.dart';
 import 'package:cncours_quiz/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:confetti/confetti.dart';
 
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
@@ -563,16 +563,8 @@ class _ResultScreenState extends State<ResultScreen>
   }
 
   void _saveReport(QuestionResource question, String message) {
-    final box = GetStorage();
-    final reports = box.read<List>('question_reports') ?? [];
-    reports.add({
-      'question_id': question.id,
-      'question_text': question.content,
-      'justification': question.justification,
-      'message': message,
-      'timestamp': DateTime.now().toIso8601String(),
-    });
-    box.write('question_reports', reports);
+    final provider = QuestionReportProvider();
+    provider.report(questionId: question.id, message: message);
   }
 
   void _retryErrors(QuizResult result) {

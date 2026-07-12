@@ -1,3 +1,5 @@
+import 'package:cncours_quiz/app/data/models/quiz_custom_ids.dart';
+import 'package:cncours_quiz/app/data/resources/question_resource.dart';
 import 'package:cncours_quiz/app/data/resources/quiz_resource.dart';
 import 'package:cncours_quiz/app/data/resources/serie_resource.dart';
 import 'package:cncours_quiz/app/modules/history/history_controller.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:cncours_quiz/app/core/theme/app_theme.dart';
+import 'serie_provider.dart';
 
 class SerieScreen extends StatelessWidget {
   final SerieResource serie;
@@ -21,6 +24,7 @@ class SerieScreen extends StatelessWidget {
         child: Column(
           children: [
             _Header(serie: serie, quizzes: quizzes),
+            if (quizzes.isNotEmpty) _RevisionCard(serie: serie),
             Expanded(
               child: quizzes.isEmpty
                   ? const _EmptyState()
@@ -48,9 +52,8 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
-      child: Column(
-        children: [
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+        child: Column(children: [
           Row(
             children: [
               GestureDetector(
@@ -77,8 +80,8 @@ class _Header extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         )),
                     if (serie.description.isNotEmpty)
                       Padding(
@@ -87,8 +90,11 @@ class _Header extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              fontSize: 14,
-                      color: Theme.of(context).textTheme.bodyMedium?.color)),
+                                fontSize: 14,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.color)),
                       ),
                   ],
                 ),
@@ -114,20 +120,243 @@ class _Header extends StatelessWidget {
                         Text(
                           '${quizzes.length} quiz${quizzes.length > 1 ? 's' : ''}',
                           style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500),
+                              fontSize: 13, fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
                   ),
-          ],
+                ],
               ),
             ),
-        ])
-            );
-        
-      
-    
+        ]));
+  }
+}
+
+class _RevisionCard extends StatelessWidget {
+  final SerieResource serie;
+  const _RevisionCard({required this.serie});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+      child: GestureDetector(
+        onTap: () => _showActions(context),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [AppTheme.vertFaso, Color(0xFF00B86B)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.menu_book_outlined,
+                  color: Colors.white,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Mode révision',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Toutes les questions de la série',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.8),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                color: Colors.white.withOpacity(0.8),
+                size: 20,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showActions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const Text(
+                'Mode révision',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8, bottom: 20),
+                child: Text(
+                  'Toutes les questions de la série',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Theme.of(ctx).textTheme.bodyMedium?.color,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 8),
+              _ActionBtn(
+                icon: Icons.quiz_outlined,
+                label: 'Test de connaissances',
+                color: AppTheme.rougeTerre,
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _startQuiz(context);
+                },
+              ),
+              const SizedBox(height: 10),
+              _ActionBtn(
+                icon: Icons.menu_book_outlined,
+                label: 'Mode correction',
+                color: AppTheme.vertFaso,
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _startLesson(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<List<QuestionResource>> _fetchQuestions() async {
+    final response = await SerieProvider().questions(serieId: serie.id);
+    if (response case {'data': final List data}) {
+      return data
+          .map<QuestionResource>(
+              (json) => QuestionResource.fromJson(json as Map<String, dynamic>))
+          .toList();
+    }
+    return [];
+  }
+
+  void _startQuiz(BuildContext context) async {
+    Get.dialog(
+      const Center(child: CircularProgressIndicator()),
+      barrierDismissible: false,
+    );
+
+    try {
+      final questions = await _fetchQuestions();
+      Get.back();
+
+      if (questions.isEmpty) {
+        Get.snackbar(
+          'Aucune question',
+          'Cette série ne contient pas encore de questions.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppTheme.orReussite,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
+        return;
+      }
+
+      Get.toNamed(Routes.QUIZ, arguments: {
+        'quizId': CustomQuiz.revision.id,
+        'quizName': '${CustomQuiz.revision.name} - ${serie.name}',
+        'questions': questions,
+      });
+    } catch (e) {
+      Get.back();
+      Get.snackbar(
+        'Erreur',
+        'Impossible de charger les questions. Vérifie ta connexion.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppTheme.rougeTerre,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
+    }
+  }
+
+  void _startLesson(BuildContext context) async {
+    Get.dialog(
+      const Center(child: CircularProgressIndicator()),
+      barrierDismissible: false,
+    );
+
+    try {
+      final questions = await _fetchQuestions();
+      Get.back();
+
+      if (questions.isEmpty) {
+        Get.snackbar(
+          'Aucune question',
+          'Cette série ne contient pas encore de questions.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppTheme.orReussite,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
+        return;
+      }
+
+      Get.toNamed(Routes.LESSON, arguments: {
+        'quizId': CustomQuiz.revision.id,
+        'quizName': '${CustomQuiz.revision.name} - ${serie.name}',
+        'questions': questions,
+        'isExam': false,
+      });
+    } catch (e) {
+      Get.back();
+      Get.snackbar(
+        'Erreur',
+        'Impossible de charger les questions. Vérifie ta connexion.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppTheme.rougeTerre,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
+    }
   }
 }
 
@@ -186,7 +415,7 @@ class _QuizCard extends StatelessWidget {
           color: Theme.of(context).cardTheme.color,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: hasAttempt 
+            color: hasAttempt
                 ? AppTheme.vertFaso.withOpacity(0.3)
                 : AppTheme.vertFaso.withOpacity(0.15),
             width: hasAttempt ? 1 : 0,
@@ -354,17 +583,16 @@ class _QuizCard extends StatelessWidget {
                   },
                 ),
               ],
-
-                const SizedBox(height: 10),
-                _ActionBtn(
-                  icon: Icons.menu_book_outlined,
-                  label: 'Mode correction',
-                  color: AppTheme.vertFaso,
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    _startLesson(quiz);
-                  },
-                ),
+              const SizedBox(height: 10),
+              _ActionBtn(
+                icon: Icons.menu_book_outlined,
+                label: 'Mode correction',
+                color: AppTheme.vertFaso,
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _startLesson(quiz);
+                },
+              ),
             ],
           ),
         );
